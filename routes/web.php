@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AppointmentStatusChangeController;
 use App\Http\Controllers\Admin\DashboardController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +27,7 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     Route::resource('member-package', '\App\Http\Controllers\Member\MemberPackageController');
     Route::resource('member-package-type', '\App\Http\Controllers\Member\MemberPackageTypeController');
     Route::resource('member-package-category', '\App\Http\Controllers\Member\MemberPackageCategoryController');
+    Route::resource('member-payment', '\App\Http\Controllers\Member\MemberPaymentController');
 
     Route::resource('trainer', '\App\Http\Controllers\Trainer\TrainerController');
     Route::resource('trainer-package', '\App\Http\Controllers\Trainer\TrainerPackageController');
@@ -56,7 +58,12 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
 
     Route::resource('trainer-session', '\App\Http\Controllers\Trainer\TrainerSessionController');
     Route::resource('running-session', '\App\Http\Controllers\Trainer\RunningSessionController');
-    // Route::get('running-session-checkout', [RunningSessionController::class, 'checkout'])->name('user-filter');
+
+    Route::resource('buddy-referral', '\App\Http\Controllers\Admin\BuddyReferralController');
+    Route::resource('appoitment', '\App\Http\Controllers\Admin\AppointmentController');
+    Route::get('/appointment-status-show/{id}', [AppointmentStatusChangeController::class, 'appointment_status_show']);
+    Route::get('/appointment-status-hide/{id}', [AppointmentStatusChangeController::class, 'appointment_status_hide']);
+    Route::get('/appointment-status-missed-guest/{id}', [AppointmentStatusChangeController::class, 'appointment_status_missed_guest']);
 });
 
 Auth::routes();

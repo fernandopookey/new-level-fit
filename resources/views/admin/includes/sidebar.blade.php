@@ -70,12 +70,12 @@
                     <span class="nav-text">Transaction Guest</span>
                 </a>
                 <ul aria-expanded="false">
-                    <li><a href="file-manager.html">Buddy Refferal</a></li>
-                    <li><a href="user.html">Appoitment</a></li>
-                    <li><a href="celandar.html">Leads</a></li>
-                    <li><a href="chat.html">Trial Member</a></li>
+                    <li><a href="{{ route('appoitment.index') }}">Appoitment</a></li>
+                    <li><a href="{{ route('buddy-referral.index') }}">Buddy Refferal</a></li>
                     <li><a href="activity.html">Missed Guest</a></li>
+                    <li><a href="celandar.html">Leads</a></li>
                     <li><a href="activity.html">Trash BTB</a></li>
+                    <li><a href="chat.html">Trial Member</a></li>
                 </ul>
             </li>
             <li>
