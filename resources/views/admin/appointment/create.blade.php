@@ -1,7 +1,7 @@
 <div class="row">
     <div class="card">
         <div class="card-body">
-            <form action="{{ route('appoitment.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('appointment.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @if ($errors->any())
                     <div class="alert alert-danger">
@@ -103,7 +103,7 @@
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary">Save</button>
-                <a href="{{ route('buddy-referral.index') }}" class="btn btn-danger">Back</a>
+                <a href="{{ route('appointment.index') }}" class="btn btn-danger">Back</a>
             </form>
         </div>
     </div>

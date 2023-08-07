@@ -15,8 +15,8 @@
                             </a></span>
                     </div>
                     <div>
-                        <a href="{{ route('appoitment.create') }}" class="btn btn-primary"><i class="fa fa-plus"></i>
-                            New Appoitment</a>
+                        <a href="{{ route('appointment.create') }}" class="btn btn-primary"><i class="fa fa-plus"></i>
+                            New Appointment</a>
                     </div>
                 </div>
             </div>
@@ -99,7 +99,7 @@
                                                     class="btn light btn-warning btn-xs mb-1 btn-block"
                                                     onclick="return confirm('Change Status to Hide ?')">Hide</a>
                                             @endif
-                                            <form action="{{ route('appoitment.destroy', $item->id) }}"
+                                            <form action="{{ route('appointment.destroy', $item->id) }}"
                                                 onclick="return confirm('Delete Data ?')" method="POST">
                                                 @method('delete')
                                                 @csrf

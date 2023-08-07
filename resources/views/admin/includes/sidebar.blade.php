@@ -17,7 +17,7 @@
                 </ul>
 
             </li>
-            <li>
+            {{-- <li>
                 <a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
                     <i class="material-symbols-outlined">school</i>
                     <span class="nav-text">Barcode Scan</span>
@@ -29,8 +29,8 @@
 
                 </ul>
 
-            </li>
-            <li>
+            </li> --}}
+            {{-- <li>
                 <a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
                     <i class="material-symbols-outlined">person</i>
                     <span class="nav-text">Approval</span>
@@ -42,7 +42,7 @@
 
                 </ul>
 
-            </li>
+            </li> --}}
             <li>
                 <a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
                     <i class="material-symbols-outlined">person</i>
@@ -51,16 +51,16 @@
                 <ul aria-expanded="false">
                     {{-- <li><a href="{{ route('member.create') }}">Member Registration</a></li> --}}
                     {{-- <li><a href="#">Trainer Registration</a></li> --}}
+                    <li><a href="{{ route('class.index') }}">Class Recap</a></li>
                     <li><a href="#">Finger Registration</a></li>
-                    <li><a href="#">Member Payment</a></li>
-                    <li><a href="{{ route('studio-transactions.index') }}">Studio Payment</a></li>
-                    <li><a href="{{ route('studio-booking.index') }}">Studio Booking</a></li>
-                    <li><a href="{{ route('running-session.index') }}">Running Session</a></li>
-                    <li><a href="{{ route('trainer-session.index') }}">Trainer Session</a></li>
-                    <li><a href="#">Session Trainer PGT</a></li>
-                    <li><a href="#">Session Trainer GO</a></li>
-                    <li><a href="#">Class Recap</a></li>
                     <li><a href="{{ route('locker-transaction.index') }}">Locker Transaction</a></li>
+                    <li><a href="{{ route('member-payment.index') }}">Member Payment</a></li>
+                    <li><a href="{{ route('running-session.index') }}">Running Session</a></li>
+                    <li><a href="{{ route('studio-booking.index') }}">Studio Booking</a></li>
+                    <li><a href="{{ route('studio-transactions.index') }}">Studio Payment</a></li>
+                    <li><a href="{{ route('trainer-session.index') }}">Trainer Session</a></li>
+                    <li><a href="{{ route('trainer-session-FO.index') }}">Trainer Session FO</a></li>
+                    <li><a href="#">Trainer Session PGT</a></li>
                 </ul>
 
             </li>
@@ -70,15 +70,15 @@
                     <span class="nav-text">Transaction Guest</span>
                 </a>
                 <ul aria-expanded="false">
-                    <li><a href="{{ route('appoitment.index') }}">Appoitment</a></li>
+                    <li><a href="{{ route('appointment.index') }}">Appointment</a></li>
                     <li><a href="{{ route('buddy-referral.index') }}">Buddy Refferal</a></li>
                     <li><a href="activity.html">Missed Guest</a></li>
-                    <li><a href="celandar.html">Leads</a></li>
+                    <li><a href="{{ route('leads.index') }}">Leads</a></li>
                     <li><a href="activity.html">Trash BTB</a></li>
                     <li><a href="chat.html">Trial Member</a></li>
                 </ul>
             </li>
-            <li>
+            {{-- <li>
                 <a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
                     <i class="material-icons"> app_registration </i>
                     <span class="nav-text">Physiotherapy</span>
@@ -107,7 +107,7 @@
                         </ul>
                     </li>
                 </ul>
-            </li>
+            </li> --}}
             <li>
                 <a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
                     <i class="material-icons"> assessment </i>
@@ -174,7 +174,7 @@
                     <li><a href="{{ route('refferal.index') }}">Refferal</a></li>
                     <li><a href="{{ route('sold-by.index') }}">Sold By</a></li>
                     <li><a href="{{ route('source-code.index') }}">Source Code</a></li>
-                    <li><a href="#">Studio Name</a></li>
+                    <li><a href="{{ route('studio.index') }}">Studio Name</a></li>
                     <li><a href="{{ route('studio-package.index') }}">Studio Package</a></li>
                     <li>
                         <a class="has-arrow" href="javascript:void(0);" aria-expanded="false">Trainer</a>
@@ -185,7 +185,7 @@
                             </li>
                         </ul>
                     </li>
-                    <li><a href="#">Transfer Package</a></li>
+                    <li><a href="{{ route('transfer-package.index') }}">Transfer Package</a></li>
                     <li>
                         <a href="{{ route('logout') }}" class="nav-link"
                             onclick="event.preventDefault();

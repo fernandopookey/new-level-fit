@@ -87,8 +87,8 @@
                         </div>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary">Save</button>
-                <a href="{{ route('buddy-referral.index') }}" class="btn btn-danger">Back</a>
+                <button type="submit" class="btn btn-primary">Update</button>
+                <a href="{{ route('appointment.index') }}" class="btn btn-danger">Back</a>
             </form>
         </div>
     </div>

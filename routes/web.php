@@ -58,12 +58,20 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
 
     Route::resource('trainer-session', '\App\Http\Controllers\Trainer\TrainerSessionController');
     Route::resource('running-session', '\App\Http\Controllers\Trainer\RunningSessionController');
+    Route::resource('trainer-session-FO', '\App\Http\Controllers\Trainer\TrainerSessionFOController');
 
     Route::resource('buddy-referral', '\App\Http\Controllers\Admin\BuddyReferralController');
-    Route::resource('appoitment', '\App\Http\Controllers\Admin\AppointmentController');
+    Route::resource('appointment', '\App\Http\Controllers\Admin\AppointmentController');
     Route::get('/appointment-status-show/{id}', [AppointmentStatusChangeController::class, 'appointment_status_show']);
     Route::get('/appointment-status-hide/{id}', [AppointmentStatusChangeController::class, 'appointment_status_hide']);
     Route::get('/appointment-status-missed-guest/{id}', [AppointmentStatusChangeController::class, 'appointment_status_missed_guest']);
+
+    Route::resource('class', '\App\Http\Controllers\Admin\ClassRecapController');
+    Route::resource('leads', '\App\Http\Controllers\Admin\LeadController');
+
+    Route::resource('transfer-package', '\App\Http\Controllers\Admin\TransferPackageController');
+
+    Route::resource('studio', '\App\Http\Controllers\Admin\StudioController');
 });
 
 Auth::routes();
