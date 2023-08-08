@@ -46,7 +46,7 @@
             <li>
                 <a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
                     <i class="material-symbols-outlined">person</i>
-                    <span class="nav-text">Member Transaction</span>
+                    <span class="nav-text">Member Trans.</span>
                 </a>
                 <ul aria-expanded="false">
                     {{-- <li><a href="{{ route('member.create') }}">Member Registration</a></li> --}}
