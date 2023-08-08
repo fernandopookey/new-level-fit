@@ -24,6 +24,7 @@ class AdministratorController extends Controller
             'full_name' => 'required|string|max:200',
             'email'     => 'required|email',
             'gender'    => 'required',
+            'roles'      => '',
             'club'      => 'required'
         ]);
 

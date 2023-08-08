@@ -19,11 +19,26 @@
                         </div>
                     @endif
                     <div class="row">
-                        <div class="col-xl-12">
+                        <div class="col-xl-6">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Full Name</label>
                                 <input type="text" name="full_name" value="{{ old('full_name') }}"
                                     class="form-control" id="exampleFormControlInput1" autocomplete="off" required>
+                            </div>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label">Email</label>
+                                <input type="email" name="email" value="{{ old('email') }}" class="form-control"
+                                    id="exampleFormControlInput1" autocomplete="off" required>
+                            </div>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label">Role</label>
+                                <select name="roles" class="form-control" aria-label="Default select example">
+                                    <option value="CS">Customer Service</option>
+                                </select>
                             </div>
                         </div>
                         <div class="col-xl-6">
@@ -43,6 +58,13 @@
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Club</label>
                                 <input type="text" name="club" value="{{ old('club') }}" class="form-control"
+                                    id="exampleFormControlInput1" autocomplete="off" required>
+                            </div>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label">Password</label>
+                                <input type="text" name="password" value="{{ old('password') }}" class="form-control"
                                     id="exampleFormControlInput1" autocomplete="off" required>
                             </div>
                         </div>
@@ -164,6 +186,7 @@
                             <thead>
                                 <tr>
                                     <th>Full Name</th>
+                                    <th>Email</th>
                                     <th>Gender</th>
                                     <th>Club</th>
                                     <th>Action</th>
@@ -173,6 +196,7 @@
                                 @foreach ($customerService as $item)
                                     <tr>
                                         <td>{{ $item->full_name }}</td>
+                                        <td>{{ $item->email }}</td>
                                         <td>{{ $item->gender }}</td>
                                         <td>{{ $item->club }}</td>
                                         <td>

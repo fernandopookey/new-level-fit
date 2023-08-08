@@ -19,9 +19,9 @@ class StaffController extends Controller
     {
         $data = [
             'title'                 => 'Staff List',
-            'administrator'         => User::get(),
+            'administrator'         => User::where('roles', 'ADMIN')->get(),
             'classInstructor'       => ClassInstructor::get(),
-            'customerService'       => CustomerService::get(),
+            'customerService'       => User::where('roles', 'CS')->get(),
             'customerServicePos'    => CustomerPosService::get(),
             'fitnessConsultant'     => FitnessConsultant::get(),
             'personalTrainer'       => PersonalTrainer::get(),

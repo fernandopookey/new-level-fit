@@ -35,6 +35,17 @@
                         </div>
                         <div class="col-xl-6">
                             <div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label">Role</label>
+                                <select name="roles" class="form-control" aria-label="Default select example">
+                                    {{-- <option disabled selected value>
+                                        <- Choose ->
+                                    </option> --}}
+                                    <option value="ADMIN">Admin</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Gender</label>
                                 <select name="gender" class="form-control" aria-label="Default select example"
                                     required>
@@ -53,7 +64,7 @@
                                     id="exampleFormControlInput1" autocomplete="off" required>
                             </div>
                         </div>
-                        <div class="col-xl-12">
+                        <div class="col-xl-6">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Password</label>
                                 <input type="text" name="password" value="{{ old('password') }}" class="form-control"

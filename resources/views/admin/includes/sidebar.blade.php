@@ -131,7 +131,6 @@
                     <li><a href="#">Member</a></li>
                     <li><a href="#">Member Visit</a></li>
                     <li><a href="#">Member Expired</a></li>
-                    <li><a href="#">Member Checkin</a></li>
 
                 </ul>
             </li>
@@ -191,7 +190,7 @@
                             onclick="event.preventDefault();
                                         document.getElementById('logout-form').submit();"
                             class="dropdown-item">
-                            <i class="nav-icon fas fa-sign-out-alt"></i>
+                            {{-- <i class="nav-icon fas fa-sign-out-alt"></i> --}}
                             <p>Logout</p>
                         </a>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -223,8 +222,8 @@
             </li> --}}
         </ul>
         <div class="copyright">
-            <p>Hi, <strong>{{ Auth::user()->full_name }}</strong></p>
-            <p class="fs-12">Made with <span class="heart"></span> by Warastra Adhiguna</p>
+            <p><b>{{ Auth::user()->full_name }}</b></p>
+            <p class="fs-12">Made with <span class="heart"></span> by WAn</p>
         </div>
     </div>
 </div>

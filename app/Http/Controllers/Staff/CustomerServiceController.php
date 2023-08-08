@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
 use App\Models\Staff\CustomerService;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class CustomerServiceController extends Controller
@@ -22,11 +23,15 @@ class CustomerServiceController extends Controller
     {
         $data = $request->validate([
             'full_name' => 'required|string|max:200',
+            'email'     => 'required|email',
             'gender'    => 'required',
+            'roles'      => '',
             'club'      => 'required'
         ]);
 
-        CustomerService::create($data);
+        $data['password'] = bcrypt($request->password);
+
+        User::create($data);
         return redirect()->route('staff.index')->with('message', 'Customer Service Added Successfully');
     }
 
@@ -37,7 +42,7 @@ class CustomerServiceController extends Controller
 
     public function update(Request $request, string $id)
     {
-        $item = CustomerService::find($id);
+        $item = User::find($id);
         $data = $request->validate([
             'full_name' => 'required|string|max:200',
             'gender'    => 'required',
