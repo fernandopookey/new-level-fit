@@ -36,7 +36,7 @@
                         <div class="col-xl-6">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Role</label>
-                                <select name="roles" class="form-control" aria-label="Default select example">
+                                <select name="role" class="form-control" aria-label="Default select example">
                                     <option value="CS">Customer Service</option>
                                 </select>
                             </div>

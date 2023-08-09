@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class IsCuser
+class IsCs
 {
     /**
      * Handle an incoming request.
@@ -17,7 +17,7 @@ class IsCuser
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::user() &&  Auth::user()->roles == 'CS') {
+        if (Auth::user() &&  Auth::user()->role == 'CS') {
             return $next($request);
         }
 

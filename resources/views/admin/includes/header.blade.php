@@ -285,16 +285,16 @@
                         </a>
                     </li>
 
-                    {{-- <li class="nav-item dropdown notification_dropdown">
-                        <a class="nav-link bell-link" href="javascript:void(0);">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                viewBox="0 0 24 24" fill="none" stroke="#A098AE" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round"
-                                class="feather feather-message-square">
-                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                            </svg>
+                    <li class="nav-item dropdown notification_dropdown">
+                        <a href="{{ route('logout') }}" class="nav-link"
+                            onclick="event.preventDefault();
+                                        document.getElementById('logout-form').submit();">
+                            <i class="fa fa-sign-out fa-lg" aria-hidden="true"></i>
                         </a>
-                    </li> --}}
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                            @csrf
+                        </form>
+                    </li>
                     {{-- <li class="nav-item bell-icon blink dropdown notification_dropdown">
                         <a class="nav-link  " href="javascript:void(0);" role="button" data-bs-toggle="dropdown">
                             <svg width="20" height="20" viewBox="0 0 32 32" fill="none"
