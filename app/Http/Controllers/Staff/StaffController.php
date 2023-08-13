@@ -19,10 +19,10 @@ class StaffController extends Controller
     {
         $data = [
             'title'                 => 'Staff List',
-            'administrator'         => User::where('roles', 'ADMIN')->get(),
+            'administrator'         => User::where('role', 'ADMIN')->get(),
             'classInstructor'       => ClassInstructor::get(),
-            'customerService'       => User::where('roles', 'CS')->get(),
-            'customerServicePos'    => CustomerPosService::get(),
+            'customerService'       => User::where('role', 'CS')->get(),
+            'customerServicePos'    => User::where('role', 'CSPOS')->get(),
             'fitnessConsultant'     => FitnessConsultant::get(),
             'personalTrainer'       => PersonalTrainer::get(),
             'physiotherapy'         => Physiotherapy::get(),

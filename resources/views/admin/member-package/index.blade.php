@@ -31,7 +31,6 @@
                             <tr>
                                 <th>Package Name</th>
                                 <th>Number Of Days</th>
-                                <th>Expired Session</th>
                                 <th>Package Type</th>
                                 <th>Package Category</th>
                                 <th>Package Price</th>
@@ -48,7 +47,6 @@
                                         <h6 class="mb-0">{{ $item->package_name }}</h6>
                                     </td>
                                     <td>{{ $item->days }}</td>
-                                    <td>{{ $item->expired_session }}</td>
                                     <td>
                                         {{ !empty($item->memberPackageType->package_type_name) ? $item->memberPackageType->package_type_name : 'Package type name has  been deleted' }}
                                     </td>

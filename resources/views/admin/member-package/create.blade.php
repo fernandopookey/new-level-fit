@@ -35,13 +35,6 @@
                         </div>
                         <div class="col-xl-6">
                             <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label">Expired Session</label>
-                                <input name="expired_session" class="datepicker-default form-control" id="datepicker"
-                                    required>
-                            </div>
-                        </div>
-                        <div class="col-xl-6">
-                            <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Package Type</label>
                                 <select name="package_type_id" class="form-control" aria-label="Default select example"
                                     required>

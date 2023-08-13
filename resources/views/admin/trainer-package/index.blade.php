@@ -32,7 +32,6 @@
                                 <th class="text-center">Package Name</th>
                                 <th class="text-center">Package Type</th>
                                 <th class="text-center">Number Of Session</th>
-                                <th class="text-center">Expired Session</th>
                                 <th class="text-center">Package Price</th>
                                 <th class="text-center">Admin Price</th>
                                 <th class="text-center">Description</th>
@@ -49,7 +48,6 @@
                                         {{ !empty($item->trainerPackageType->package_type_name) ? $item->trainerPackageType->package_type_name : 'Package type name has  been deleted' }}
                                     </td>
                                     <td class="text-center">{{ $item->number_of_session }}</td>
-                                    <td class="text-center">{{ $item->expired_session }}</td>
                                     <td class="text-center">
                                         {{ formatRupiah($item->package_price) }}
                                     </td>

@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Admin\AppointmentStatusChangeController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Report\AppointmentListController;
+use App\Http\Controllers\Report\MemberListController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -72,6 +74,16 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     Route::resource('transfer-package', '\App\Http\Controllers\Admin\TransferPackageController');
 
     Route::resource('studio', '\App\Http\Controllers\Admin\StudioController');
+
+    Route::resource('report-gym', '\App\Http\Controllers\Report\ReportFitnessController');
+
+    Route::resource('appointment-list', '\App\Http\Controllers\Report\AppointmentListController');
+    Route::get('all-appointment', [AppointmentListController::class, 'allData'])->name('all-appointment');
+    Route::get('appointment-filter', [AppointmentListController::class, 'filter'])->name('appointment-filter');
+
+    Route::resource('member-list', '\App\Http\Controllers\Report\MemberListController');
+    Route::get('all-member', [MemberListController::class, 'allData'])->name('all-member');
+    Route::get('member-filter', [MemberListController::class, 'filter'])->name('member-filter');
 });
 
 Auth::routes();

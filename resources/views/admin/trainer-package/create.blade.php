@@ -47,13 +47,6 @@
                                     class="form-control" id="exampleFormControlInput1" autocomplete="off" required>
                             </div>
                         </div>
-                        <div class="col-xl-12">
-                            <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label">Expired Session</label>
-                                <input name="expired_session" class="datepicker-default form-control" id="datepicker"
-                                    required>
-                            </div>
-                        </div>
                         <div class="col-xl-6">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Package Price</label>

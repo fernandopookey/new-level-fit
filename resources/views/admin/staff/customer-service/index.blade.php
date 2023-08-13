@@ -196,6 +196,7 @@
                                 @foreach ($customerService as $item)
                                     <tr>
                                         <td>{{ $item->full_name }}</td>
+                                        <td>{{ $item->role }}</td>
                                         <td>{{ $item->email }}</td>
                                         <td>{{ $item->gender }}</td>
                                         <td>{{ $item->club }}</td>

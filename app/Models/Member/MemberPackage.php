@@ -14,7 +14,6 @@ class MemberPackage extends Model
     protected $fillable = [
         'package_name',
         'days',
-        'expired_session',
         'package_type_id',
         'package_category_id',
         'package_price',

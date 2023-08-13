@@ -4,19 +4,21 @@
 <div class="dlabnav">
     <div class="dlabnav-scroll">
         <ul class="metismenu" id="menu">
-            <li>
-                <a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
-                    <i class="material-symbols-outlined">home</i>
-                    <span class="nav-text">Home</span>
-                </a>
-                <ul aria-expanded="false">
-                    {{-- <li><a href="index.html">Dashboard Light</a></li> --}}
-                    <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li><a href="{{ route('member.index') }}">Member List</a></li>
-                    <li><a href="{{ route('trainer.index') }}">Trainer List</a></li>
-                </ul>
+            @if (Auth::user()->role == 'ADMIN' || Auth::user()->role == 'CS')
+                <li>
+                    <a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
+                        <i class="material-symbols-outlined">home</i>
+                        <span class="nav-text">Dashboard</span>
+                    </a>
+                    <ul aria-expanded="false">
+                        {{-- <li><a href="index.html">Dashboard Light</a></li> --}}
+                        <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
+                        <li><a href="{{ route('member.index') }}">Member List</a></li>
+                        <li><a href="{{ route('trainer.index') }}">Trainer List</a></li>
+                    </ul>
 
-            </li>
+                </li>
+            @endif
             {{-- <li>
                 <a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
                     <i class="material-symbols-outlined">school</i>
@@ -131,7 +133,7 @@
                         <span class="nav-text">Member</span>
                     </a>
                     <ul aria-expanded="false">
-                        <li><a href="#">Member</a></li>
+                        <li><a href="{{ route('member.index') }}">Member</a></li>
                         <li><a href="#">Member Visit</a></li>
                         <li><a href="#">Member Expired</a></li>
 
@@ -144,7 +146,7 @@
                     <span class="nav-text">Report</span>
                 </a>
                 <ul aria-expanded="false">
-                    <li><a href="#">Fitness Club</a></li>
+                    <li><a href="{{ route('report-gym.index') }}">GYM Club</a></li>
                     <li><a href="#">Guest</a></li>
                     <li><a href="#">FC Performance</a></li>
                 </ul>
