@@ -3,22 +3,17 @@
 namespace App\Http\Controllers\Report;
 
 use App\Http\Controllers\Controller;
-use App\Models\Member\Member;
-use App\Models\Member\MemberPackage;
-use App\Models\MethodPayment;
-use App\Models\Refferal;
-use App\Models\Sold;
-use App\Models\SourceCode;
+use App\Models\Staff\PersonalTrainer;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class MemberListController extends Controller
+class PersonalTrainerListController extends Controller
 {
     public function index()
     {
         $data = [
-            'content'               => 'admin/gym-report/member-list/index'
+            'content'   => 'admin/gym-report/personal-trainer-list/index'
         ];
 
         return view('admin.layouts.wrapper', $data);
@@ -26,8 +21,7 @@ class MemberListController extends Controller
 
     public function filter(Request $request)
     {
-        $member = Member::orderBy('id', 'desc')
-            ->where('status', 'Active')
+        $personalTrainer = PersonalTrainer::orderBy('id', 'desc')
             ->when(
                 $request->startDate && $request->endDate,
                 function (Builder $builder) use ($request) {
@@ -42,8 +36,8 @@ class MemberListController extends Controller
             )->paginate(10);
 
         $data = [
-            'title'                 => 'Report Member List',
-            'member'                => $member,
+            'title'                 => 'Report Personal Trainer List',
+            'member'                => $personalTrainer,
             'request'               => $request,
             'memberPackage'         => MemberPackage::get(),
             'sourceCode'            => SourceCode::get(),
@@ -59,7 +53,7 @@ class MemberListController extends Controller
     public function allData()
     {
         $data = [
-            'title'                 => 'Report Member List',
+            'title'                 => 'Report Personal Trainer List',
             'member'                => Member::where('status', 'Active')->get(),
             'memberPackage'         => MemberPackage::get(),
             'sourceCode'            => SourceCode::get(),

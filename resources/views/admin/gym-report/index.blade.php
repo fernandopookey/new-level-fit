@@ -9,18 +9,18 @@
                             Appointment
                         </a>
                     </li>
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab" href="#classInstructor">
                             Locker
                         </a>
-                    </li>
+                    </li> --}}
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab" href="#member">
                             Member
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="#csPos">
+                        <a class="nav-link" data-bs-toggle="tab" href="#memberExpired">
                             Member Expired
                         </a>
                     </li>
@@ -35,7 +35,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="#ptLeader">
+                        <a class="nav-link" data-bs-toggle="tab" href="#trainerGo">
                             Personal Trainer GO
                         </a>
                     </li>
@@ -58,6 +58,8 @@
                 <div class="tab-content">
                     @include('admin.gym-report.appointment-list.index')
                     @include('admin.gym-report.member-list.index')
+                    @include('admin.gym-report.member-expired-list.index')
+                    @include('admin.gym-report.personal-trainer-list.index')
                 </div>
             </div>
         </div>

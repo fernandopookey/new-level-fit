@@ -3,7 +3,9 @@
 use App\Http\Controllers\Admin\AppointmentStatusChangeController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Report\AppointmentListController;
+use App\Http\Controllers\Report\MemberExpiredListController;
 use App\Http\Controllers\Report\MemberListController;
+use App\Http\Controllers\Report\TrainerGoListController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -84,6 +86,14 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     Route::resource('member-list', '\App\Http\Controllers\Report\MemberListController');
     Route::get('all-member', [MemberListController::class, 'allData'])->name('all-member');
     Route::get('member-filter', [MemberListController::class, 'filter'])->name('member-filter');
+
+    Route::resource('member-expired-list', '\App\Http\Controllers\Report\MemberListController');
+    Route::get('all-member-expired', [MemberListController::class, 'allData'])->name('all-member-expired');
+    Route::get('member-expired-filter', [MemberExpiredListController::class, 'filter'])->name('member-expired-filter');
+
+    Route::resource('personal-trainer-list', '\App\Http\Controllers\Report\MemberListController');
+    Route::get('all-personal-trainer', [MemberListController::class, 'allData'])->name('all-personal-trainer');
+    Route::get('personal-trainer-filter', [MemberExpiredListController::class, 'filter'])->name('personal-trainer-filter');
 });
 
 Auth::routes();

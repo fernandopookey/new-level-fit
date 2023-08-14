@@ -13,16 +13,6 @@ class ReportFitnessController extends Controller
     {
         $data = [
             'title'                 => 'Report GYM Club List',
-            'appointment'           => Appointment::get(),
-            'member'                => Member::get(),
-            // 'administrator'         => User::where('role', 'ADMIN')->get(),
-            // 'classInstructor'       => ClassInstructor::get(),
-            // 'customerService'       => User::where('role', 'CS')->get(),
-            // 'customerServicePos'    => User::where('role', 'CSPOS')->get(),
-            // 'fitnessConsultant'     => FitnessConsultant::get(),
-            // 'personalTrainer'       => PersonalTrainer::get(),
-            // 'physiotherapy'         => Physiotherapy::get(),
-            // 'ptLeader'              => PTLeader::get(),
             'content'               => 'admin/gym-report/index'
         ];
 

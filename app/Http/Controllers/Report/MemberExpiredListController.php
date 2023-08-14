@@ -13,12 +13,12 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class MemberListController extends Controller
+class MemberExpiredListController extends Controller
 {
     public function index()
     {
         $data = [
-            'content'               => 'admin/gym-report/member-list/index'
+            'content'               => 'admin/gym-report/member-expired-list/index'
         ];
 
         return view('admin.layouts.wrapper', $data);
@@ -27,7 +27,7 @@ class MemberListController extends Controller
     public function filter(Request $request)
     {
         $member = Member::orderBy('id', 'desc')
-            ->where('status', 'Active')
+            ->where('status', 'Inactive')
             ->when(
                 $request->startDate && $request->endDate,
                 function (Builder $builder) use ($request) {
@@ -42,7 +42,7 @@ class MemberListController extends Controller
             )->paginate(10);
 
         $data = [
-            'title'                 => 'Report Member List',
+            'title'                 => 'Report Member Expired List',
             'member'                => $member,
             'request'               => $request,
             'memberPackage'         => MemberPackage::get(),
@@ -50,7 +50,7 @@ class MemberListController extends Controller
             'methodPayment'         => MethodPayment::get(),
             'soldBy'                => Sold::get(),
             'referralName'          => Refferal::get(),
-            'content'               => 'admin/gym-report/member-list/list'
+            'content'               => 'admin/gym-report/member-expired-list/list'
         ];
 
         return view('admin.layouts.wrapper', $data);
@@ -66,7 +66,7 @@ class MemberListController extends Controller
             'methodPayment'         => MethodPayment::get(),
             'soldBy'                => Sold::get(),
             'referralName'          => Refferal::get(),
-            'content'               => 'admin/gym-report/member-list/all-data'
+            'content'               => 'admin/gym-report/member-expired-list/all-data'
         ];
 
         return view('admin.layouts.wrapper', $data);
