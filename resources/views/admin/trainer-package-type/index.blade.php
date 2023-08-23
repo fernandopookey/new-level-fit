@@ -28,7 +28,7 @@
     </div>
 </div>
 
-<!-- Modal Edit -->
+{{-- <!-- Modal Edit -->
 @foreach ($trainerPackageType as $item)
     <div class="modal fade" id="modalEdit{{ $item->id }}" tabindex="-1" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
@@ -62,7 +62,7 @@
             </div>
         </div>
     </div>
-@endforeach
+@endforeach --}}
 
 
 
@@ -109,10 +109,10 @@
                                     </td>
                                     <td>
                                         <div class="text-center">
-                                            <button type="button" class="btn light btn-warning btn-xs mb-1"
+                                            {{-- <button type="button" class="btn light btn-warning btn-xs mb-1"
                                                 data-bs-toggle="modal" data-bs-target="#modalEdit{{ $item->id }}">
                                                 Edit
-                                            </button>
+                                            </button> --}}
                                             <form action="{{ route('trainer-package-type.destroy', $item->id) }}"
                                                 onclick="return confirm('Delete Data ? ')" method="POST">
                                                 @method('delete')

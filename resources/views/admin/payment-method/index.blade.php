@@ -2,17 +2,17 @@
 <div class="modal fade" id="modalAdd" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-center">
         <div class="modal-content">
-            <form action="{{ route('method-payment.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('payment-method.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Create Method Payment</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Create Payment Method</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-xl-12">
                             <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label">Method Payment Name</label>
+                                <label for="exampleFormControlInput1" class="form-label">Payment Method Name</label>
                                 <input type="text" name="name" value="{{ old('name') }}" class="form-control"
                                     id="exampleFormControlInput1" autocomplete="off" required>
                             </div>
@@ -27,41 +27,6 @@
         </div>
     </div>
 </div>
-
-<!-- Modal Edit -->
-@foreach ($methodPayment as $item)
-    <div class="modal fade" id="modalEdit{{ $item->id }}" tabindex="-1" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-center">
-            <div class="modal-content">
-                <form action="{{ route('method-payment.update', $item->id) }}" method="POST"
-                    enctype="multipart/form-data">
-                    @method('PUT')
-                    @csrf
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Method Payment</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-xl-12">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Method Payment Name</label>
-                                    <input type="text" name="name" value="{{ old('name', $item->name) }}"
-                                        class="form-control" id="exampleFormControlInput1" autocomplete="off" required>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Update</button>
-                        <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-@endforeach
 
 
 
@@ -84,7 +49,7 @@
                     <div>
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                             data-bs-target="#modalAdd">
-                            + New Method Payment
+                            + New Payment Method
                         </button>
                     </div>
                 </div>
@@ -101,18 +66,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($methodPayment as $item)
+                            @foreach ($paymentMethod as $item)
                                 <tr>
                                     <td class="text-center">
                                         <h6 class="mb-0">{{ $item->name }}</h6>
                                     </td>
                                     <td>
                                         <div class="text-center">
-                                            <button type="button" class="btn light btn-warning btn-xs mb-1"
-                                                data-bs-toggle="modal" data-bs-target="#modalEdit{{ $item->id }}">
-                                                Edit
-                                            </button>
-                                            <form action="{{ route('method-payment.destroy', $item->id) }}"
+                                            <form action="{{ route('payment-method.destroy', $item->id) }}"
                                                 onclick="return confirm('Delete Data ? ')" method="POST">
                                                 @method('delete')
                                                 @csrf

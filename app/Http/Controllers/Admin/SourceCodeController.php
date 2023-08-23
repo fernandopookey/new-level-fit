@@ -52,7 +52,11 @@ class SourceCodeController extends Controller
 
     public function destroy(SourceCode $sourceCode)
     {
-        $sourceCode->delete();
-        return redirect()->back()->with('message', 'Source Code Deleted Successfully');
+        try {
+            $sourceCode->delete();
+            return redirect()->back()->with('message', 'Source Code Deleted Successfully');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Deleted Failed, please check other page where using this source code');
+        }
     }
 }

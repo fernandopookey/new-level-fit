@@ -15,8 +15,8 @@
                             </a></span>
                     </div>
                     <div>
-                        <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal"
-                            data-bs-target="#modalAdd"> + New Trainer </button>
+                        <a href="{{ route('trainer.create') }}" class="btn btn-primary"><i class="fa fa-plus"></i> New
+                            Trainer</a>
                     </div>
                 </div>
             </div>
@@ -33,6 +33,7 @@
                                 <th>Transaction Type</th>
                                 <th>Method Payment</th>
                                 <th>FC Name</th>
+                                <th>Staff Name</th>
                                 <th>Description</th>
                                 <th>Action</th>
                             </tr>
@@ -41,14 +42,10 @@
                             @foreach ($trainers as $item)
                                 <tr>
                                     <td>
-                                        <div class="trans-list">
-                                            <img src="{{ Storage::url($item->photos) }}" alt=""
-                                                class="avatar avatar-sm me-3">
-                                            <h6>{{ $item->trainer_name }}</h6>
-                                        </div>
+                                        {{ !empty($item->personalTrainer->full_name) ? $item->personalTrainer->full_name : 'Trainer has  been deleted' }}
                                     </td>
                                     <td>
-                                        {{ !empty($item->members->first_name) ? $item->members->first_name : 'Member has  been deleted' }}
+                                        {{ !empty($item->members->full_name) ? $item->members->full_name : 'Member has  been deleted' }}
                                     </td>
                                     <td>
                                         {{ !empty($item->trainerPackage->package_name) ? $item->trainerPackage->package_name : 'Trainer Package has  been deleted' }}
@@ -63,11 +60,14 @@
                                         {{ !empty($item->fc->full_name) ? $item->fc->full_name : 'Fitness Consultant has  been deleted' }}
                                     </td>
                                     <td>
+                                        {{ !empty($item->users->full_name) ? $item->users->full_name : 'Staff has  been deleted' }}
+                                    </td>
+                                    <td>
                                         {{ $item->description }}
                                     </td>
                                     <td>
                                         <div>
-                                            <button type="button" class="btn light btn-warning btn-xs mb-1"
+                                            <button type="button" class="btn light btn-warning btn-xs mb-1 btn-block"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#modalEdit{{ $item->id }}">Edit</button>
                                             <form action="{{ route('trainer.destroy', $item->id) }}"
@@ -75,7 +75,7 @@
                                                 @method('delete')
                                                 @csrf
                                                 <button type="submit"
-                                                    class="btn light btn-danger btn-xs">Delete</button>
+                                                    class="btn light btn-danger btn-xs btn-block">Delete</button>
                                             </form>
                                         </div>
                                     </td>
@@ -89,5 +89,5 @@
         </div>
     </div>
 </div>
-@include('admin.trainer.create')
+{{-- @include('admin.trainer.create') --}}
 @include('admin.trainer.edit')

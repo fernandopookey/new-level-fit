@@ -26,11 +26,11 @@ class TrainerSessionStoreRequest extends FormRequest
         return [
             'active_period'         => 'required|string',
             'member_id'             => 'required|exists:members,id',
-            'trainer_id'            => 'required|exists:trainers,id',
+            'trainer_id'            => 'required|exists:personal_trainers,id',
             'trainer_package_id'    => 'required|exists:trainer_packages,id',
-            'session_total'         => 'required',
             'remaining_session'     => 'required',
-            'status'                => 'required'
+            'status'                => 'required',
+            'user_id'               => ''
         ];
     }
 }

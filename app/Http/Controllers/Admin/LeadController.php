@@ -78,8 +78,12 @@ class LeadController extends Controller
 
     public function destroy($id)
     {
-        $lead = Lead::find($id);
-        $lead->delete();
-        return redirect()->back()->with('message', 'Lead Deleted Successfully');
+        try {
+            $lead = Lead::find($id);
+            $lead->delete();
+            return redirect()->back()->with('message', 'Lead Deleted Successfully');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Deleted Failed, please check other page where using this lead');
+        }
     }
 }

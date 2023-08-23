@@ -50,7 +50,11 @@ class TransferPackageController extends Controller
 
     public function destroy(TransferPackage $transferPackage)
     {
-        $transferPackage->delete();
-        return redirect()->back()->with('message', 'Transfer Package Deleted Successfully');
+        try {
+            $transferPackage->delete();
+            return redirect()->back()->with('message', 'Transfer Package Deleted Successfully');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Deleted Failed, please check other page where using this transfer package');
+        }
     }
 }

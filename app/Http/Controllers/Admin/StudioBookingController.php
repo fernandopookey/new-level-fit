@@ -57,7 +57,11 @@ class StudioBookingController extends Controller
 
     public function destroy(StudioBooking $studioBooking)
     {
-        $studioBooking->delete();
-        return redirect()->back()->with('message', 'Studio Booking Deleted Successfully');
+        try {
+            $studioBooking->delete();
+            return redirect()->back()->with('message', 'Studio Booking Deleted Successfully');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Deleted Failed, please check other page where using this studio booking');
+        }
     }
 }

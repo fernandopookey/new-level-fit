@@ -29,7 +29,7 @@ class ClassStoreRequest extends FormRequest
             'class_instructor_id'   => 'required|exists:class_instructors,id',
             'member_total'          => 'required',
             'class_price'           => 'required|numeric',
-            'cs_id'                 => 'required|exists:customer_services,id',
+            'user_id'               => ''
         ];
     }
 

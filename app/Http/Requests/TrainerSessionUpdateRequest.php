@@ -28,9 +28,9 @@ class TrainerSessionUpdateRequest extends FormRequest
             'member_id'             => 'exists:members,id',
             'trainer_id'            => 'required|exists:trainers,id',
             'trainer_package_id'    => 'exists:trainer_packages,id',
-            'session_total'         => '',
             'remaining_session'     => '',
-            'status'                => ''
+            'status'                => '',
+            'user_id'               => ''
         ];
     }
 }

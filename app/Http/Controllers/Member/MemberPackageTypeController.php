@@ -52,7 +52,11 @@ class MemberPackageTypeController extends Controller
 
     public function destroy(MemberPackageType $memberPackageType)
     {
-        $memberPackageType->delete();
-        return redirect()->back()->with('message', 'Member Package Type Deleted Successfully');
+        try {
+            $memberPackageType->delete();
+            return redirect()->back()->with('message', 'Member Package Type Deleted Successfully');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Deleted Failed, please check other page where using this member package type');
+        }
     }
 }

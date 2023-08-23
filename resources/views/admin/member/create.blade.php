@@ -20,16 +20,23 @@
                     <div class="row">
                         <div class="col-xl-6">
                             <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label">First Name</label>
-                                <input type="text" name="first_name" value="{{ old('first_name') }}"
+                                <label for="exampleFormControlInput1" class="form-label">Full Name</label>
+                                <input type="text" name="full_name" value="{{ old('full_name') }}"
                                     class="form-control" id="exampleFormControlInput1" autocomplete="off" required>
                             </div>
                         </div>
                         <div class="col-xl-6">
                             <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label">Last Name</label>
-                                <input type="text" name="last_name" value="{{ old('last_name') }}"
-                                    class="form-control" id="exampleFormControlInput1" autocomplete="off" required>
+                                <label for="exampleFormControlInput1" class="form-label">Member Code</label>
+                                <div class="d-flex">
+                                    <input type="text" name="member_code" value="{{ old('member_code') }}"
+                                        class="form-control" id="exampleFormControlInput1" autocomplete="off" required>
+                                </div>
+                                @if (!empty($memberLastCode->member_code))
+                                    <small>*Last member code {{ $memberLastCode->member_code }}</small>
+                                @else
+                                    <small>*No data</small>
+                                @endif
                             </div>
                         </div>
                         <div class="col-xl-6">

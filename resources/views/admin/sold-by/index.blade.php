@@ -107,10 +107,10 @@
                                     </td>
                                     <td>
                                         <div class="text-center">
-                                            <button type="button" class="btn light btn-warning btn-xs mb-1"
+                                            {{-- <button type="button" class="btn light btn-warning btn-xs mb-1"
                                                 data-bs-toggle="modal" data-bs-target="#modalEdit{{ $item->id }}">
                                                 Edit
-                                            </button>
+                                            </button> --}}
                                             <form action="{{ route('sold-by.destroy', $item->id) }}"
                                                 onclick="return confirm('Delete Data ? ')" method="POST">
                                                 @method('delete')

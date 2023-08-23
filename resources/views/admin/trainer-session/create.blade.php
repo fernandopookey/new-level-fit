@@ -22,7 +22,7 @@
                                 </option>
                                 @foreach ($members as $item)
                                     <option value="{{ $item->id }}">
-                                        {{ $item->first_name }} | {{ $item->last_name }}
+                                        {{ $item->full_name }} | {{ $item->member_code }}
                                     </option>
                                 @endforeach
                             </select>
@@ -42,9 +42,9 @@
                                 <option disabled selected value>
                                     <- Choose ->
                                 </option>
-                                @foreach ($trainers as $item)
+                                @foreach ($personalTrainers as $item)
                                     <option value="{{ $item->id }}">
-                                        {{ $item->trainer_name }}
+                                        {{ $item->full_name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -59,16 +59,11 @@
                                 </option>
                                 @foreach ($trainerPackages as $item)
                                     <option value="{{ $item->id }}">
-                                        {{ $item->package_name }} | {{ formatRupiah($item->package_price) }}
+                                        {{ $item->package_name }} | {{ formatRupiah($item->package_price) }} |
+                                        {{ $item->number_of_session }} Sessions
                                     </option>
                                 @endforeach
                             </select>
-                        </div>
-                    </div>
-                    <div class="col-xl-6">
-                        <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">Session Total</label>
-                            <input class="form-control" type="number" name="session_total" required>
                         </div>
                     </div>
                     <div class="col-xl-6">

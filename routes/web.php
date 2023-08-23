@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AppointmentStatusChangeController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Member\MemberController;
 use App\Http\Controllers\Report\AppointmentListController;
 use App\Http\Controllers\Report\MemberExpiredListController;
 use App\Http\Controllers\Report\MemberListController;
@@ -32,6 +33,7 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     Route::resource('member-package-type', '\App\Http\Controllers\Member\MemberPackageTypeController');
     Route::resource('member-package-category', '\App\Http\Controllers\Member\MemberPackageCategoryController');
     Route::resource('member-payment', '\App\Http\Controllers\Member\MemberPaymentController');
+    Route::post('member-second-store', [MemberController::class, 'memberSecondStore'])->name('member-second-store');
 
     Route::resource('trainer', '\App\Http\Controllers\Trainer\TrainerController');
     Route::resource('trainer-package', '\App\Http\Controllers\Trainer\TrainerPackageController');
@@ -39,9 +41,9 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     Route::resource('trainer-transaction-type', '\App\Http\Controllers\Trainer\TrainerTransactionTypeController');
 
     Route::resource('source-code', '\App\Http\Controllers\Admin\SourceCodeController');
-    Route::resource('method-payment', '\App\Http\Controllers\Admin\MethodPaymentController');
+    Route::resource('payment-method', '\App\Http\Controllers\Admin\MethodPaymentController');
     Route::resource('sold-by', '\App\Http\Controllers\Admin\SoldByController');
-    Route::resource('refferal', '\App\Http\Controllers\Admin\RefferalController');
+    Route::resource('referral', '\App\Http\Controllers\Admin\RefferalController');
 
     Route::resource('staff', '\App\Http\Controllers\Staff\StaffController');
     Route::resource('administrator', '\App\Http\Controllers\Staff\AdministratorController');

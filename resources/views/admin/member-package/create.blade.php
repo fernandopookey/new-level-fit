@@ -1,6 +1,6 @@
 <!-- Modal Add -->
-<div class="modal fade" id="modalAdd" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-center">
+<div class="modal fade bd-example-modal-lg" id="modalAdd" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <form action="{{ route('member-package.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -19,7 +19,7 @@
                         </div>
                     @endif
                     <div class="row">
-                        <div class="col-xl-12">
+                        <div class="col-xl-6">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Package Name</label>
                                 <input type="text" name="package_name" value="{{ old('package_name') }}"

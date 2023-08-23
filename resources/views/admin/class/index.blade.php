@@ -32,7 +32,7 @@
                                 <th>Instructor Name</th>
                                 <th>Member Total</th>
                                 <th>Class Price</th>
-                                <th>CS Name</th>
+                                <th>Staff Name</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -47,7 +47,7 @@
                                     <td>{{ $item->member_total }}</td>
                                     <td>{{ formatRupiah($item->class_price) }}</td>
                                     <td>
-                                        {{ !empty($item->customerService->full_name) ? $item->customerService->full_name : 'Customer Service has  been deleted' }}
+                                        {{ !empty($item->users->full_name) ? $item->users->full_name : 'Staff has  been deleted' }}
                                     </td>
                                     <td>
                                         <a href="{{ route('class.edit', $item->id) }}"

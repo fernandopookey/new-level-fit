@@ -2,7 +2,7 @@
 <div class="modal fade" id="modalAdd" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-center">
         <div class="modal-content">
-            <form action="{{ route('refferal.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('referral.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Create Refferal</h1>
@@ -34,7 +34,7 @@
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-center">
             <div class="modal-content">
-                <form action="{{ route('refferal.update', $item->id) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('referral.update', $item->id) }}" method="POST" enctype="multipart/form-data">
                     @method('PUT')
                     @csrf
                     <div class="modal-header">
@@ -83,7 +83,7 @@
                     <div>
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                             data-bs-target="#modalAdd">
-                            + New Refferal
+                            + New Referral
                         </button>
                     </div>
                 </div>
@@ -95,7 +95,7 @@
                         id="example-student">
                         <thead>
                             <tr>
-                                <th class="text-center">Refferal Name</th>
+                                <th class="text-center">Referral Name</th>
                                 <th class="text-center">Action</th>
                             </tr>
                         </thead>
@@ -107,11 +107,7 @@
                                     </td>
                                     <td>
                                         <div class="text-center">
-                                            <button type="button" class="btn light btn-warning btn-xs mb-1"
-                                                data-bs-toggle="modal" data-bs-target="#modalEdit{{ $item->id }}">
-                                                Edit
-                                            </button>
-                                            <form action="{{ route('refferal.destroy', $item->id) }}"
+                                            <form action="{{ route('referral.destroy', $item->id) }}"
                                                 onclick="return confirm('Delete Data ? ')" method="POST">
                                                 @method('delete')
                                                 @csrf

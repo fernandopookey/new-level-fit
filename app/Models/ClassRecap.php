@@ -19,7 +19,7 @@ class ClassRecap extends Model
         'class_instructor_id',
         'member_total',
         'class_price',
-        'cs_id'
+        'user_id'
     ];
 
     protected $hidden = [];
@@ -29,8 +29,8 @@ class ClassRecap extends Model
         return $this->belongsTo(ClassInstructor::class, 'class_instructor_id', 'id');
     }
 
-    public function customerService()
+    public function users()
     {
-        return $this->belongsTo(CustomerService::class, 'cs_id', 'id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

@@ -24,7 +24,7 @@
 
     <!-- FAVICONS ICON -->
     <link rel="shortcut icon" type="{{ asset('admingym/image/png') }}"
-        href="{{ asset('admingym/images/favicon.png') }}">
+        href="{{ asset('admingym/images/gym/fav-icon.png') }}">
     <link href="{{ asset('admingym/vendor/wow-master/css/libs/animate.css') }}" rel="stylesheet">
     <link href="{{ asset('admingym/vendor/bootstrap-select/dist/css/bootstrap-select.min.css') }}" rel="stylesheet">
     <link rel="stylesheet"

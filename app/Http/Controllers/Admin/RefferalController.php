@@ -11,7 +11,7 @@ class RefferalController extends Controller
     public function index()
     {
         $data = [
-            'title'     => 'Refferal List',
+            'title'     => 'Referral List',
             'refferal'  => Refferal::get(),
             'content'   => 'admin/refferal/index'
         ];
@@ -31,7 +31,7 @@ class RefferalController extends Controller
         ]);
 
         Refferal::create($data);
-        return redirect()->route('refferal.index')->with('message', 'Refferal Added Successfully');
+        return redirect()->route('referral.index')->with('message', 'Referral Added Successfully');
     }
 
     public function edit(string $id)
@@ -47,12 +47,17 @@ class RefferalController extends Controller
         ]);
 
         $item->update($data);
-        return redirect()->route('refferal.index')->with('message', 'Refferal Updated Successfully');
+        return redirect()->route('referral.index')->with('message', 'Referral Updated Successfully');
     }
 
-    public function destroy(Refferal $refferal)
+    public function destroy($id)
     {
-        $refferal->delete();
-        return redirect()->back()->with('message', 'Refferal Deleted Successfully');
+        try {
+            $referral = Refferal::find($id);
+            $referral->delete();
+            return redirect()->back()->with('message', 'Referral Deleted Successfully');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Referral Deleted Failed, please check other session where using this referral');
+        }
     }
 }

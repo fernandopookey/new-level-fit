@@ -51,7 +51,7 @@
                     <span class="nav-text">Member Trans.</span>
                 </a>
                 <ul aria-expanded="false">
-                    {{-- <li><a href="{{ route('member.create') }}">Member Registration</a></li> --}}
+                    <li><a href="{{ route('member.create') }}">Member Registration</a></li>
                     {{-- <li><a href="#">Trainer Registration</a></li> --}}
                     <li><a href="{{ route('class.index') }}">Class Recap</a></li>
                     <li><a href="#">Finger Registration</a></li>
@@ -61,7 +61,7 @@
                     <li><a href="{{ route('studio-booking.index') }}">Studio Booking</a></li>
                     <li><a href="{{ route('studio-transactions.index') }}">Studio Payment</a></li>
                     <li><a href="{{ route('trainer-session.index') }}">Trainer Session</a></li>
-                    <li><a href="{{ route('trainer-session-FO.index') }}">Trainer Session FO</a></li>
+                    <li><a href="{{ route('trainer-session-FO.index') }}">Trainer Session GO</a></li>
                     <li><a href="#">Trainer Session PGT</a></li>
                 </ul>
 
@@ -177,9 +177,9 @@
                         </li>
                         <li><a href="#">Class Name</a></li>
                         <li><a href="#">Locker Package</a></li>
-                        <li><a href="{{ route('method-payment.index') }}">Method Payment</a></li>
+                        <li><a href="{{ route('payment-method.index') }}">Payment Method</a></li>
                         <li><a href="#">Physiotherapy Package</a></li>
-                        <li><a href="{{ route('refferal.index') }}">Refferal</a></li>
+                        <li><a href="{{ route('referral.index') }}">Referral</a></li>
                         <li><a href="{{ route('sold-by.index') }}">Sold By</a></li>
                         <li><a href="{{ route('source-code.index') }}">Source Code</a></li>
                         <li><a href="{{ route('studio.index') }}">Studio Name</a></li>

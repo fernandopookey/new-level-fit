@@ -24,9 +24,9 @@ class MemberStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'first_name'            => 'required',
-            'last_name'             => 'required',
+            'full_name'             => 'required',
             'gender'                => 'required',
+            'member_code'           => 'required|unique:members,member_code',
             'phone_number'          => 'required',
             'source_code_id'        => 'required|exists:source_codes,id',
             'member_package_id'     => 'required|exists:member_packages,id',

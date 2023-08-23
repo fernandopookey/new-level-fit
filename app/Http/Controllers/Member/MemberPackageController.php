@@ -54,7 +54,11 @@ class MemberPackageController extends Controller
 
     public function destroy(MemberPackage $memberPackage)
     {
-        $memberPackage->delete();
-        return redirect()->back()->with('message', 'Member Package Deleted Successfully');
+        try {
+            $memberPackage->delete();
+            return redirect()->back()->with('message', 'Member Package Deleted Successfully');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Deleted Failed, please check other page where using this member package');
+        }
     }
 }

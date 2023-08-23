@@ -58,21 +58,6 @@
                                 id="exampleFormControlInput1" autocomplete="off" required>
                         </div>
                     </div>
-                    <div class="col-xl-6">
-                        <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">CS Name</label>
-                            <select id="single-select" name="cs_id" class="form-control">
-                                <option value="{{ $class->cs_id }}" selected>
-                                    {{ old('cs_id', $class->customerService->full_name) }}
-                                </option>
-                                @foreach ($customerService as $item)
-                                    <option value="{{ $item->id }}">
-                                        {{ $item->full_name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
                 </div>
                 <button type="submit" class="btn btn-primary">Update</button>
                 <a href="{{ route('class.index') }}" class="btn btn-danger">Back</a>

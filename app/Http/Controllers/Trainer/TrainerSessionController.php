@@ -6,10 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\TrainerSessionStoreRequest;
 use App\Http\Requests\TrainerSessionUpdateRequest;
 use App\Models\Member\Member;
+use App\Models\Staff\PersonalTrainer;
 use App\Models\Trainer\Trainer;
 use App\Models\Trainer\TrainerPackage;
 use App\Models\Trainer\TrainerSession;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TrainerSessionController extends Controller
 {
@@ -19,7 +22,8 @@ class TrainerSessionController extends Controller
             'title'             => 'Trainer Session List',
             'trainerSession'    => TrainerSession::get(),
             'members'           => Member::get(),
-            'trainers'          => Trainer::get(),
+            // 'personalTrainers'  => Trainer::get(),
+            'personalTrainers'  => PersonalTrainer::get(),
             'trainerPackages'   => TrainerPackage::get(),
             'content'           => 'admin/trainer-session/index'
         ];
@@ -33,8 +37,10 @@ class TrainerSessionController extends Controller
             'title'             => 'New Trainer Session',
             'trainerSession'    => TrainerSession::all(),
             'members'           => Member::get(),
-            'trainers'          => Trainer::get(),
+            // 'trainers'          => Trainer::get(),
+            'personalTrainers'  => PersonalTrainer::get(),
             'trainerPackages'   => TrainerPackage::get(),
+            'users'             => User::get(),
             'content'           => 'admin/trainer-session/create',
         ];
 
@@ -44,6 +50,7 @@ class TrainerSessionController extends Controller
     public function store(TrainerSessionStoreRequest $request)
     {
         $data = $request->all();
+        $data['user_id'] = Auth::user()->id;
 
         TrainerSession::create($data);
         return redirect()->route('trainer-session.index')->with('message', 'Trainer Session Added Successfully');
@@ -57,7 +64,8 @@ class TrainerSessionController extends Controller
             'title'             => 'Trainer Session Detail',
             'trainerSession'    => TrainerSession::find($id),
             'members'           => Member::get(),
-            'trainers'          => Trainer::get(),
+            // 'trainers'          => Trainer::get(),
+            'personalTrainers'  => PersonalTrainer::get(),
             'trainerPackages'   => TrainerPackage::get(),
             'content'           => 'admin/trainer-session/show',
         ];
@@ -71,7 +79,8 @@ class TrainerSessionController extends Controller
             'title'             => 'Edit Trainer Session',
             'trainerSession'    => TrainerSession::find($id),
             'members'           => Member::get(),
-            'trainers'          => Trainer::get(),
+            // 'trainers'          => Trainer::get(),
+            'personalTrainers'  => PersonalTrainer::get(),
             'trainerPackages'   => TrainerPackage::get(),
             'content'           => 'admin/trainer-session/edit'
         ];
@@ -82,6 +91,7 @@ class TrainerSessionController extends Controller
     {
         $item = TrainerSession::find($id);
         $data = $request->all();
+        $data['user_id'] = Auth::user()->id;
 
         $item->update($data);
         return redirect()->route('trainer-session.index')->with('message', 'Trainer Session Updated Successfully');
@@ -89,7 +99,11 @@ class TrainerSessionController extends Controller
 
     public function destroy(TrainerSession $trainerSession)
     {
-        $trainerSession->delete();
-        return redirect()->back()->with('message', 'Trainer Session Deleted Successfully');
+        try {
+            $trainerSession->delete();
+            return redirect()->back()->with('message', 'Trainer Session Deleted Successfully');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Deleted Failed, please check other page where using this trainer session');
+        }
     }
 }

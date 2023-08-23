@@ -52,7 +52,11 @@ class TrainerTransactionTypeController extends Controller
 
     public function destroy(TrainerTransactionType $trainerTransactionType)
     {
-        $trainerTransactionType->delete();
-        return redirect()->back()->with('message', 'Trainer Transaction Type Deleted Successfully');
+        try {
+            $trainerTransactionType->delete();
+            return redirect()->back()->with('message', 'Trainer Transaction Type Deleted Successfully');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Deleted Failed, please check other page where using this trainer transaction type');
+        }
     }
 }

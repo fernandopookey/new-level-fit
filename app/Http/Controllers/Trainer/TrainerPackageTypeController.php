@@ -52,7 +52,11 @@ class TrainerPackageTypeController extends Controller
 
     public function destroy(TrainerPackageType $trainerPackageType)
     {
-        $trainerPackageType->delete();
-        return redirect()->back()->with('message', 'Trainer Package Type Deleted Successfully');
+        try {
+            $trainerPackageType->delete();
+            return redirect()->back()->with('message', 'Trainer Package Type Deleted Successfully');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Failed, please check other session where using this trainer package type');
+        }
     }
 }

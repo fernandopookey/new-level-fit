@@ -52,7 +52,11 @@ class SoldByController extends Controller
 
     public function destroy(Sold $soldBy)
     {
-        $soldBy->delete();
-        return redirect()->back()->with('message', 'Sold By Deleted Successfully');
+        try {
+            $soldBy->delete();
+            return redirect()->back()->with('message', 'Sold By Deleted Successfully');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Deleted Failed, please check other page where using this sold');
+        }
     }
 }

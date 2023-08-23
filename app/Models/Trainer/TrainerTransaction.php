@@ -2,15 +2,10 @@
 
 namespace App\Models\Trainer;
 
-use App\Models\Member\Member;
-use App\Models\MethodPayment;
-use App\Models\Staff\FitnessConsultant;
-use App\Models\Staff\PersonalTrainer;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Trainer extends Model
+class TrainerTransaction extends Model
 {
     use HasFactory;
 
@@ -24,6 +19,7 @@ class Trainer extends Model
         'description',
         'photos',
         'user_id'
+
     ];
 
     protected $hidden = [];

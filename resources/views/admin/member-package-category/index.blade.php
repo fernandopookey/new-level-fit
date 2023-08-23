@@ -111,11 +111,7 @@
                                     </td>
                                     <td>
                                         <div class="text-center">
-                                            <button type="button" class="btn light btn-warning btn-xs mb-1"
-                                                data-bs-toggle="modal" data-bs-target="#modalEdit{{ $item->id }}">
-                                                Edit
-                                            </button>
-                                            <form action="{{ route('member-package-type.destroy', $item->id) }}"
+                                            <form action="{{ route('member-package-category.destroy', $item->id) }}"
                                                 onclick="return confirm('Delete Data ? ')" method="POST">
                                                 @method('delete')
                                                 @csrf

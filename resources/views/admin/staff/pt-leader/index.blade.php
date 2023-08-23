@@ -176,7 +176,8 @@
                                         <td>{{ $item->club }}</td>
                                         <td>
                                             <div>
-                                                <button type="button" class="btn light btn-warning btn-xs mb-1"
+                                                <button type="button"
+                                                    class="btn light btn-warning btn-xs mb-1 btn-block"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#modalEditPTLeader{{ $item->id }}">
                                                     Edit
@@ -186,7 +187,7 @@
                                                     @method('delete')
                                                     @csrf
                                                     <button type="submit"
-                                                        class="btn light btn-danger btn-xs">Delete</button>
+                                                        class="btn light btn-danger btn-xs btn-block">Delete</button>
                                                 </form>
                                             </div>
                                         </td>

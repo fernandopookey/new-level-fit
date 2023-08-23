@@ -27,15 +27,15 @@
                         id="example-student">
                         <thead>
                             <tr>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Gender</th>
-                                <th>Member Code</th>
-                                <th>Phone Number</th>
-                                <th>Source Code</th>
-                                <th>Package Member</th>
-                                <th>Method Payment</th>
-                                <th>Sold By</th>
+                                <th>Image</th>
+                                <th>Member Data</th>
+                                {{-- <th>Gender</th> --}}
+                                {{-- <th>Member Code</th> --}}
+                                {{-- <th>Phone Number</th> --}}
+                                {{-- <th>Source Code</th> --}}
+                                {{-- <th>Package Member</th> --}}
+                                <th>Member Data</th>
+                                {{-- <th>Sold By</th> --}}
                                 <th>Refferal Name</th>
                                 <th>Description</th>
                                 <th>Status</th>
@@ -47,40 +47,89 @@
                                 <tr>
                                     <td>
                                         <div class="trans-list">
-                                            <img src="{{ Storage::url($member->photos) }}" alt=""
-                                                class="avatar avatar-sm me-3">
-                                            <h6>{{ $member->first_name }}</h6>
+
+                                            @if ($member->count())
+                                                <img src="{{ Storage::url($member->photos ?? '') }}" class="lazyload"
+                                                    width="200" alt="image">
+                                            @else
+                                                {{-- <div class="justify-content-center align-items-center"
+                                                    style="width: 300px; height: 235px;">
+                                                    <p>Tidak Ada Gambar</p>
+                                                </div> --}}
+                                                <img src="{{ asset('default.png') }}" class="img-fluid" alt="">
+                                            @endif
+
+                                            {{-- <img src="{{ Storage::url($member->photos) }}" alt="" width="200"
+                                                class="me-3 img-fluid"> --}}
                                         </div>
                                     </td>
                                     <td>
-                                        <h6>{{ $member->last_name }}</h6>
+                                        <div class="d-flex">
+                                            <h6>Member Name : </h6> {{ $member->full_name }}
+                                        </div>
+                                        <div class="d-flex">
+                                            <h6>Gender : </h6> {{ $member->gender }}
+                                        </div>
+                                        <div class="d-flex">
+                                            <h6>Member Code : </h6> {{ $member->member_code }}
+                                        </div>
+                                        <div class="d-flex">
+                                            <h6>Phone Number : </h6> {{ $member->phone_number }}
+                                        </div>
+                                    </td>
+                                    {{-- <td>
+                                        <h6>{{ $member->gender }}</h6>
+                                    </td> --}}
+                                    {{-- <td>
+                                        <h6>{{ $member->member_code }}</h6>
                                     </td>
                                     <td>
-                                        {{ $member->gender }}
+                                        <h6>{{ $member->phone_number }}</h6>
+                                    </td> --}}
+                                    <td>
+                                        <div class="d-flex">
+                                            <h6>Member Package : </h6>
+                                            {{ !empty($member->memberPackage->package_name) ? $member->memberPackage->package_name : 'Member Package name has  been deleted' }}
+                                        </div>
+                                        <div class="d-flex">
+                                            <h6>Source Code : </h6>
+                                            {{ !empty($member->sourceCode->name) ? $member->sourceCode->name : 'Source code name has  been deleted' }}
+                                        </div>
+                                        <div class="d-flex">
+                                            <h6>Method Payment : </h6>
+                                            {{ !empty($member->methodPayment->name) ? $member->methodPayment->name : 'Method payment has  been deleted' }}
+                                        </div>
+                                        <div class="d-flex">
+                                            <h6>Sold by : </h6>
+                                            {{ !empty($member->soldBy->name) ? $member->soldBy->name : 'Sold name has  been deleted' }}
+                                        </div>
+                                        <div class="d-flex">
+                                            <h6>Referral Name : </h6>
+                                            {{ !empty($member->refferalName->name) ? $member->refferalName->name : 'Referral name has  been deleted' }}
+                                        </div>
+                                    </td>
+                                    {{-- <td>
+                                        <h6>{{ !empty($member->sourceCode->name) ? $member->sourceCode->name : 'Source code name has  been deleted' }}
+                                        </h6>
+                                    </td> --}}
+                                    {{-- <td>
+                                        <h6>{{ !empty($member->memberPackage->package_name) ? $member->memberPackage->package_name : 'Member Package name has  been deleted' }}
+                                        </h6>
+                                    </td> --}}
+                                    {{-- <td>
+                                        <h6>{{ !empty($member->methodPayment->name) ? $member->methodPayment->name : 'Method payment name has  been deleted' }}
+                                        </h6>
+                                    </td> --}}
+                                    {{-- <td>
+                                        <h6>{{ !empty($member->soldBy->name) ? $member->soldBy->name : 'Sold by name has  been deleted' }}
+                                        </h6>
                                     </td>
                                     <td>
-                                        {{ $member->member_code }}
-                                    </td>
+                                        <h6>{{ !empty($member->refferalName->name) ? $member->refferalName->name : 'Refferal name has  been deleted' }}
+                                        </h6>
+                                    </td> --}}
                                     <td>
-                                        {{ $member->phone_number }}
-                                    </td>
-                                    <td>
-                                        {{ !empty($member->sourceCode->name) ? $member->sourceCode->name : 'Source code name has  been deleted' }}
-                                    </td>
-                                    <td>
-                                        {{ !empty($member->memberPackage->package_name) ? $member->memberPackage->package_name : 'Member Package name has  been deleted' }}
-                                    </td>
-                                    <td>
-                                        {{ !empty($member->methodPayment->name) ? $member->methodPayment->name : 'Method payment name has  been deleted' }}
-                                    </td>
-                                    <td>
-                                        {{ !empty($member->soldBy->name) ? $member->soldBy->name : 'Sold by name has  been deleted' }}
-                                    </td>
-                                    <td>
-                                        {{ !empty($member->refferalName->name) ? $member->refferalName->name : 'Refferal name has  been deleted' }}
-                                    </td>
-                                    <td>
-                                        {{ $member->description }}
+                                        <h6>{{ $member->description }}</h6>
                                     </td>
                                     <td>
                                         <?php if ($member->status == 'Active'){ ?>
@@ -89,13 +138,13 @@
                                         </div>
                                         <?php }else{ ?>
                                         <div class="badge bg-danger">
-                                            Inactive
+                                            Member package period is over
                                         </div>
                                         <?php } ?>
                                     </td>
                                     <td>
                                         <div>
-                                            <button type="button" class="btn light btn-warning btn-xs mb-1"
+                                            <button type="button" class="btn light btn-warning btn-xs mb-1 btn-block"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#modalEdit{{ $member->id }}">Edit</button>
                                             <form action="{{ route('member.destroy', $member->id) }}"
@@ -103,7 +152,7 @@
                                                 @method('delete')
                                                 @csrf
                                                 <button type="submit"
-                                                    class="btn light btn-danger btn-xs">Delete</button>
+                                                    class="btn light btn-danger btn-xs btn-block">Delete</button>
                                             </form>
                                         </div>
                                     </td>

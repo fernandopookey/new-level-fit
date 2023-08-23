@@ -75,7 +75,11 @@ class LockerTransactionController extends Controller
 
     public function destroy(LockerTransaction $lockerTransaction)
     {
-        $lockerTransaction->delete();
-        return redirect()->back()->with('message', 'Locker Transaction Deleted Successfully');
+        try {
+            $lockerTransaction->delete();
+            return redirect()->back()->with('message', 'Locker Transaction Deleted Successfully');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Deleted Failed, please check other page where using this locker transaction');
+        }
     }
 }

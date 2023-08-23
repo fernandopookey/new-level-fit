@@ -45,9 +45,9 @@
                                 <option value="{{ $trainerSession->trainer_id }}" selected>
                                     {{ old('trainer_id', $trainerSession->trainers->trainer_name) }}
                                 </option>
-                                @foreach ($trainers as $item)
+                                @foreach ($personalTrainers as $item)
                                     <option value="{{ $item->id }}">
-                                        {{ $item->trainer_name }}
+                                        {{ $item->full_name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -66,13 +66,6 @@
                                     </option>
                                 @endforeach
                             </select>
-                        </div>
-                    </div>
-                    <div class="col-xl-6">
-                        <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">Session Total</label>
-                            <input class="form-control" type="number" name="session_total"
-                                value="{{ old('session_total', $trainerSession->session_total) }}" disabled>
                         </div>
                     </div>
                     <div class="col-xl-6">
@@ -96,7 +89,7 @@
                         </div>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="submit" class="btn btn-primary">Update</button>
                 <a href="{{ route('trainer-session.index') }}" class="btn btn-danger">Back</a>
             </form>
         </div>

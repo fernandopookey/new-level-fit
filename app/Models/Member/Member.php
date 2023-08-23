@@ -2,6 +2,7 @@
 
 namespace App\Models\Member;
 
+// use Alfa6661\AutoNumber\AutoNumberTrait;
 use App\Models\SourceCode;
 use App\Models\MethodPayment;
 use App\Models\Refferal;
@@ -14,8 +15,7 @@ class Member extends Model
     use HasFactory;
 
     protected $fillable = [
-        'first_name',
-        'last_name',
+        'full_name',
         'gender',
         'member_code',
         'phone_number',

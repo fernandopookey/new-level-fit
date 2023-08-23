@@ -9,7 +9,10 @@ use App\Models\Member\Member;
 use App\Models\Staff\CustomerService;
 use App\Models\Staff\PersonalTrainer;
 use App\Models\Trainer\RunningSession;
+use App\Models\Trainer\Trainer;
 use App\Models\Trainer\TrainerPackage;
+use App\Models\Trainer\TrainerSession;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class RunningSessionController extends Controller
@@ -18,11 +21,11 @@ class RunningSessionController extends Controller
     {
         $data = [
             'title'             => 'Running Session List',
-            'runningSession'    => RunningSession::get(),
+            'runningSession'    => TrainerSession::where('status', 'running')->get(),
             'members'           => Member::get(),
+            'trainers'          => Trainer::get(),
             'trainerPackages'   => TrainerPackage::get(),
-            'personalTrainers'  => PersonalTrainer::get(),
-            'customerServices'  => CustomerService::get(),
+            'users'             => User::get(),
             'content'           => 'admin/running-session/index'
         ];
 
@@ -31,25 +34,25 @@ class RunningSessionController extends Controller
 
     public function create()
     {
-        $data = [
-            'title'             => 'New Running Session',
-            'runningSession'    => RunningSession::get(),
-            'members'           => Member::get(),
-            'trainerPackages'   => TrainerPackage::get(),
-            'personalTrainers'  => PersonalTrainer::get(),
-            'customerServices'  => CustomerService::get(),
-            'content'           => 'admin/running-session/create',
-        ];
+        // $data = [
+        //     'title'             => 'New Running Session',
+        //     'runningSession'    => RunningSession::get(),
+        //     'members'           => Member::get(),
+        //     'trainerPackages'   => TrainerPackage::get(),
+        //     'personalTrainers'  => PersonalTrainer::get(),
+        //     'customerServices'  => CustomerService::get(),
+        //     'content'           => 'admin/running-session/create',
+        // ];
 
-        return view('admin.layouts.wrapper', $data);
+        // return view('admin.layouts.wrapper', $data);
     }
 
     public function store(RunningSessionStoreRequest $request)
     {
-        $data = $request->all();
+        // $data = $request->all();
 
-        RunningSession::create($data);
-        return redirect()->route('running-session.index')->with('message', 'Running Session Added Successfully');
+        // RunningSession::create($data);
+        // return redirect()->route('running-session.index')->with('message', 'Running Session Added Successfully');
     }
 
     public function show($id)
@@ -59,31 +62,31 @@ class RunningSessionController extends Controller
 
     public function edit(string $id)
     {
-        $data = [
-            'title'             => 'Running Session Check Out',
-            'runningSession'    => RunningSession::find($id),
-            'members'           => Member::get(),
-            'trainerPackages'   => TrainerPackage::get(),
-            'personalTrainers'  => PersonalTrainer::get(),
-            'customerServices'  => CustomerService::get(),
-            'content'           => 'admin/running-session/edit'
-        ];
-        return view('admin.layouts.wrapper', $data);
+        // $data = [
+        //     'title'             => 'Running Session Check Out',
+        //     'runningSession'    => RunningSession::find($id),
+        //     'members'           => Member::get(),
+        //     'trainerPackages'   => TrainerPackage::get(),
+        //     'personalTrainers'  => PersonalTrainer::get(),
+        //     'customerServices'  => CustomerService::get(),
+        //     'content'           => 'admin/running-session/edit'
+        // ];
+        // return view('admin.layouts.wrapper', $data);
     }
 
     public function update(RunningSessionUpdateRequest $request, string $id)
     {
-        $item = RunningSession::find($id);
-        // dd($item);
-        $data = $request->all();
+        // $item = RunningSession::find($id);
+        // // dd($item);
+        // $data = $request->all();
 
-        $item->update($data);
-        return redirect()->route('running-session.index')->with('message', 'Running Session Check Out Successfully');
+        // $item->update($data);
+        // return redirect()->route('running-session.index')->with('message', 'Running Session Check Out Successfully');
     }
 
     public function destroy(RunningSession $runningSession)
     {
-        $runningSession->delete();
-        return redirect()->back()->with('message', 'Running Session Deleted Successfully');
+        // $runningSession->delete();
+        // return redirect()->back()->with('message', 'Running Session Deleted Successfully');
     }
 }

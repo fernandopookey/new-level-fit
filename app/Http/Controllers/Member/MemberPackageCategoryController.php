@@ -50,9 +50,14 @@ class MemberPackageCategoryController extends Controller
         return redirect()->route('member-package-category.index')->with('message', 'Member Package Category Updated Successfully');
     }
 
-    public function destroy(MemberPackageCategory $memberPackageCategory)
+    public function destroy($id)
     {
-        $memberPackageCategory->delete();
-        return redirect()->back()->with('message', 'Member Package Category Deleted Successfully');
+        try {
+            $data = MemberPackageCategory::find($id);
+            $data->delete();
+            return redirect()->back()->with('message', 'Member Package Category Deleted Successfully');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Deleted Failed, please check other session where using this member package category');
+        }
     }
 }

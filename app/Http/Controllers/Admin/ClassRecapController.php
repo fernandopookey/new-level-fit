@@ -8,7 +8,9 @@ use App\Http\Requests\ClassUpdateRequest;
 use App\Models\ClassRecap;
 use App\Models\Staff\ClassInstructor;
 use App\Models\Staff\CustomerService;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ClassRecapController extends Controller
 {
@@ -31,7 +33,7 @@ class ClassRecapController extends Controller
             'title'             => 'New Class',
             'class'             => ClassRecap::get(),
             'classInstructor'   => ClassInstructor::get(),
-            'customerService'   => CustomerService::get(),
+            'users'             => User::get(),
             'content'           => 'admin/class/create',
         ];
 
@@ -41,6 +43,7 @@ class ClassRecapController extends Controller
     public function store(ClassStoreRequest $request)
     {
         $data = $request->all();
+        $data['user_id'] = Auth::user()->id;
 
         ClassRecap::create($data);
         return redirect()->route('class.index')->with('message', 'Class Added Successfully');
@@ -62,6 +65,7 @@ class ClassRecapController extends Controller
     {
         $item = ClassRecap::find($id);
         $data = $request->all();
+        $data['user_id'] = Auth::user()->id;
 
         $item->update($data);
         return redirect()->route('class.index')->with('message', 'Class Updated Successfully');
@@ -69,8 +73,12 @@ class ClassRecapController extends Controller
 
     public function destroy($id)
     {
-        $class = ClassRecap::find($id);
-        $class->delete();
-        return redirect()->back()->with('message', 'Class Deleted Successfully');
+        try {
+            $class = ClassRecap::find($id);
+            $class->delete();
+            return redirect()->back()->with('message', 'Class Deleted Successfully');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Deleted Failed, please check other page where using this class');
+        }
     }
 }

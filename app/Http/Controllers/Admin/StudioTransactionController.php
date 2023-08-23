@@ -75,7 +75,11 @@ class StudioTransactionController extends Controller
 
     public function destroy(StudioTransaction $studioTransaction)
     {
-        $studioTransaction->delete();
-        return redirect()->back()->with('message', 'Studio Transaction Deleted Successfully');
+        try {
+            $studioTransaction->delete();
+            return redirect()->back()->with('message', 'Studio Transaction Deleted Successfully');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Deleted Failed, please check other page where using this studio transaction');
+        }
     }
 }

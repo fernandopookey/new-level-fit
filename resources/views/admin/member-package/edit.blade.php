@@ -1,8 +1,7 @@
 <!-- Modal Edit -->
 @foreach ($memberPackage as $item => $value)
-    <div class="modal fade" id="modalEdit{{ $value->id }}" tabindex="-1" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-center">
+    <div class="modal fade" id="modalEdit{{ $value->id }}" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <form action="{{ route('member-package.update', $value->id) }}" method="POST"
                     enctype="multipart/form-data">
@@ -23,7 +22,7 @@
                             </div>
                         @endif
                         <div class="row">
-                            <div class="col-xl-12">
+                            <div class="col-xl-6">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Package Name</label>
                                     <input type="text" name="package_name"

@@ -179,12 +179,12 @@
     };
 </script>
 
-<script>
+{{-- <script>
     var loadFile = function(event) {
         var output = document.getElementById('outputEdit');
         output.src = URL.createObjectURL(event.target.files[0]);
     };
-</script>
+</script> --}}
 
 @if (Session::has('message'))
     <script>
@@ -192,6 +192,15 @@
             "progressBar": true,
         }
         toastr.success("{{ Session::get('message') }}");
+    </script>
+@endif
+
+@if (Session::has('error'))
+    <script>
+        toastr.options = {
+            "progressBar": true,
+        }
+        toastr.error("{{ Session::get('error') }}");
     </script>
 @endif
 

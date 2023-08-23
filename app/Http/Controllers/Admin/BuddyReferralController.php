@@ -78,7 +78,11 @@ class BuddyReferralController extends Controller
 
     public function destroy(BuddyReferral $buddyReferral)
     {
-        $buddyReferral->delete();
-        return redirect()->back()->with('message', 'Buddy Referral Deleted Successfully');
+        try {
+            $buddyReferral->delete();
+            return redirect()->back()->with('message', 'Buddy Referral Deleted Successfully');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Deleted Failed, please check other page where using this buddy referral');
+        }
     }
 }

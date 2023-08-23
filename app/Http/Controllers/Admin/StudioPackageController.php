@@ -50,7 +50,11 @@ class StudioPackageController extends Controller
 
     public function destroy(StudioPackage $studioPackage)
     {
-        $studioPackage->delete();
-        return redirect()->back()->with('message', 'Studio Package Deleted Successfully');
+        try {
+            $studioPackage->delete();
+            return redirect()->back()->with('message', 'Studio Package Deleted Successfully');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Deleted Failed, please check other page where using this studio package');
+        }
     }
 }

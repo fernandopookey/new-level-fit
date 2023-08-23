@@ -78,8 +78,12 @@ class AppointmentController extends Controller
 
     public function destroy($id)
     {
-        $appointment = Appointment::find($id);
-        $appointment->delete();
-        return redirect()->back()->with('message', 'Appointment Deleted Successfully');
+        try {
+            $appointment = Appointment::find($id);
+            $appointment->delete();
+            return redirect()->back()->with('message', 'Appointment Deleted Successfully');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Deleted Failed, please check other page where using this appointment');
+        }
     }
 }

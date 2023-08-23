@@ -44,9 +44,13 @@ class AdministratorController extends Controller
         $item = User::find($id);
         $data = $request->validate([
             'full_name' => 'required|string|max:200',
+            'email'     => 'email',
             'gender'    => 'required',
-            'club'      => 'required'
+            'role'      => '',
+            'club'      => 'required',
         ]);
+
+        $data['password'] = bcrypt($request->password);
 
         $item->update($data);
         return redirect()->route('staff.index')->with('message', 'Administrator Updated Successfully');

@@ -22,17 +22,9 @@
                         <div class="row">
                             <div class="col-xl-6">
                                 <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">First Name</label>
-                                    <input type="text" name="first_name"
-                                        value="{{ old('first_name', $value->first_name) }}" class="form-control"
-                                        id="exampleFormControlInput1" autocomplete="off">
-                                </div>
-                            </div>
-                            <div class="col-xl-6">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Last Name</label>
-                                    <input type="text" name="last_name"
-                                        value="{{ old('last_name', $value->last_name) }}" class="form-control"
+                                    <label for="exampleFormControlInput1" class="form-label">Full Name</label>
+                                    <input type="text" name="full_name"
+                                        value="{{ old('full_name', $value->full_name) }}" class="form-control"
                                         id="exampleFormControlInput1" autocomplete="off">
                                 </div>
                             </div>
@@ -103,7 +95,11 @@
                                     <label for="exampleFormControlInput1" class="form-label">Sold By</label>
                                     <select name="sold_by_id" class="form-control" aria-label="Default select example">
                                         <option value="{{ $value->sold_by_id }}" selected>
-                                            {{ old('sold_by_id', $value->soldBy->name) }}
+                                            @if (isset($value->soldBy->name))
+                                                {{ old('sold_by_id', $value->soldBy->name) }}
+                                            @else
+                                                <- Choose ->
+                                            @endif
                                         </option>
                                         @foreach ($soldBy as $item)
                                             <option value="{{ $item->id }}">{{ $item->name }}</option>
@@ -114,10 +110,13 @@
                             <div class="col-xl-6">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Refferal Name</label>
-                                    <select name="refferal_id" class="form-control"
-                                        aria-label="Default select example" required>
+                                    <select name="refferal_id" class="form-control" aria-label="Default select example">
                                         <option value="{{ $value->refferal_id }}" selected>
-                                            {{ old('refferal_id', $value->refferalName->name) }}
+                                            @if (isset($value->refferalName->name))
+                                                {{ old('refferal_id', $value->refferalName->name) }}
+                                            @else
+                                                <- Choose ->
+                                            @endif
                                         </option>
                                         @foreach ($refferalName as $item)
                                             <option value="{{ $item->id }}">{{ $item->name }}</option>

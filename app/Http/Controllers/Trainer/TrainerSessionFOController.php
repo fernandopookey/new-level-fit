@@ -85,8 +85,12 @@ class TrainerSessionFOController extends Controller
 
     public function destroy($id)
     {
-        $trainerSessionfo = TrainerSessionFitnessOrientation::find($id);
-        $trainerSessionfo->delete();
-        return redirect()->back()->with('message', 'Trainer Session Fitness Orientation Deleted Successfully');
+        try {
+            $trainerSessionfo = TrainerSessionFitnessOrientation::find($id);
+            $trainerSessionfo->delete();
+            return redirect()->back()->with('message', 'Trainer Session Gym Orientation Deleted Successfully');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Deleted Failed, please check other page where using this trainer session GO');
+        }
     }
 }

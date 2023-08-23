@@ -29,7 +29,7 @@ class ClassUpdateRequest extends FormRequest
             'class_instructor_id'   => 'exists:class_instructors,id',
             'member_total'          => '',
             'class_price'           => 'numeric',
-            'cs_id'                 => 'exists:customer_services,id',
+            'user_id'               => ''
         ];
     }
 

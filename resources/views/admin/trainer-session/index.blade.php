@@ -35,6 +35,7 @@
                                 <th>Session Total</th>
                                 <th>Remaining Session</th>
                                 <th>Status</th>
+                                <th>Staff Name</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -50,13 +51,18 @@
                                         {{ !empty($item->members->member_code) ? $item->members->member_code : 'Member has  been deleted' }}
                                     </td>
                                     <td>{{ $item->active_period }}</td>
-                                    <td>
+                                    {{-- <td>
                                         {{ !empty($item->trainers->trainer_name) ? $item->trainers->trainer_name : 'Trainer has  been deleted' }}
+                                    </td> --}}
+                                    <td>
+                                        {{ !empty($item->personalTrainers->full_name) ? $item->personalTrainers->full_name : 'Trainer has  been deleted' }}
                                     </td>
                                     <td>
                                         {{ !empty($item->trainerPackages->package_name) ? $item->trainerPackages->package_name : 'Trainer has  been deleted' }}
                                     </td>
-                                    <td>{{ $item->session_total }}</td>
+                                    <td>
+                                        {{ !empty($item->trainerPackages->session_total) ? $item->trainerPackages->session_total : 'Trainer package has  been deleted' }}
+                                    </td>
                                     <td>{{ $item->remaining_session }}</td>
                                     <td>
                                         @if ($item->status == 'Running')
@@ -68,6 +74,9 @@
                                                 Member Active Period is Over
                                             </div>
                                         @endif
+                                    </td>
+                                    <td>
+                                        {{ !empty($item->users->full_name) ? $item->users->full_name : 'User has  been deleted' }}
                                     </td>
                                     <td class="btn-group-vertical">
                                         <a href="{{ route('trainer-session.edit', $item->id) }}"
