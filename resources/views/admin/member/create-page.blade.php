@@ -83,6 +83,13 @@
                     </div>
                     <div class="col-xl-6">
                         <div class="mb-3">
+                            <label class="form-label">Expired Date</label>
+                            <input type="text" name="expired_date" value="{{ old('expired_date') }}"
+                                class="form-control" placeholder="Choose expired date" id="mdate">
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Method Payment</label>
                             <select name="method_payment_id" class="form-control" aria-label="Default select example"
                                 required>
@@ -93,13 +100,6 @@
                                     <option value="{{ $item->id }}">{{ $item->name }}</option>
                                 @endforeach
                             </select>
-                        </div>
-                    </div>
-                    <div class="col-xl-6">
-                        <div class="mb-3">
-                            <label class="form-label">Expired Date</label>
-                            <input type="text" name="expired_date" value="{{ old('expired_date') }}"
-                                class="form-control" placeholder="Choose expired date" id="mdate">
                         </div>
                     </div>
                     <div class="col-xl-6">
