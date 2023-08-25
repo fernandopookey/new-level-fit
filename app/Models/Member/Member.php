@@ -21,6 +21,7 @@ class Member extends Model
         'phone_number',
         'source_code_id',
         'member_package_id',
+        'expired_date',
         'method_payment_id',
         'sold_by_id',
         'refferal_id',

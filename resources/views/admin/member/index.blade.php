@@ -36,7 +36,7 @@
                                 {{-- <th>Package Member</th> --}}
                                 <th>Member Data</th>
                                 {{-- <th>Sold By</th> --}}
-                                <th>Refferal Name</th>
+                                {{-- <th>Refferal Name</th> --}}
                                 <th>Description</th>
                                 <th>Status</th>
                                 <th>Action</th>
@@ -75,6 +75,9 @@
                                         </div>
                                         <div class="d-flex">
                                             <h6>Phone Number : </h6> {{ $member->phone_number }}
+                                        </div>
+                                        <div class="d-flex">
+                                            <h6>Expired Date : </h6> {{ $member->expired_date }}
                                         </div>
                                     </td>
                                     {{-- <td>
