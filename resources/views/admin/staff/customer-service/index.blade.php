@@ -112,6 +112,14 @@
                                         id="exampleFormControlInput1" autocomplete="off" required>
                                 </div>
                             </div>
+                            <div class="col-xl-12">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Email</label>
+                                    <input type="email" name="email" value="{{ old('email', $item->email) }}"
+                                        class="form-control" id="exampleFormControlInput1" autocomplete="off"
+                                        required>
+                                </div>
+                            </div>
                             <div class="col-xl-6">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Gender</label>
@@ -130,6 +138,14 @@
                                     <input type="text" name="club" value="{{ old('club', $item->club) }}"
                                         class="form-control" id="exampleFormControlInput1" autocomplete="off"
                                         required>
+                                </div>
+                            </div>
+                            <div class="col-xl-12">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Password</label>
+                                    <input type="text" name="password" class="form-control"
+                                        id="exampleFormControlInput1" autocomplete="off">
+                                    <small>Leave blank if you don't want to change</small>
                                 </div>
                             </div>
                         </div>
@@ -196,7 +212,6 @@
                                 @foreach ($customerService as $item)
                                     <tr>
                                         <td>{{ $item->full_name }}</td>
-                                        <td>{{ $item->role }}</td>
                                         <td>{{ $item->email }}</td>
                                         <td>{{ $item->gender }}</td>
                                         <td>{{ $item->club }}</td>

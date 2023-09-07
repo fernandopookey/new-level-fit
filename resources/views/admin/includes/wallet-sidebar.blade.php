@@ -11,7 +11,7 @@
                         <h2 class="heading mb-0">Recent Members</h2>
                         <span>You have <span class="font-w600">{{ $totalMember }}</span> Members</span>
                     </div>
-                    <div>
+                    {{-- <div>
                         <a href="#" class="add icon-box bg-primary" data-bs-toggle="modal"
                             data-bs-target="#exampleModal">
                             <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
@@ -21,7 +21,7 @@
                                     fill="white" />
                             </svg>
                         </a>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="card-body height450 dlab-scroll loadmore-content recent-activity-wrapper p-3 pt-2"
                     id="RecentActivityContent">
@@ -29,10 +29,10 @@
                     <div class="d-flex align-items-center student">
                         <div class="user-info">
                             @foreach ($members as $item)
-                                <h6 class="name mt-3">
-                                    <a href="#">{{ $item->first_name }}</a>
+                                <h6 class="name mt-1">
+                                    <a href="#">{{ $item->full_name }}</a>
                                 </h6>
-                                <span class="fs-14 font-w400 text-wrap">{{ $item->last_name }}</span>
+                                {{-- <span class="fs-14 font-w400 text-wrap">{{ $item->full_name }}</span><br /> --}}
                             @endforeach
                         </div>
                     </div>
@@ -50,9 +50,9 @@
                 <div class="card-header border-0 px-3">
                     <div>
                         <h2 class="heading mb-0">Recent Trainers</h2>
-                        <span>You have <span class="font-w600">{{ $totalTrainer }}</span> Trainers</span>
+                        <span>You have <span class="font-w600">{{ $totalPersonalTrainers }}</span> Trainers</span>
                     </div>
-                    <div>
+                    {{-- <div>
                         <a href="#" class="add icon-box bg-primary" data-bs-toggle="modal"
                             data-bs-target="#exampleModal">
                             <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
@@ -62,7 +62,7 @@
                                     fill="white" />
                             </svg>
                         </a>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="card-body height450 dlab-scroll loadmore-content recent-activity-wrapper p-3 pt-2"
                     id="RecentActivityContent">
@@ -71,7 +71,7 @@
                         <div class="user-info">
                             @foreach ($trainers as $item)
                                 <h6 class="name mt-3">
-                                    <a href="#">{{ $item->trainer_name }}</a>
+                                    <a href="#">{{ $item->full_name }}</a>
                                 </h6>
                                 {{-- <span class="fs-14 font-w400 text-wrap">{{ $item->last_name }}</span> --}}
                             @endforeach

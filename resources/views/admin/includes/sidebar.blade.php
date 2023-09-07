@@ -6,16 +6,15 @@
         <ul class="metismenu" id="menu">
             @if (Auth::user()->role == 'ADMIN' || Auth::user()->role == 'CS')
                 <li>
-                    <a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
+                    <a href="{{ route('dashboard') }}" aria-expanded="false">
                         <i class="material-symbols-outlined">home</i>
                         <span class="nav-text">Dashboard</span>
                     </a>
-                    <ul aria-expanded="false">
-                        {{-- <li><a href="index.html">Dashboard Light</a></li> --}}
+                    {{-- <ul aria-expanded="false">
                         <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
                         <li><a href="{{ route('member.index') }}">Member List</a></li>
                         <li><a href="{{ route('trainer.index') }}">Trainer List</a></li>
-                    </ul>
+                    </ul> --}}
 
                 </li>
             @endif
@@ -133,9 +132,9 @@
                         <span class="nav-text">Member</span>
                     </a>
                     <ul aria-expanded="false">
-                        <li><a href="{{ route('member.index') }}">Member</a></li>
-                        <li><a href="#">Member Visit</a></li>
-                        <li><a href="#">Member Expired</a></li>
+                        <li><a href="{{ route('member.index') }}">Member List</a></li>
+                        {{-- <li><a href="#">Member Visit</a></li> --}}
+                        {{-- <li><a href="#">Member Expired</a></li> --}}
 
                     </ul>
                 </li>

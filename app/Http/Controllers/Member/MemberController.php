@@ -38,7 +38,7 @@ class MemberController extends Controller
     public function create()
     {
         $data = [
-            'title'                     => 'New Trainer',
+            'title'             => 'New Member',
             'members'           => Member::get(),
             'memberLastCode'    => Member::latest('id')->first(),
             'sourceCode'        => SourceCode::get(),
@@ -55,7 +55,7 @@ class MemberController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'full_name'            => 'required',
+            'full_name'             => 'required',
             'gender'                => 'required',
             'phone_number'          => 'required',
             'source_code_id'        => 'required|exists:source_codes,id',
@@ -208,7 +208,7 @@ class MemberController extends Controller
             return redirect()->back()->with('message', 'Member Deleted Successfully');
         } catch (\Throwable $e) {
             // Alert::error('Error', $e->getMessage());
-            return redirect()->back()->with('error', 'Trainer Deleted Failed, please check other session where using this trainer');
+            return redirect()->back()->with('error', 'Member Deleted Failed, please check other session where using this member');
         }
 
 

@@ -45,9 +45,13 @@ class CustomerServiceController extends Controller
         $item = User::find($id);
         $data = $request->validate([
             'full_name' => 'required|string|max:200',
+            'email'     => 'email',
             'gender'    => 'required',
+            'role'      => '',
             'club'      => 'required'
         ]);
+
+        $data['password'] = bcrypt($request->password);
 
         $item->update($data);
         return redirect()->route('staff.index')->with('message', 'Customer Service Updated Successfully');
