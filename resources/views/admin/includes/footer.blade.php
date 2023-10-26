@@ -145,7 +145,8 @@
 <!-- Material color picker init -->
 <script src="{{ asset('admingym/js/plugins-init/material-date-picker-init.js') }}"></script>
 <!-- Material color picker -->
-<script src="{{ asset('vendor/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js') }}"></script>
+<script src="{{ asset('admingym/vendor/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js') }}">
+</script>
 <!-- Pickdate -->
 <script src="{{ asset('admingym/js/plugins-init/pickadate-init.js') }}"></script>
 <script src="{{ asset('admingym/vendor/bootstrap-select/dist/js/bootstrap-select.min.js') }}"></script>

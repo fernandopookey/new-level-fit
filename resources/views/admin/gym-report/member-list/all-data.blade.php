@@ -26,7 +26,7 @@
             <tbody>
                 @foreach ($member as $item)
                     <tr>
-                        <td>{{ $item->first_name }} {{ $item->last_name }}</td>
+                        <td>{{ $item->full_name }}</td>
                         <td>{{ $item->member_code }}</td>
                         <td>{{ $item->gender }}</td>
                         <td>{{ $item->phone_number }}</td>

@@ -3,18 +3,30 @@
         <div class="card-body">
             <div class="teacher-deatails">
                 <h3 class="heading">Trainer Session Detail:</h3>
-                <ul>
-                    <li>
-                        <h6 class="mb-1">Active Period</h6>
-                        <span>{{ $trainerSession->active_period }}</span>
-                        <h6 class="mb-1">Session Total</h6>
-                        <span>{{ $trainerSession->session_total }}</span>
-                        <h6 class="mb-1">Remaining Session</h6>
-                        <span>{{ $trainerSession->remaining_session }}</span>
-                        <h6 class="mb-1">Status</h6>
-                        <span>{{ $trainerSession->status }}</span>
-                    </li>
-                </ul>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col"><b>Trainer Name</b></th>
+                            <th scope="col">{{ $trainerSession->personalTrainers->full_name }}</th>
+                        </tr>
+                        <tr>
+                            <th scope="col"><b>Active Period</b></th>
+                            <th scope="col">{{ $trainerSession->active_period }}</th>
+                        </tr>
+                        <tr>
+                            <th scope="col"><b>Session Total</b></th>
+                            <th scope="col">{{ $trainerSession->trainerPackages->number_of_session }}</th>
+                        </tr>
+                        <tr>
+                            <th scope="col"><b>Remaining Session</b></th>
+                            <th scope="col">{{ $trainerSession->trainerPackages->number_of_session }}</th>
+                        </tr>
+                        <tr>
+                            <th scope="col"><b>Status</b></th>
+                            <th scope="col">{{ $trainerSession->status }}</th>
+                        </tr>
+                    </thead>
+                </table>
             </div>
         </div>
     </div>
@@ -25,27 +37,27 @@
         <div class="card-body">
             <div class="teacher-deatails">
                 <h3 class="heading">Member:</h3>
-                <ul>
-                    <li>
-                        <h6 class="mb-1">First Name</h6>
-                        <span>{{ $trainerSession->members->first_name }}</span>
-                        <h6 class="mb-1">Last Name</h6>
-                        <span>{{ $trainerSession->members->last_name }}</span>
-                        <h6 class="mb-1">Member Code</h6>
-                        <span>{{ $trainerSession->members->member_code }}</span>
-                        <h6 class="mb-1">Phone Number</h6>
-                        <span>{{ $trainerSession->members->phone_number }}</span>
-                        <h6 class="mb-1">Member Status</h6>
-                        <span>{{ $trainerSession->members->status }}</span>
-                    </li>
-                </ul>
-                <h3 class="heading mt-4">Trainer:</h3>
-                <ul>
-                    <li>
-                        <h6 class="mb-1">trainer Name</h6>
-                        <span>{{ $trainerSession->trainers->trainer_name }}</span>
-                    </li>
-                </ul>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col"><b>Full Name</b></th>
+                            <th scope="col">{{ $trainerSession->members->full_name }}</th>
+                        </tr>
+                        <tr>
+                            <th scope="col"><b>Member Code</b></th>
+                            <th scope="col">{{ $trainerSession->members->member_code }}</th>
+                        </tr>
+                        <tr>
+                            <th scope="col"><b>Phone Number</b></th>
+                            <th scope="col">{{ $trainerSession->members->phone_number }}</th>
+                        </tr>
+                        <tr>
+                            <th scope="col"><b>Member Status</b></th>
+                            <th scope="col">{{ $trainerSession->members->status }}</th>
+                        </tr>
+                    </thead>
+                </table>
             </div>
         </div>
     </div>

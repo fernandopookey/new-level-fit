@@ -45,13 +45,14 @@
                     <div class="col-xl-6">
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Trainer Package</label>
-                            <select name="trainer_package_id" class="form-control" aria-label="Default select example"
-                                required>
+                            <select name="trainer_package_id" id="single-select3" class="form-control"
+                                aria-label="Default select example" required>
                                 <option disabled selected value>
                                     <- Choose ->
                                 </option>
                                 @foreach ($trainerPackage as $item)
-                                    <option value="{{ $item->id }}">{{ $item->package_name }}</option>
+                                    <option value="{{ $item->id }}">{{ $item->package_name }} |
+                                        {{ formatRupiah($item->package_price) }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -59,8 +60,8 @@
                     <div class="col-xl-6">
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Transaction Type</label>
-                            <select name="transaction_type_id" class="form-control" aria-label="Default select example"
-                                required>
+                            <select name="transaction_type_id" id="single-select4" class="form-control"
+                                aria-label="Default select example" required>
                                 <option disabled selected value>
                                     <- Choose ->
                                 </option>
@@ -73,8 +74,8 @@
                     <div class="col-xl-6">
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Method Payment</label>
-                            <select name="method_payment_id" class="form-control" aria-label="Default select example"
-                                required>
+                            <select name="method_payment_id" id="single-select5" class="form-control"
+                                aria-label="Default select example" required>
                                 <option disabled selected value>
                                     <- Choose ->
                                 </option>
@@ -87,7 +88,8 @@
                     <div class="col-xl-6">
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">FC Name</label>
-                            <select name="fc_id" class="form-control" aria-label="Default select example" required>
+                            <select name="fc_id" id="single-select6" class="form-control"
+                                aria-label="Default select example" required>
                                 <option disabled selected value>
                                     <- Choose ->
                                 </option>

@@ -38,6 +38,8 @@ class TrainerController extends Controller
 
     public function create()
     {
+        $sessionNumber = Trainer::with('');
+
         $data = [
             'title'                     => 'New Trainer',
             'members'                   => Member::get(),

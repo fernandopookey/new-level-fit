@@ -65,8 +65,7 @@
                             <div class="col-xl-6">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Member Package</label>
-                                    <select name="member_package_id" class="form-control"
-                                        aria-label="Default select example">
+                                    <select name="member_package_id" class="form-control" id="single-select">
                                         <option value="{{ $value->member_package_id }}" selected>
                                             {{ old('member_package_id', $value->memberPackage->package_name) }}
                                         </option>
@@ -93,16 +92,16 @@
                             <div class="col-xl-6">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Sold By</label>
-                                    <select name="sold_by_id" class="form-control" aria-label="Default select example">
-                                        <option value="{{ $value->sold_by_id }}" selected>
-                                            @if (isset($value->soldBy->name))
-                                                {{ old('sold_by_id', $value->soldBy->name) }}
+                                    <select name="fc_id" class="form-control" id="single-select2">
+                                        <option value="{{ $value->fitnessConsultant }}" selected>
+                                            @if (isset($value->fitnessConsultant->full_name))
+                                                {{ old('refferal_id', $value->fitnessConsultant->full_name) }}
                                             @else
                                                 <- Choose ->
                                             @endif
                                         </option>
-                                        @foreach ($soldBy as $item)
-                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                        @foreach ($fitnessConsultant as $item)
+                                            <option value="{{ $item->id }}">{{ $item->full_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -112,13 +111,13 @@
                                     <label for="exampleFormControlInput1" class="form-label">Refferal Name</label>
                                     <select name="refferal_id" class="form-control" aria-label="Default select example">
                                         <option value="{{ $value->refferal_id }}" selected>
-                                            @if (isset($value->refferalName->name))
-                                                {{ old('refferal_id', $value->refferalName->name) }}
+                                            @if (isset($value->referralName->name))
+                                                {{ old('refferal_id', $value->referralName->name) }}
                                             @else
                                                 <- Choose ->
                                             @endif
                                         </option>
-                                        @foreach ($refferalName as $item)
+                                        @foreach ($referralName as $item)
                                             <option value="{{ $item->id }}">{{ $item->name }}</option>
                                         @endforeach
                                     </select>

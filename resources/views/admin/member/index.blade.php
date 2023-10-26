@@ -1,7 +1,9 @@
+@inject('carbon', 'Carbon\Carbon')
+
 <div class="row">
     <div class="col-xl-12">
         <div class="row">
-            <div class="col-xl-12">
+            {{-- <div class="col-xl-12">
                 <div class="page-title flex-wrap">
                     <div class="input-group search-area mb-md-0 mb-3">
                         <input type="text" class="form-control" placeholder="Search here...">
@@ -19,7 +21,7 @@
                             data-bs-target="#modalAdd"> + New Member </button>
                     </div>
                 </div>
-            </div>
+            </div> --}}
             <!--column-->
             <div class="col-xl-12 wow fadeInUp" data-wow-delay="1.5s">
                 <div class="table-responsive full-data">
@@ -28,15 +30,8 @@
                         <thead>
                             <tr>
                                 <th>Image</th>
-                                <th>Member Data</th>
-                                {{-- <th>Gender</th> --}}
-                                {{-- <th>Member Code</th> --}}
-                                {{-- <th>Phone Number</th> --}}
-                                {{-- <th>Source Code</th> --}}
-                                {{-- <th>Package Member</th> --}}
-                                <th>Member Data</th>
-                                {{-- <th>Sold By</th> --}}
-                                {{-- <th>Refferal Name</th> --}}
+                                <th>Member Profile</th>
+                                <th>Member Package</th>
                                 <th>Description</th>
                                 <th>Status</th>
                                 <th>Action</th>
@@ -77,18 +72,12 @@
                                             <h6>Phone Number : </h6> {{ $member->phone_number }}
                                         </div>
                                         <div class="d-flex">
+                                            <h6>Start Date : </h6> {{ $member->start_date }}
+                                        </div>
+                                        <div class="d-flex">
                                             <h6>Expired Date : </h6> {{ $member->expired_date }}
                                         </div>
                                     </td>
-                                    {{-- <td>
-                                        <h6>{{ $member->gender }}</h6>
-                                    </td> --}}
-                                    {{-- <td>
-                                        <h6>{{ $member->member_code }}</h6>
-                                    </td>
-                                    <td>
-                                        <h6>{{ $member->phone_number }}</h6>
-                                    </td> --}}
                                     <td>
                                         <div class="d-flex">
                                             <h6>Member Package : </h6>
@@ -104,38 +93,32 @@
                                         </div>
                                         <div class="d-flex">
                                             <h6>Sold by : </h6>
-                                            {{ !empty($member->soldBy->name) ? $member->soldBy->name : 'Sold name has  been deleted' }}
+                                            {{ !empty($member->fitnessConsultant->full_name) ? $member->fitnessConsultant->full_name : 'Referral name has  been deleted' }}
                                         </div>
                                         <div class="d-flex">
                                             <h6>Referral Name : </h6>
-                                            {{ !empty($member->refferalName->name) ? $member->refferalName->name : 'Referral name has  been deleted' }}
+                                            {{ !empty($member->referralName->full_name) ? $member->referralName->full_name : 'Referral name has  been deleted' }}
                                         </div>
+                                        {{-- <div class="d-flex">
+                                            <h6>Remaining Time : </h6>
+                                            {{ $durationInDays }}
+                                        </div> --}}
                                     </td>
-                                    {{-- <td>
-                                        <h6>{{ !empty($member->sourceCode->name) ? $member->sourceCode->name : 'Source code name has  been deleted' }}
-                                        </h6>
-                                    </td> --}}
-                                    {{-- <td>
-                                        <h6>{{ !empty($member->memberPackage->package_name) ? $member->memberPackage->package_name : 'Member Package name has  been deleted' }}
-                                        </h6>
-                                    </td> --}}
-                                    {{-- <td>
-                                        <h6>{{ !empty($member->methodPayment->name) ? $member->methodPayment->name : 'Method payment name has  been deleted' }}
-                                        </h6>
-                                    </td> --}}
-                                    {{-- <td>
-                                        <h6>{{ !empty($member->soldBy->name) ? $member->soldBy->name : 'Sold by name has  been deleted' }}
-                                        </h6>
-                                    </td>
-                                    <td>
-                                        <h6>{{ !empty($member->refferalName->name) ? $member->refferalName->name : 'Refferal name has  been deleted' }}
-                                        </h6>
-                                    </td> --}}
                                     <td>
                                         <h6>{{ $member->description }}</h6>
                                     </td>
                                     <td>
-                                        <?php if ($member->status == 'Active'){ ?>
+                                        @if ($carbon::now()->tz('Asia/Jakarta') < $member->expired_date)
+                                            <div class="badge bg-primary">
+                                                Active
+                                            </div>
+                                        @elseif ($carbon::now()->tz('Asia/Jakarta') > $member->expired_date)
+                                            <div class="badge bg-danger">
+                                                Member package period is over
+                                            </div>
+                                        @endif
+
+                                        {{-- <?php if ($member->status == 'Active'){ ?>
                                         <div class="badge bg-primary">
                                             Active
                                         </div>
@@ -143,13 +126,15 @@
                                         <div class="badge bg-danger">
                                             Member package period is over
                                         </div>
-                                        <?php } ?>
+                                        <?php } ?> --}}
                                     </td>
                                     <td>
                                         <div>
-                                            <button type="button" class="btn light btn-warning btn-xs mb-1 btn-block"
+                                            {{-- <button type="button" class="btn light btn-warning btn-xs mb-1 btn-block"
                                                 data-bs-toggle="modal"
-                                                data-bs-target="#modalEdit{{ $member->id }}">Edit</button>
+                                                data-bs-target="#modalEdit{{ $member->id }}">Edit</button> --}}
+                                            <a href="{{ route('member.edit', $member->id) }}"
+                                                class="btn light btn-warning btn-xs mb-1 btn-block">Edit</a>
                                             <form action="{{ route('member.destroy', $member->id) }}"
                                                 onclick="return confirm('Delete Data ?')" method="POST">
                                                 @method('delete')
@@ -169,5 +154,5 @@
         </div>
     </div>
 </div>
-@include('admin.member.create')
-@include('admin.member.edit')
+{{-- @include('admin.member.create')
+@include('admin.member.edit') --}}

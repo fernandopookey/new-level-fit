@@ -29,8 +29,9 @@
                             <tr>
                                 <th>Member Name</th>
                                 <th>Member Code</th>
-                                <th>Active Period</th>
                                 <th>Trainer Name</th>
+                                <th>Start Date</th>
+                                <th>Expired Date</th>
                                 <th>Trainer Package</th>
                                 <th>Session Total</th>
                                 <th>Remaining Session</th>
@@ -43,27 +44,24 @@
                             @foreach ($trainerSession as $item)
                                 <tr>
                                     <td>
-                                        {{ !empty($item->members->first_name) ? $item->members->first_name : 'Member has  been deleted' }}
-                                        |
-                                        {{ !empty($item->members->last_name) ? $item->members->last_name : 'Member has  been deleted' }}
+                                        {{ !empty($item->members->full_name) ? $item->members->full_name : 'Member has  been deleted' }}
                                     </td>
                                     <td>
                                         {{ !empty($item->members->member_code) ? $item->members->member_code : 'Member has  been deleted' }}
                                     </td>
-                                    <td>{{ $item->active_period }}</td>
-                                    {{-- <td>
-                                        {{ !empty($item->trainers->trainer_name) ? $item->trainers->trainer_name : 'Trainer has  been deleted' }}
-                                    </td> --}}
                                     <td>
                                         {{ !empty($item->personalTrainers->full_name) ? $item->personalTrainers->full_name : 'Trainer has  been deleted' }}
                                     </td>
+                                    <td>{{ $item->start_date }}</td>
+                                    <td>{{ $item->expired_date }}</td>
                                     <td>
                                         {{ !empty($item->trainerPackages->package_name) ? $item->trainerPackages->package_name : 'Trainer has  been deleted' }}
                                     </td>
                                     <td>
-                                        {{ !empty($item->trainerPackages->session_total) ? $item->trainerPackages->session_total : 'Trainer package has  been deleted' }}
+                                        {{ !empty($item->trainerPackages->number_of_session) ? $item->trainerPackages->number_of_session : 'Trainer package has  been deleted' }}
                                     </td>
-                                    <td>{{ $item->remaining_session }}</td>
+                                    {{-- <td>{{ $remainingSession }}</td> --}}
+                                    <td></td>
                                     <td>
                                         @if ($item->status == 'Running')
                                             <div class="badge bg-primary">

@@ -6,6 +6,10 @@
         weekStart: 0,
         time: false,
     });
+    $("#mdate2").bootstrapMaterialDatePicker({
+        weekStart: 0,
+        time: false,
+    });
     $("#timepicker").bootstrapMaterialDatePicker({
         format: "HH:mm",
         time: true,
@@ -19,6 +23,16 @@
     });
 
     $("#min-date").bootstrapMaterialDatePicker({
+        format: "YYYY-MM-DD HH:mm",
+        minDate: new Date(),
+    });
+
+    $("#min-date2").bootstrapMaterialDatePicker({
+        format: "YYYY-MM-DD HH:mm",
+        minDate: new Date(),
+    });
+
+    $("#min-date3").bootstrapMaterialDatePicker({
         format: "YYYY-MM-DD HH:mm",
         minDate: new Date(),
     });

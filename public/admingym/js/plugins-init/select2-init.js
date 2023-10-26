@@ -12,6 +12,12 @@
 
     $("#single-select5").select2();
 
+    $("#single-select6").select2();
+
+    $("#single-select7").select2();
+
+    $("#single-select8").select2();
+
     // multi select box
     $(".multi-select").select2();
 

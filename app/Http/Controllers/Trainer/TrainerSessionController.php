@@ -11,18 +11,52 @@ use App\Models\Trainer\Trainer;
 use App\Models\Trainer\TrainerPackage;
 use App\Models\Trainer\TrainerSession;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class TrainerSessionController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        // $date = Carbon::now()->tz('Asia/Jakarta')->addSeconds(10)->diffForHumans();
+        // $date = Carbon::now()->tz('Asia/Jakarta');
+        // $newDate = $date->subMinutes(20);
+        // $remainingSession = TrainerSession::with([]);
+
+        // $currentDateTime = Carbon::now()->tz('Asia/Jakarta');
+        // $minutesToSubtract = 5; // You can change this value to the number of minutes you want to subtract.
+
+        // $newDateTime = $currentDateTime->subMinutes($minutesToSubtract);
+
+        // $isTimeOver = $newDateTime <= $currentDateTime;
+        // $createdAt = Trainer
+
+        // $remainingSession = TrainerSession::where('created_at', '>', Carbon::now()->tz('Asia/Jakarta')->subMinutes(5));
+        // $numberOfSession = 
+
+        // $endDate = Carbon::parse("2023-10-26");
+        $currentDate = Carbon::now()->tz("Asia/Jakarta");
+
+        // Create two Carbon date instances
+        // $date1 = Carbon::parse('2023-10-25');
+        // $expiredDate = TrainerSession::select('expired_date')->get();
+        // $date1 = Carbon::parse($expiredDate);
+        // $date1 = TrainerSession::select('expired_date');
+        // $date2 = Carbon::parse('2023-10-30');
+
+        // Calculate the difference in days
+        // $remainingSession = $date1->diffInDays($date2);
+
         $data = [
             'title'             => 'Trainer Session List',
             'trainerSession'    => TrainerSession::get(),
             'members'           => Member::get(),
             // 'personalTrainers'  => Trainer::get(),
+            // 'number'            => $number,
+            // 'date1'             => $date1,
+            // 'remainingSession'  => $remainingSession,
             'personalTrainers'  => PersonalTrainer::get(),
             'trainerPackages'   => TrainerPackage::get(),
             'content'           => 'admin/trainer-session/index'

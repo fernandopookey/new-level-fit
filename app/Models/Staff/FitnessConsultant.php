@@ -14,4 +14,9 @@ class FitnessConsultant extends Model
         'gender',
         'club'
     ];
+
+    public function referralNameMember()
+    {
+        return $this->hasMany(Member::class);
+    }
 }

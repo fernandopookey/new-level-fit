@@ -41,15 +41,14 @@
                             @foreach ($runningSession as $item)
                                 <tr>
                                     <td>
-                                        {{ !empty($item->members->first_name) ? $item->members->first_name : 'Member has  been deleted' }}
-                                        {{ !empty($item->members->last_name) ? $item->members->last_name : 'Member has  been deleted' }}
+                                        {{ !empty($item->members->full_name) ? $item->members->full_name : 'Member has  been deleted' }}
                                     </td>
                                     <td>
                                         {{ !empty($item->members->member_code) ? $item->members->member_code : 'Member has  been deleted' }}
                                     </td>
                                     <td>{{ $item->active_period }}</td>
                                     <td>
-                                        {{ !empty($item->trainers->trainer_name) ? $item->trainers->trainer_name : 'Trainer has  been deleted' }}
+                                        {{ !empty($item->trainers->full_name) ? $item->trainers->full_name : 'Trainer has  been deleted' }}
                                     </td>
                                     <td>
                                         {{ !empty($item->trainerPackages->package_name) ? $item->trainerPackages->package_name : 'Trainer has  been deleted' }}

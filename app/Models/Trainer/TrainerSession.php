@@ -15,11 +15,11 @@ class TrainerSession extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'active_period',
         'member_id',
         'trainer_id',
+        'start_date',
+        'expired_date',
         'trainer_package_id',
-        'remaining_session',
         'status',
         'user_id'
     ];

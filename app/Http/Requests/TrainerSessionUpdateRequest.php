@@ -24,9 +24,10 @@ class TrainerSessionUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'active_period'         => 'required|string',
             'member_id'             => 'exists:members,id',
             'trainer_id'            => 'required|exists:trainers,id',
+            'start_date'            => 'string',
+            'expired_date'          => 'string',
             'trainer_package_id'    => 'exists:trainer_packages,id',
             'remaining_session'     => '',
             'status'                => '',
