@@ -32,13 +32,6 @@
                     </div>
                     <div class="col-xl-6">
                         <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">Active Period</label>
-                            <input class="form-control input-daterange-datepicker" type="text" name="active_period"
-                                value="{{ old('active_period', $trainerSession->active_period) }}" required>
-                        </div>
-                    </div>
-                    <div class="col-xl-6">
-                        <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Trainer Name</label>
                             <select id="single-select" name="trainer_id" class="form-control">
                                 <option value="{{ $trainerSession->trainer_id }}" selected>
@@ -65,6 +58,14 @@
                                     </option>
                                 @endforeach
                             </select>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <div class="mb-3">
+                            <label class="form-label">Start Date</label>
+                            <input type="text" name="start_date"
+                                value="{{ old('start_date', $trainerSession->start_date) }}" class="form-control"
+                                id="mdate">
                         </div>
                     </div>
                     {{-- <div class="col-xl-6">

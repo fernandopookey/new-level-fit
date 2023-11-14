@@ -28,6 +28,17 @@
                         </div>
                         <div class="col-xl-6">
                             <div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label">Role</label>
+                                <select name="role" class="form-control" aria-label="Default select example">
+                                    <option disabled selected value>
+                                        <- Choose ->
+                                    </option>
+                                    <option value="Personal Trainer">Class Instructor</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Gender</label>
                                 <select name="gender" class="form-control" aria-label="Default select example"
                                     required>
@@ -37,13 +48,6 @@
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
                                 </select>
-                            </div>
-                        </div>
-                        <div class="col-xl-6">
-                            <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label">Club</label>
-                                <input type="text" name="club" value="{{ old('club') }}" class="form-control"
-                                    id="exampleFormControlInput1" autocomplete="off" required>
                             </div>
                         </div>
                     </div>
@@ -102,14 +106,6 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-xl-6">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Club</label>
-                                    <input type="text" name="club" value="{{ old('club', $item->club) }}"
-                                        class="form-control" id="exampleFormControlInput1" autocomplete="off"
-                                        required>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -165,7 +161,6 @@
                                 <tr>
                                     <th>Full Name</th>
                                     <th>Gender</th>
-                                    <th>Club</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -174,7 +169,6 @@
                                     <tr>
                                         <td>{{ $item->full_name }}</td>
                                         <td>{{ $item->gender }}</td>
-                                        <td>{{ $item->club }}</td>
                                         <td>
                                             <div>
                                                 <button type="button"

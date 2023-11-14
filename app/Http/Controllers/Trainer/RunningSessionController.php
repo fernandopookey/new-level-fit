@@ -6,10 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RunningSessionStoreRequest;
 use App\Http\Requests\RunningSessionUpdateRequest;
 use App\Models\Member\Member;
-use App\Models\Staff\CustomerService;
 use App\Models\Staff\PersonalTrainer;
 use App\Models\Trainer\RunningSession;
-use App\Models\Trainer\Trainer;
 use App\Models\Trainer\TrainerPackage;
 use App\Models\Trainer\TrainerSession;
 use App\Models\User;
@@ -23,7 +21,7 @@ class RunningSessionController extends Controller
             'title'             => 'Running Session List',
             'runningSession'    => TrainerSession::where('status', 'running')->get(),
             'members'           => Member::get(),
-            'trainers'          => Trainer::get(),
+            'personalTrainers'  => PersonalTrainer::get(),
             'trainerPackages'   => TrainerPackage::get(),
             'users'             => User::get(),
             'content'           => 'admin/running-session/index'

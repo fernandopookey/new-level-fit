@@ -13,13 +13,13 @@
 
                 </li>
             @endif
-            <li>
+            {{-- <li>
                 <a href="{{ route('class.index') }}" aria-expanded="false">
                     <i class="material-icons">folder</i>
                     <span class="nav-text">Class Recap</span>
                 </a>
 
-            </li>
+            </li> --}}
             @if (Auth::user()->role == 'ADMIN')
                 <li>
                     <a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
@@ -54,11 +54,11 @@
                     <span class="nav-text">Trainer</span>
                 </a>
                 <ul aria-expanded="false">
-                    <li><a href="{{ route('trainer.create') }}">Trainer Registration</a></li>
-                    <li><a href="{{ route('trainer.index') }}">Trainer List</a></li>
+                    {{-- <li><a href="{{ route('trainer.create') }}">Trainer Registration</a></li> --}}
+                    {{-- <li><a href="{{ route('trainer.index') }}">Trainer List</a></li> --}}
                     <li><a href="{{ route('trainer-session.index') }}">Trainer Session</a></li>
-                    <li><a href="{{ route('trainer-session-FO.index') }}">Trainer Session GO</a></li>
-                    <li><a href="#">Trainer Session PGT</a></li>
+                    {{-- <li><a href="{{ route('trainer-session-FO.index') }}">Trainer Session GO</a></li> --}}
+                    {{-- <li><a href="#">Trainer Session PGT</a></li> --}}
                     {{-- <li><a href="{{ route('running-session.index') }}">Running Session</a></li> --}}
                 </ul>
 
@@ -75,7 +75,7 @@
                     </ul> --}}
 
             </li>
-            <li>
+            {{-- <li>
                 <a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
                     <i class="material-icons">folder</i>
                     <span class="nav-text">Transaction Guest</span>
@@ -85,7 +85,7 @@
                     <li><a href="{{ route('buddy-referral.index') }}">Buddy Referral</a></li>
                     <li><a href="{{ route('leads.index') }}">Leads</a></li>
                 </ul>
-            </li>
+            </li> --}}
             {{-- @if (Auth::user()->role == 'ADMIN')
                 <li>
                     <a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
@@ -102,17 +102,15 @@
                     </ul>
                 </li>
             @endif --}}
-            <li>
+            {{-- <li>
                 <a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
                     <i class="material-icons"> extension </i>
                     <span class="nav-text">Report</span>
                 </a>
                 <ul aria-expanded="false">
                     <li><a href="{{ route('report-gym.index') }}">GYM Club</a></li>
-                    {{-- <li><a href="#">Guest</a></li>
-                    <li><a href="#">FC Performance</a></li> --}}
                 </ul>
-            </li>
+            </li> --}}
             @if (Auth::user()->role == 'ADMIN')
                 <li>
                     <a href="{{ route('staff.index') }}" href="javascript:void(0);" aria-expanded="false">

@@ -18,8 +18,9 @@ class TrainerSession extends Model
         'member_id',
         'trainer_id',
         'start_date',
-        'expired_date',
         'trainer_package_id',
+        'remaining_session',
+        'check_in',
         'status',
         'user_id'
     ];
@@ -30,11 +31,6 @@ class TrainerSession extends Model
     {
         return $this->belongsTo(Member::class, 'member_id', 'id');
     }
-
-    // public function trainers()
-    // {
-    //     return $this->belongsTo(Trainer::class, 'trainer_id', 'id');
-    // }
 
     public function personalTrainers()
     {
@@ -49,5 +45,10 @@ class TrainerSession extends Model
     public function users()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function trainerSessionCheckIn()
+    {
+        return $this->hasMany(CheckInTrainerSession::class);
     }
 }

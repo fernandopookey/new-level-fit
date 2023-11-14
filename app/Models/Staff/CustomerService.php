@@ -11,7 +11,6 @@ class CustomerService extends Model
 
     protected $fillable = [
         'full_name',
-        'gender',
-        'club'
+        'gender'
     ];
 }

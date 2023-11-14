@@ -12,7 +12,6 @@ class PersonalTrainer extends Model
     protected $fillable = [
         'full_name',
         'gender',
-        'level',
-        'club'
+        'role',
     ];
 }

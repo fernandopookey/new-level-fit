@@ -28,7 +28,7 @@ class ClassInstructorController extends Controller
         $data = $request->validate([
             'full_name' => 'required|string|max:200',
             'gender'    => 'required',
-            'club'      => 'required'
+            'role'      => 'required',
         ]);
 
         ClassInstructor::create($data);
@@ -46,7 +46,7 @@ class ClassInstructorController extends Controller
         $data = $request->validate([
             'full_name' => 'required|string|max:200',
             'gender'    => 'required',
-            'club'      => 'required'
+            'role'      => '',
         ]);
 
         $item->update($data);

@@ -3,20 +3,13 @@
         <div class="row">
             <div class="col-xl-12">
                 <div class="page-title flex-wrap">
-                    <div class="input-group search-area mb-md-0 mb-3">
-                        <input type="text" class="form-control" placeholder="Search here...">
-                        <span class="input-group-text"><a href="javascript:void(0)">
-                                <svg width="15" height="15" viewBox="0 0 18 18" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M17.5605 15.4395L13.7527 11.6317C14.5395 10.446 15 9.02625 15 7.5C15 3.3645 11.6355 0 7.5 0C3.3645 0 0 3.3645 0 7.5C0 11.6355 3.3645 15 7.5 15C9.02625 15 10.446 14.5395 11.6317 13.7527L15.4395 17.5605C16.0245 18.1462 16.9755 18.1462 17.5605 17.5605C18.1462 16.9747 18.1462 16.0252 17.5605 15.4395V15.4395ZM2.25 7.5C2.25 4.605 4.605 2.25 7.5 2.25C10.395 2.25 12.75 4.605 12.75 7.5C12.75 10.395 10.395 12.75 7.5 12.75C4.605 12.75 2.25 10.395 2.25 7.5V7.5Z"
-                                        fill="#01A3FF" />
-                                </svg>
-                            </a></span>
+                    <div>
+                        <a href="{{ route('trainer-session.create') }}" class="btn btn-primary"><i class="fa fa-plus"></i>
+                            New Trainer Session</a>
                     </div>
                     <div>
-                        <a href="{{ route('trainer-session.create') }}" class="btn btn-primary"><i
-                                class="fa fa-plus"></i> New Trainer Session</a>
+                        <a href="{{ route('cetak-trainer-session-pdf') }}" target="_blank" class="btn btn-info">Cetak
+                            PDF</a>
                     </div>
                 </div>
             </div>
@@ -24,17 +17,14 @@
             <div class="col-xl-12 wow fadeInUp" data-wow-delay="1.5s">
                 <div class="table-responsive full-data">
                     <table class="table-responsive-lg table display dataTablesCard student-tab dataTable no-footer"
-                        id="example-student">
+                        id="myTable">
                         <thead>
                             <tr>
-                                <th>Member Name</th>
-                                <th>Member Code</th>
-                                <th>Trainer Name</th>
+                                <th>Member Data</th>
+                                <th>Trainer Data</th>
                                 <th>Start Date</th>
-                                <th>Expired Date</th>
-                                <th>Trainer Package</th>
-                                <th>Session Total</th>
-                                <th>Remaining Session</th>
+                                <th>Session</th>
+                                <th>Check-In</th>
                                 <th>Status</th>
                                 <th>Staff Name</th>
                                 <th>Action</th>
@@ -43,33 +33,53 @@
                         <tbody>
                             @foreach ($trainerSession as $item)
                                 <tr>
+                                    @php
+                                        $remainingSessions = optional($item->trainerSession)->remaining_session ?? 0;
+                                        $remainingSessions = $item->trainerSessionCheckIn->count();
+                                        $totalSessions = $item->trainerPackages->number_of_session;
+                                        $result = $remainingSessions - $totalSessions;
+                                    @endphp
                                     <td>
-                                        {{ !empty($item->members->full_name) ? $item->members->full_name : 'Member has  been deleted' }}
+                                        <div class="d-flex">
+                                            <h6>Member Name : </h6>
+                                            {{ !empty($item->members->full_name) ? $item->members->full_name : 'Member has  been deleted' }}
+                                        </div>
+                                        <div class="d-flex">
+                                            <h6>Member Code : </h6>
+                                            {{ !empty($item->members->member_code) ? $item->members->member_code : 'Member has  been deleted' }}
+                                        </div>
                                     </td>
                                     <td>
-                                        {{ !empty($item->members->member_code) ? $item->members->member_code : 'Member has  been deleted' }}
-                                    </td>
-                                    <td>
-                                        {{ !empty($item->personalTrainers->full_name) ? $item->personalTrainers->full_name : 'Trainer has  been deleted' }}
+                                        <div class="d-flex">
+                                            <h6>Trainer Name : </h6>
+                                            {{ !empty($item->personalTrainers->full_name) ? $item->personalTrainers->full_name : 'Trainer has  been deleted' }}
+                                        </div>
+                                        <div class="d-flex">
+                                            <h6>Trainer Package : </h6>
+                                            {{ !empty($item->trainerPackages->package_name) ? $item->trainerPackages->package_name : 'Trainer has  been deleted' }}
+                                        </div>
                                     </td>
                                     <td>{{ $item->start_date }}</td>
-                                    <td>{{ $item->expired_date }}</td>
                                     <td>
-                                        {{ !empty($item->trainerPackages->package_name) ? $item->trainerPackages->package_name : 'Trainer has  been deleted' }}
+                                        <div class="d-flex">
+                                            <h6>Session Total : </h6>
+                                            {{ !empty($item->trainerPackages->number_of_session) ? $item->trainerPackages->number_of_session : 'Trainer package has  been deleted' }}
+                                        </div>
+                                        <div class="d-flex">
+                                            <h6>Remaining Session : {{ abs($result) }}</h6>
+                                        </div>
                                     </td>
                                     <td>
-                                        {{ !empty($item->trainerPackages->number_of_session) ? $item->trainerPackages->number_of_session : 'Trainer package has  been deleted' }}
+                                        <a href="#">Lihat</a>
                                     </td>
-                                    {{-- <td>{{ $remainingSession }}</td> --}}
-                                    <td></td>
                                     <td>
-                                        @if ($item->status == 'Running')
-                                            <div class="badge bg-primary">
-                                                Running
+                                        @if ($result == 0)
+                                            <div class="badge bg-danger">
+                                                Trainer session is Over
                                             </div>
                                         @else
-                                            <div class="badge bg-danger">
-                                                Member Active Period is Over
+                                            <div class="badge bg-primary">
+                                                Running
                                             </div>
                                         @endif
                                     </td>
@@ -77,15 +87,30 @@
                                         {{ !empty($item->users->full_name) ? $item->users->full_name : 'User has  been deleted' }}
                                     </td>
                                     <td class="btn-group-vertical">
+                                        @if ($result == 0)
+                                            <button type="button" class="btn light btn-primary btn-xs mb-1 btn-block"
+                                                data-bs-toggle="modal" data-bs-target="#modalEdit{{ $item->id }}"
+                                                disabled>Check
+                                                In</button>
+                                        @else
+                                            <button type="button" class="btn light btn-primary btn-xs mb-1 btn-block"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalEdit{{ $item->id }}">Check
+                                                In</button>
+                                        @endif
                                         <a href="{{ route('trainer-session.edit', $item->id) }}"
                                             class="btn light btn-warning btn-xs mb-1">Edit</a>
                                         <a href="{{ route('trainer-session.show', $item->id) }}"
                                             class="btn light btn-info btn-xs mb-1">Detail</a>
+                                        {{-- <a class="btn btn-info  btn-xs"
+                                            onclick="openTrainerSessionDetail(<?php echo $item->id; ?>)"><i
+                                                class="fa fa-search"></i>Detail</a> --}}
                                         <form action="{{ route('trainer-session.destroy', $item->id) }}"
                                             onclick="return confirm('Delete Data ?')" method="POST">
                                             @method('delete')
                                             @csrf
-                                            <button type="submit" class="btn light btn-danger btn-xs">Delete</button>
+                                            <button type="submit"
+                                                class="btn light btn-danger btn-xs mb-1">Delete</button>
                                         </form>
                                     </td>
                                 </tr>
@@ -98,3 +123,5 @@
         </div>
     </div>
 </div>
+
+@include('admin.trainer-session.check-in')

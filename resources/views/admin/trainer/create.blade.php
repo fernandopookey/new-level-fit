@@ -36,7 +36,8 @@
                                     <- Choose ->
                                 </option>
                                 @foreach ($members as $item)
-                                    <option value="{{ $item->id }}">{{ $item->full_name }}
+                                    <option value="{{ $item->id }}">{{ $item->full_name }} |
+                                        {{ $item->member_code }}
                                     </option>
                                 @endforeach
                             </select>

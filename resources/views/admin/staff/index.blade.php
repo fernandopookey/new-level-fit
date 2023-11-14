@@ -1,3 +1,9 @@
+<div class="col-xl-12">
+    <div class="page-title flex-wrap justify-content-end">
+        <a href="{{ route('cetak-staff-pdf') }}" target="_blank" class="btn btn-info">Cetak PDF</a>
+    </div>
+</div>
+
 <div class="tab-content" id="myTabContent-1">
     <div class="tab-pane fade show active" id="DefaultTab1" role="tabpanel" aria-labelledby="home-tab">
         <div class="card-body pt-0">
@@ -9,41 +15,41 @@
                             Adminstrator
                         </a>
                     </li>
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab" href="#classInstructor">
                             Class Instructor
                         </a>
-                    </li>
+                    </li> --}}
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab" href="#customerService">
                             Customer Service
                         </a>
                     </li>
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab" href="#csPos">
                             Customer Service POS
                         </a>
-                    </li>
-                    <li class="nav-item">
+                    </li> --}}
+                    {{-- <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab" href="#fitnessConsultant">
                             Fitness Consultant
                         </a>
-                    </li>
+                    </li> --}}
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab" href="#personalTrainer">
                             Personal Trainer
                         </a>
                     </li>
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab" href="#physiotherapy">
                             Physiotherapy
                         </a>
-                    </li>
-                    <li class="nav-item">
+                    </li> --}}
+                    {{-- <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab" href="#ptLeader">
                             PT Leader
                         </a>
-                    </li>
+                    </li> --}}
                 </ul>
                 <div class="tab-content">
                     @include('admin.staff.administrator.index')

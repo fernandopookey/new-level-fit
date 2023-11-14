@@ -25,7 +25,6 @@ class AdministratorController extends Controller
             'email'     => 'required|email',
             'gender'    => 'required',
             'role'      => '',
-            'club'      => 'required'
         ]);
 
         $data['password'] = bcrypt($request->password);
@@ -47,7 +46,6 @@ class AdministratorController extends Controller
             'email'     => 'email',
             'gender'    => 'required',
             'role'      => '',
-            'club'      => 'required',
         ]);
 
         $data['password'] = bcrypt($request->password);

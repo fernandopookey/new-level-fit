@@ -8,6 +8,7 @@ use App\Models\MethodPayment;
 use App\Models\Refferal;
 use App\Models\Sold;
 use App\Models\Staff\FitnessConsultant;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -26,7 +27,8 @@ class Member extends Model
         'expired_date',
         'durationInDays',
         'method_payment_id',
-        'fc_id',
+        'user_id',
+        'sold_by',
         'refferal_id',
         'description',
         'status',
@@ -70,6 +72,11 @@ class Member extends Model
     public function referralNameMember()
     {
         return $this->belongsTo(Member::class, 'refferal_id', 'id');
+    }
+
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     // public function referralName()

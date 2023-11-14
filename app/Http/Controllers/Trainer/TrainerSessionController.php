@@ -7,6 +7,7 @@ use App\Http\Requests\TrainerSessionStoreRequest;
 use App\Http\Requests\TrainerSessionUpdateRequest;
 use App\Models\Member\Member;
 use App\Models\Staff\PersonalTrainer;
+use App\Models\Trainer\CheckInTrainerSession;
 use App\Models\Trainer\Trainer;
 use App\Models\Trainer\TrainerPackage;
 use App\Models\Trainer\TrainerSession;
@@ -15,51 +16,23 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use PDF;
 
 class TrainerSessionController extends Controller
 {
     public function index(Request $request)
     {
-        // $date = Carbon::now()->tz('Asia/Jakarta')->addSeconds(10)->diffForHumans();
-        // $date = Carbon::now()->tz('Asia/Jakarta');
-        // $newDate = $date->subMinutes(20);
-        // $remainingSession = TrainerSession::with([]);
-
-        // $currentDateTime = Carbon::now()->tz('Asia/Jakarta');
-        // $minutesToSubtract = 5; // You can change this value to the number of minutes you want to subtract.
-
-        // $newDateTime = $currentDateTime->subMinutes($minutesToSubtract);
-
-        // $isTimeOver = $newDateTime <= $currentDateTime;
-        // $createdAt = Trainer
-
-        // $remainingSession = TrainerSession::where('created_at', '>', Carbon::now()->tz('Asia/Jakarta')->subMinutes(5));
-        // $numberOfSession = 
-
-        // $endDate = Carbon::parse("2023-10-26");
-        $currentDate = Carbon::now()->tz("Asia/Jakarta");
-
-        // Create two Carbon date instances
-        // $date1 = Carbon::parse('2023-10-25');
-        // $expiredDate = TrainerSession::select('expired_date')->get();
-        // $date1 = Carbon::parse($expiredDate);
-        // $date1 = TrainerSession::select('expired_date');
-        // $date2 = Carbon::parse('2023-10-30');
-
-        // Calculate the difference in days
-        // $remainingSession = $date1->diffInDays($date2);
-
+        $trainerSessionCheckIn = CheckInTrainerSession::with('trainerSession')->get();
         $data = [
-            'title'             => 'Trainer Session List',
-            'trainerSession'    => TrainerSession::get(),
-            'members'           => Member::get(),
-            // 'personalTrainers'  => Trainer::get(),
-            // 'number'            => $number,
-            // 'date1'             => $date1,
-            // 'remainingSession'  => $remainingSession,
-            'personalTrainers'  => PersonalTrainer::get(),
-            'trainerPackages'   => TrainerPackage::get(),
-            'content'           => 'admin/trainer-session/index'
+            'title'                 => 'Trainer Session List',
+            'trainerSession'        => TrainerSession::get(),
+            // 'trainerSessionCheckIn' => $tes,
+            // 'trainerSessions'       => $trainerSessions,
+            'trainerSessionCheckIn' => $trainerSessionCheckIn,
+            'members'               => Member::get(),
+            'personalTrainers'      => PersonalTrainer::get(),
+            'trainerPackages'       => TrainerPackage::get(),
+            'content'               => 'admin/trainer-session/index'
         ];
 
         return view('admin.layouts.wrapper', $data);
@@ -71,7 +44,6 @@ class TrainerSessionController extends Controller
             'title'             => 'New Trainer Session',
             'trainerSession'    => TrainerSession::all(),
             'members'           => Member::get(),
-            // 'trainers'          => Trainer::get(),
             'personalTrainers'  => PersonalTrainer::get(),
             'trainerPackages'   => TrainerPackage::get(),
             'users'             => User::get(),
@@ -92,16 +64,19 @@ class TrainerSessionController extends Controller
 
     public function show($id)
     {
-        // $trainerSession        = TrainerSession::with(['members', 'product'])->findOrFail($id);
+        $tes = TrainerSession::where('id', 11)->pluck('remaining_session');
+        // dd($tes);
+        $checkInTrainerSession = TrainerSession::find($id);
 
         $data = [
-            'title'             => 'Trainer Session Detail',
-            'trainerSession'    => TrainerSession::find($id),
-            'members'           => Member::get(),
-            // 'trainers'          => Trainer::get(),
-            'personalTrainers'  => PersonalTrainer::get(),
-            'trainerPackages'   => TrainerPackage::get(),
-            'content'           => 'admin/trainer-session/show',
+            'title'                 => 'Trainer Session Detail',
+            'checkInTrainerSession' => $checkInTrainerSession,
+            'trainerSession'        => TrainerSession::find($id),
+            'trainerSessionCheckIn' => $checkInTrainerSession->trainerSessionCheckIn,
+            'members'               => Member::get(),
+            'personalTrainers'      => PersonalTrainer::get(),
+            'trainerPackages'       => TrainerPackage::get(),
+            'content'               => 'admin/trainer-session/show',
         ];
 
         return view('admin.layouts.wrapper', $data);
@@ -113,7 +88,6 @@ class TrainerSessionController extends Controller
             'title'             => 'Edit Trainer Session',
             'trainerSession'    => TrainerSession::find($id),
             'members'           => Member::get(),
-            // 'trainers'          => Trainer::get(),
             'personalTrainers'  => PersonalTrainer::get(),
             'trainerPackages'   => TrainerPackage::get(),
             'content'           => 'admin/trainer-session/edit'
@@ -139,5 +113,23 @@ class TrainerSessionController extends Controller
         } catch (\Throwable $th) {
             return redirect()->back()->with('error', 'Deleted Failed, please check other page where using this trainer session');
         }
+    }
+
+    public function cetak_pdf()
+    {
+        $trainerSessionCheckIn = CheckInTrainerSession::with('trainerSession')->get();
+        $members            = Member::orderBy('full_name')->get();
+        $trainerSessions    = TrainerSession::orderBy('status', 'DESC')->get();
+        $personalTrainers   = PersonalTrainer::all();
+        $trainerPackages    = TrainerPackage::all();
+
+        $pdf = PDF::loadView('admin/trainer-session/trainer-session-pdf', [
+            'trainerSession'        => $trainerSessions,
+            'members'               => $members,
+            'trainerSessionCheckIn' => $trainerSessionCheckIn,
+            'personalTrainers'      => $personalTrainers,
+            'trainerPackages'       => $trainerPackages,
+        ])->setPaper('a4', 'landscape');
+        return $pdf->stream('laporan-trainer-session-pdf');
     }
 }

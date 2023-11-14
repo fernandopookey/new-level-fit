@@ -50,7 +50,7 @@
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Phone Number</label>
                             <input type="text" name="phone_number" value="{{ old('phone_number') }}"
-                                class="form-control" id="exampleFormControlInput1" autocomplete="off" required>
+                                class="form-control" id="exampleFormControlInput1" autocomplete="off">
                         </div>
                     </div>
                     <div class="col-xl-6">
@@ -70,7 +70,7 @@
                     <div class="col-xl-6">
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Member Package</label>
-                            <select id="single-select" name="member_package_id" class="form-control">
+                            <select id="single-select" name="member_package_id" class="form-control" required>
                                 <option>
                                     <- Choose ->
                                 </option>
@@ -80,21 +80,18 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-xl-6">
+                    <div class="col-xl-3">
                         <div class="mb-3">
                             <label class="form-label">Start Date</label>
                             <input type="text" name="start_date" value="{{ old('start_date') }}"
-                                class="form-control" placeholder="Choose start date" id="min-date">
-                            {{-- <label class="form-label">Start Date</label>
-                            <input type="text" name="start_date" value="{{ old('start_date') }}"
-                                class="form-control" placeholder="Choose start date" id="mdate"> --}}
+                                class="form-control" placeholder="Choose start date" id="mdate" required>
                         </div>
                     </div>
-                    <div class="col-xl-6">
+                    <div class="col-xl-3">
                         <div class="mb-3">
                             <label class="form-label">Expired Date</label>
                             <input type="text" name="expired_date" value="{{ old('expired_date') }}"
-                                class="form-control" placeholder="Choose expired date" id="min-date2">
+                                class="form-control" placeholder="Choose expired date" id="mdate2" required>
                             {{-- <label class="form-label">Expired Date</label>
                             <input type="text" name="expired_date" value="{{ old('expired_date') }}"
                                 class="form-control" placeholder="Choose expired date" id="mdate2"> --}}
@@ -103,7 +100,7 @@
                     <div class="col-xl-6">
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Method Payment</label>
-                            <select id="single-select4" name="method_payment_id" class="form-control">
+                            <select id="single-select4" name="method_payment_id" class="form-control" required>
                                 <option>
                                     <- Choose ->
                                 </option>
@@ -113,10 +110,10 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-xl-6">
+                    {{-- <div class="col-xl-6">
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Sold By</label>
-                            <select id="single-select2" name="fc_id" class="form-control">
+                            <select id="single-select2" name="fc_id" class="form-control" required>
                                 <option>
                                     <- Choose ->
                                 </option>
@@ -127,11 +124,11 @@
                                 @endforeach
                             </select>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="col-xl-6">
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Referral Name</label>
-                            <select id="single-select3" name="refferal_id" class="form-control">
+                            <select id="single-select3" name="refferal_id" class="form-control" required>
                                 <option>
                                     <- Choose ->
                                 </option>

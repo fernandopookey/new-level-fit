@@ -154,6 +154,12 @@
 <!-- clockpicker -->
 <script src="{{ asset('admingym/vendor/clockpicker/js/bootstrap-clockpicker.min.js') }}"></script>
 
+{{-- Datatables --}}
+<script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script>
+    let table = new DataTable('#myTable');
+</script>
+
 
 <script>
     @if (Session::has('success'))
@@ -167,6 +173,25 @@
             reverse: true
         });
     });
+</script>
+
+<script>
+    function openTrainerSessionDetail(id) {
+        var width = 500;
+        var height = 400;
+        var url = "<?php echo URL::to('/trainer-session/'); ?>" + id;
+
+        var leftPosition, topPosition;
+        //Allow for borders.
+        leftPosition = (window.screen.width / 2) - ((width / 2) + 10);
+        //Allow for title and status bars.
+        topPosition = (window.screen.height / 2) - ((height / 2) + 50);
+        //Open the window.
+        window.open(url, "Window2",
+            "status=no,height=" + height + ",width=" + width + ",resizable=yes,left=" +
+            leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" +
+            topPosition + ",toolbar=no,menubar=no,scrollbars=no,location=no,directories=no");
+    }
 </script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"

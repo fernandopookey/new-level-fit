@@ -23,8 +23,7 @@ class PersonalTrainerController extends Controller
         $data = $request->validate([
             'full_name' => 'required|string|max:200',
             'gender'    => 'required',
-            'club'      => 'required',
-            'level'     => 'required'
+            'role'      => 'required',
         ]);
 
         PersonalTrainer::create($data);
@@ -42,8 +41,7 @@ class PersonalTrainerController extends Controller
         $data = $request->validate([
             'full_name' => 'required|string|max:200',
             'gender'    => 'required',
-            'club'      => 'required',
-            'level'     => 'required'
+            'role'      => '',
         ]);
 
         $item->update($data);
