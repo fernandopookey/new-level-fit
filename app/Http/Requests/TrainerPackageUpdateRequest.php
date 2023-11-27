@@ -24,11 +24,11 @@ class TrainerPackageUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'package_name'          => 'required|string',
-            'package_type_id'       => 'required|exists:trainer_package_types,id',
+            'package_name'          => 'string',
+            'package_type_id'       => 'requiredexists:trainer_package_types,id',
             'number_of_session'     => 'required',
-            'package_price'         => 'required|numeric',
-            'admin_price'           => 'required|numeric',
+            'package_price'         => 'numeric',
+            'admin_price'           => 'numeric',
             'description'           => 'nullable',
         ];
     }

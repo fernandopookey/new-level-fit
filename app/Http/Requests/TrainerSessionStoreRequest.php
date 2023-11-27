@@ -28,9 +28,8 @@ class TrainerSessionStoreRequest extends FormRequest
             'trainer_id'            => 'required|exists:personal_trainers,id',
             'start_date'            => 'required|string',
             'trainer_package_id'    => 'required|exists:trainer_packages,id',
-            'remaining_session'     => '',
-            'status'                => 'required',
-            'user_id'               => ''
+            'user_id'               => '',
+            'description'           => ''
         ];
     }
 }

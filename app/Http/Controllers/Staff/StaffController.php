@@ -25,6 +25,7 @@ class StaffController extends Controller
             'personalTrainer'       => PersonalTrainer::get(),
             'physiotherapy'         => Physiotherapy::get(),
             'ptLeader'              => PTLeader::get(),
+            'users'                 => User::get(),
             'content'               => 'admin/staff/index'
         ];
 

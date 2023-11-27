@@ -28,10 +28,8 @@ class TrainerSessionUpdateRequest extends FormRequest
             'trainer_id'            => 'exists:personal_trainers,id',
             'start_date'            => 'string',
             'trainer_package_id'    => 'exists:trainer_packages,id',
-            'remaining_session'     => '',
-            'check_in'              => '',
-            'status'                => '',
-            'user_id'               => ''
+            'user_id'               => '',
+            'description'           => ''
         ];
     }
 }

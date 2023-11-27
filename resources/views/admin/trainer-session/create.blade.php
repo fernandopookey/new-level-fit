@@ -51,7 +51,7 @@
                                     <- Choose ->
                                 </option>
                                 @foreach ($trainerPackages as $item)
-                                    <option value="{{ $item->id }}">
+                                    <option value="{{ $item->id }}" data-session="{{ $item->number_of_session }}">
                                         {{ $item->package_name }} | {{ formatRupiah($item->package_price) }} |
                                         {{ $item->number_of_session }} Sessions
                                     </option>
@@ -68,21 +68,11 @@
                     </div>
                     <div class="col-xl-6">
                         <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">Remaining Session</label>
-                            <input class="form-control" type="number" name="remaining_session" required>
-                        </div>
-                    </div>
-                    <div class="col-xl-6">
-                        <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">Status</label>
-                            <select name="status" value="{{ old('status') }}" aria-label="Default select example"
-                                class="form-control" required>
-                                <option disabled selected value>
-                                    <- Choose ->
-                                </option>
-                                <option value="Running">Running</option>
-                                <option value="Over">Over</option>
-                            </select>
+                            <label for="exampleFormControlTextarea1" class="form-label text-primary">
+                                Description
+                            </label>
+                            <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="6"
+                                placeholder="Enter Description">{{ old('description') }}</textarea>
                         </div>
                     </div>
                 </div>

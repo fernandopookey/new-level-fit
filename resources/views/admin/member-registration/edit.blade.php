@@ -2,7 +2,8 @@
     <div class="modal fade" id="modalEdit{{ $value->id }}" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <form action="{{ route('member.update', $value->id) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('member-registration.update', $value->id) }}" method="POST"
+                    enctype="multipart/form-data">
                     @method('PUT')
                     @csrf
                     <div class="modal-header">

@@ -2,6 +2,7 @@
 
 namespace App\Models\Trainer;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,6 +13,7 @@ class CheckInTrainerSession extends Model
     protected $fillable = [
         'trainer_session_id',
         'check_in_date',
+        'user_id'
     ];
 
     protected $hidden = [];
@@ -19,5 +21,10 @@ class CheckInTrainerSession extends Model
     public function trainerSession()
     {
         return $this->belongsTo(TrainerSession::class, 'trainer_session_id', 'id');
+    }
+
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

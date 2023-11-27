@@ -7,17 +7,20 @@ use App\Http\Requests\TrainerPackageStoreRequest;
 use App\Http\Requests\TrainerPackageUpdateRequest;
 use App\Models\Trainer\TrainerPackage;
 use App\Models\Trainer\TrainerPackageType;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TrainerPackageController extends Controller
 {
     public function index()
     {
         $data = [
-            'title'                     => 'Trainer Package List',
-            'trainerPackage'             => TrainerPackage::get(),
-            'trainerPackageType'         => TrainerPackageType::get(),
-            'content'                   => 'admin/trainer-package/index'
+            'title'                 => 'Trainer Package List',
+            'trainerPackage'        => TrainerPackage::get(),
+            'trainerPackageType'    => TrainerPackageType::get(),
+            'users'                 => User::get(),
+            'content'               => 'admin/trainer-package/index'
         ];
 
         return view('admin.layouts.wrapper', $data);
@@ -31,7 +34,7 @@ class TrainerPackageController extends Controller
     public function store(TrainerPackageStoreRequest $request)
     {
         $data = $request->all();
-
+        $data['user_id'] = Auth::user()->id;
         TrainerPackage::create($data);
         return redirect()->route('trainer-package.index')->with('message', 'Trainer Package Added Successfully');
     }
@@ -45,7 +48,7 @@ class TrainerPackageController extends Controller
     {
         $item = TrainerPackage::find($id);
         $data = $request->all();
-
+        $data['user_id'] = Auth::user()->id;
         $item->update($data);
         return redirect()->route('trainer-package.index')->with('message', 'Trainer Package Updated Successfully');
     }

@@ -8,7 +8,9 @@ use App\Http\Requests\MemberPackageUpdateRequest;
 use App\Models\Member\MemberPackage;
 use App\Models\Member\MemberPackageCategory;
 use App\Models\Member\MemberPackageType;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class MemberPackageController extends Controller
 {
@@ -19,6 +21,7 @@ class MemberPackageController extends Controller
             'memberPackage'             => MemberPackage::get(),
             'memberPackageType'         => MemberPackageType::get(),
             'memberPackageCategories'   => MemberPackageCategory::get(),
+            'users'                     => User::get(),
             'content'                   => 'admin/member-package/index'
         ];
 
@@ -33,7 +36,7 @@ class MemberPackageController extends Controller
     public function store(MemberPackageStoreRequest $request)
     {
         $data = $request->all();
-
+        $data['user_id'] = Auth::user()->id;
         MemberPackage::create($data);
         return redirect()->route('member-package.index')->with('message', 'Member Package Added Successfully');
     }
@@ -47,7 +50,7 @@ class MemberPackageController extends Controller
     {
         $item = MemberPackage::find($id);
         $data = $request->all();
-
+        $data['user_id'] = Auth::user()->id;
         $item->update($data);
         return redirect()->route('member-package.index')->with('message', 'Member Package Updated Successfully');
     }

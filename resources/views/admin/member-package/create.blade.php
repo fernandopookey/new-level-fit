@@ -33,7 +33,7 @@
                                     id="exampleFormControlInput1" autocomplete="off" required>
                             </div>
                         </div>
-                        <div class="col-xl-6">
+                        {{-- <div class="col-xl-6">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Package Type</label>
                                 <select name="package_type_id" class="form-control" aria-label="Default select example"
@@ -46,8 +46,8 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
-                        <div class="col-xl-6">
+                        </div> --}}
+                        {{-- <div class="col-xl-6">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Package Category</label>
                                 <select name="package_category_id" class="form-control"
@@ -60,7 +60,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="col-xl-6">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Package Price</label>
@@ -73,14 +73,6 @@
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Admin Price</label>
                                 <input type="text" name="admin_price" value="{{ old('admin_price') }}"
-                                    class="form-control rupiah" id="exampleFormControlInput1" autocomplete="off"
-                                    required>
-                            </div>
-                        </div>
-                        <div class="col-xl-6">
-                            <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label">Joining Price</label>
-                                <input type="text" name="joining_price" value="{{ old('joining_price') }}"
                                     class="form-control rupiah" id="exampleFormControlInput1" autocomplete="off"
                                     required>
                             </div>

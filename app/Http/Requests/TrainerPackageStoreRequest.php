@@ -25,7 +25,7 @@ class TrainerPackageStoreRequest extends FormRequest
     {
         return [
             'package_name'          => 'required|string',
-            'package_type_id'       => 'required|exists:trainer_package_types,id',
+            'package_type_id'       => 'exists:trainer_package_types,id',
             'number_of_session'     => 'required',
             'package_price'         => 'required|numeric',
             'admin_price'           => 'required|numeric',

@@ -80,7 +80,8 @@
                     <!--/student-->
                 </div>
                 <div class="card-footer text-center border-0 pt-0 px-3 pb-0">
-                    <a href="{{ route('trainer.index') }}" class="btn btn-block btn-primary light btn-rounded">View
+                    <a href="{{ route('personal-trainer.index') }}"
+                        class="btn btn-block btn-primary light btn-rounded">View
                         More</a>
                 </div>
             </div>

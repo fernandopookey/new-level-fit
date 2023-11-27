@@ -157,7 +157,14 @@
 {{-- Datatables --}}
 <script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script>
-    let table = new DataTable('#myTable');
+    $(document).ready(function() {
+        let table = new DataTable('#myTable', {
+            // Code below useless
+            order: [
+                [1, 'asc']
+            ] // 1 is the column index, 'asc' is for ascending order
+        });
+    });
 </script>
 
 
@@ -205,6 +212,34 @@
     };
 </script>
 
+<script>
+    // Add this script to handle automatic data saving
+    $(document).ready(function() {
+        $('#memberCode').on('input', function() {
+            // Get the member code value
+            var memberCode = $(this).val();
+
+            // Make an AJAX request to save the member code
+            $.ajax({
+                url: '{{ route('member-check-in.store') }}',
+                method: 'POST',
+                data: {
+                    '_token': '{{ csrf_token() }}',
+                    'member_code': memberCode
+                },
+                success: function(response) {
+                    console.log(response);
+                    // You can handle success actions if needed
+                },
+                error: function(error) {
+                    console.log(error);
+                    // You can handle error actions if needed
+                }
+            });
+        });
+    });
+</script>
+
 {{-- <script>
     var loadFile = function(event) {
         var output = document.getElementById('outputEdit');
@@ -229,6 +264,24 @@
         toastr.error("{{ Session::get('error') }}");
     </script>
 @endif
+
+<script>
+    document.addEventListener("keydown", e => {
+        if (e.key.toLowerCase() === "`") {
+            document.getElementById('checkInButton').click();
+        }
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('#single-select3').change(function() {
+            var numberOfSessions = $(this).find(':selected').data('session');
+
+            $('#remaining-session-input').val(numberOfSessions);
+        });
+    });
+</script>
 
 
 </body>

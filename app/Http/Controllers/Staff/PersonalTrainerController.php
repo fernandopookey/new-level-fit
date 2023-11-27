@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Staff;
 use App\Http\Controllers\Controller;
 use App\Models\Staff\PersonalTrainer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PersonalTrainerController extends Controller
 {
@@ -21,10 +22,13 @@ class PersonalTrainerController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'full_name' => 'required|string|max:200',
-            'gender'    => 'required',
-            'role'      => 'required',
+            'full_name'     => 'required|string|max:200',
+            'phone_number'  => '',
+            'gender'        => 'required',
+            'address'       => '',
+            'description'   => '',
         ]);
+        $data['user_id'] = Auth::user()->id;
 
         PersonalTrainer::create($data);
         return redirect()->route('staff.index')->with('message', 'Personal Trainer Added Successfully');
@@ -39,10 +43,10 @@ class PersonalTrainerController extends Controller
     {
         $item = PersonalTrainer::find($id);
         $data = $request->validate([
-            'full_name' => 'required|string|max:200',
-            'gender'    => 'required',
-            'role'      => '',
+            'full_name' => 'string|max:200',
+            'gender'    => '',
         ]);
+        $data['user_id'] = Auth::user()->id;
 
         $item->update($data);
         return redirect()->route('staff.index')->with('message', 'Personal Trainer Updated Successfully');

@@ -27,8 +27,9 @@
                         <span class="nav-text">Member</span>
                     </a>
                     <ul aria-expanded="false">
-                        <li><a href="{{ route('member.index') }}">Member List</a></li>
-                        <li><a href="{{ route('member.create') }}">Member Registration</a></li>
+                        <li><a href="{{ route('members.index') }}">Members</a></li>
+                        <li><a href="{{ route('member-registration.index') }}">Member Registration List</a></li>
+                        <li><a href="{{ route('member-registration.create') }}">Create Member Registration</a></li>
                         {{-- <li><a href="{{ route('member-payment.index') }}">Member Payment</a></li> --}}
                         {{-- <li><a href="#">Member Visit</a></li> --}}
                         {{-- <li><a href="#">Member Expired</a></li> --}}
@@ -62,6 +63,16 @@
                     {{-- <li><a href="{{ route('running-session.index') }}">Running Session</a></li> --}}
                 </ul>
 
+            </li>
+            <li>
+                <a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
+                    <i class="material-icons"> assessment </i>
+                    <span class="nav-text">Report Over</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li><a href="{{ route('member-registration-over.index') }}">Member Registration Over</a></li>
+                    <li><a href="{{ route('trainer-session-over.index') }}">Trainer Session Over</a></li>
+                </ul>
             </li>
             <li>
                 <a href="{{ route('running-session.index') }}" aria-expanded="false">
@@ -130,28 +141,27 @@
                             <a class="has-arrow" href="javascript:void(0);" aria-expanded="false">Member</a>
                             <ul aria-expanded="false">
                                 <li><a href="{{ route('member-package.index') }}">Member Package</a></li>
-                                <li><a href="{{ route('member-package-type.index') }}">Member Package Type</a></li>
+                                {{-- <li><a href="{{ route('member-package-type.index') }}">Member Package Type</a></li>
                                 <li><a href="{{ route('member-package-category.index') }}">Member Package Category</a>
-                                </li>
+                                </li> --}}
                             </ul>
                         </li>
-                        <li><a href="#">Class Name</a></li>
+                        {{-- <li><a href="#">Class Name</a></li> --}}
                         {{-- <li><a href="#">Locker Package</a></li> --}}
                         <li><a href="{{ route('payment-method.index') }}">Payment Method</a></li>
-                        <li><a href="#">Physiotherapy Package</a></li>
+                        {{-- <li><a href="#">Physiotherapy Package</a></li> --}}
                         {{-- <li><a href="{{ route('referral.index') }}">Referral</a></li> --}}
                         {{-- <li><a href="{{ route('sold-by.index') }}">Sold By</a></li> --}}
-                        <li><a href="{{ route('source-code.index') }}">Source Code</a></li>
                         {{-- <li><a href="{{ route('studio.index') }}">Studio Name</a></li>
                         <li><a href="{{ route('studio-package.index') }}">Studio Package</a></li> --}}
                         <li>
                             <a class="has-arrow" href="javascript:void(0);" aria-expanded="false">Trainer</a>
                             <ul aria-expanded="false">
                                 <li><a href="{{ route('trainer-package.index') }}">Trainer Package</a></li>
-                                <li><a href="{{ route('trainer-package-type.index') }}">Trainer Package Type</a></li>
+                                {{-- <li><a href="{{ route('trainer-package-type.index') }}">Trainer Package Type</a></li>
                                 <li><a href="{{ route('trainer-transaction-type.index') }}">Trainer Transaction
                                         Type</a>
-                                </li>
+                                </li> --}}
                             </ul>
                         </li>
                         {{-- <li><a href="{{ route('transfer-package.index') }}">Transfer Package</a></li> --}}

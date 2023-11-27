@@ -68,24 +68,13 @@
                                 id="mdate">
                         </div>
                     </div>
-                    {{-- <div class="col-xl-6">
-                        <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">Remaining Session</label>
-                            <input class="form-control" type="number" name="remaining_session"
-                                value="{{ old('remaining_session', $trainerSession->remaining_session) }}" required>
-                        </div>
-                    </div> --}}
                     <div class="col-xl-6">
                         <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">Status</label>
-                            <select id="single-select2" name="status" value="{{ old('status') }}"
-                                aria-label="Default select example" class="form-control" required>
-                                <option value="{{ $trainerSession->status }}" selected>
-                                    {{ old('status', $trainerSession->status) }}
-                                </option>
-                                <option value="Running">Running</option>
-                                <option value="Over">Over</option>
-                            </select>
+                            <label for="exampleFormControlTextarea1" class="form-label text-primary">
+                                Description
+                            </label>
+                            <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="6"
+                                placeholder="Enter Description">{{ old('description', $trainerSession->description) }}</textarea>
                         </div>
                     </div>
                 </div>

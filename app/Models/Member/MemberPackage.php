@@ -2,6 +2,7 @@
 
 namespace App\Models\Member;
 
+use App\Models\User;
 use App\Traits\HasFormatRupiah;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -18,8 +19,8 @@ class MemberPackage extends Model
         'package_category_id',
         'package_price',
         'admin_price',
-        'joining_price',
         'description',
+        'user_id'
     ];
 
     protected $hidden = [];
@@ -32,5 +33,10 @@ class MemberPackage extends Model
     public function memberPackageCategories()
     {
         return $this->belongsTo(MemberPackageCategory::class, 'package_category_id', 'id');
+    }
+
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

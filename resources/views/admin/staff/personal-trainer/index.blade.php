@@ -1,6 +1,7 @@
 <!-- Modal Add -->
-<div class="modal fade" id="modalAddPersonalTrainer" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-center">
+<div class="modal fade bd-example-modal-lg" id="modalAddPersonalTrainer" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <form action="{{ route('personal-trainer.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -26,28 +27,42 @@
                                     class="form-control" id="exampleFormControlInput1" autocomplete="off" required>
                             </div>
                         </div>
-                        <div class="col-xl-6">
-                            <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label">Role</label>
-                                <select name="role" class="form-control" aria-label="Default select example">
-                                    <option disabled selected value>
-                                        <- Choose ->
-                                    </option>
-                                    <option value="Personal Trainer">Personal Trainer</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-xl-6">
+                        <div class="col-xl-3">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Gender</label>
-                                <select name="gender" class="form-control" aria-label="Default select example"
-                                    required>
+                                <select name="gender" class="form-control" aria-label="Default select example" required
+                                    autocomplete="off">
                                     <option disabled selected value>
                                         <- Choose ->
                                     </option>
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
                                 </select>
+                            </div>
+                        </div>
+                        <div class="col-xl-3">
+                            <div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label">Phone Number</label>
+                                <input type="text" name="phone_number" value="{{ old('phone_number') }}"
+                                    class="form-control" id="exampleFormControlInput1" autocomplete="off" required>
+                            </div>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="mb-3">
+                                <label for="exampleFormControlTextarea1" class="form-label text-primary">
+                                    Address
+                                </label>
+                                <textarea class="form-control" name="address" id="exampleFormControlTextarea1" rows="6"
+                                    placeholder="Enter Address">{{ old('address') }}</textarea>
+                            </div>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="mb-3">
+                                <label for="exampleFormControlTextarea1" class="form-label text-primary">
+                                    Description
+                                </label>
+                                <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="6"
+                                    placeholder="Enter Description">{{ old('description') }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -91,21 +106,10 @@
                                     <label for="exampleFormControlInput1" class="form-label">Full Name</label>
                                     <input type="text" name="full_name"
                                         value="{{ old('full_name', $item->full_name) }}" class="form-control"
-                                        id="exampleFormControlInput1" autocomplete="off" required>
+                                        id="exampleFormControlInput1" required autocomplete="off">
                                 </div>
                             </div>
-                            <div class="col-xl-6">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Role</label>
-                                    <select name="role" class="form-control" aria-label="Default select example">
-                                        <option value="{{ $item->role }}" selected>
-                                            {{ old('role', $item->role) }}
-                                        </option>
-                                        <option value="Personal Trainer">Personal Trainer</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-xl-6">
+                            <div class="col-xl-3">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Gender</label>
                                     <select name="gender" class="form-control" aria-label="Default select example">
@@ -115,6 +119,32 @@
                                         <option value="Male">Male</option>
                                         <option value="Female">Female</option>
                                     </select>
+                                </div>
+                            </div>
+                            <div class="col-xl-3">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Phone Number</label>
+                                    <input type="text" name="phone_number"
+                                        value="{{ old('phone_number', $item->phone_number) }}" class="form-control"
+                                        id="exampleFormControlInput1" autocomplete="off" required>
+                                </div>
+                            </div>
+                            <div class="col-xl-6">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlTextarea1" class="form-label text-primary">
+                                        Address
+                                    </label>
+                                    <textarea class="form-control" name="address" id="exampleFormControlTextarea1" rows="6"
+                                        placeholder="Enter Address">{{ old('address', $item->address) }}</textarea>
+                                </div>
+                            </div>
+                            <div class="col-xl-6">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlTextarea1" class="form-label text-primary">
+                                        Description
+                                    </label>
+                                    <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="6"
+                                        placeholder="Enter Description">{{ old('description', $item->description) }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -159,18 +189,44 @@
                             id="myTable">
                             <thead>
                                 <tr>
+                                    <th>No</th>
                                     <th>Full Name</th>
+                                    <th>Phone Number</th>
                                     <th>Gender</th>
                                     <th>Role</th>
+                                    <th>Address</th>
+                                    <th>Description</th>
+                                    <th>Staff</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($personalTrainer as $item)
                                     <tr>
-                                        <td>{{ $item->full_name }}</td>
-                                        <td>{{ $item->gender }}</td>
-                                        <td>{{ $item->role }}</td>
+                                        <td>
+                                            <h6>{{ $loop->iteration }}</h6>
+                                        </td>
+                                        <td>
+                                            <h6>{{ $item->full_name }}</h6>
+                                        </td>
+                                        <td>
+                                            <h6>{{ $item->phone_number }}</h6>
+                                        </td>
+                                        <td>
+                                            <h6>{{ $item->gender }}</h6>
+                                        </td>
+                                        <td>
+                                            <h6>{{ $item->role }}</h6>
+                                        </td>
+                                        <td>
+                                            <h6>{{ $item->address }}</h6>
+                                        </td>
+                                        <td>
+                                            <h6>{{ $item->description }}</h6>
+                                        </td>
+                                        <td>
+                                            <h6>{{ $item->users->full_name }}</h6>
+                                        </td>
                                         <td>
                                             <div>
                                                 <button type="button"

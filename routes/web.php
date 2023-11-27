@@ -3,6 +3,9 @@
 use App\Http\Controllers\Admin\AppointmentStatusChangeController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Member\MemberController;
+use App\Http\Controllers\Member\MemberRegistrationController;
+use App\Http\Controllers\Member\MemberRegistrationOverController;
+use App\Http\Controllers\Member\MemberVisitController;
 use App\Http\Controllers\Report\AppointmentListController;
 use App\Http\Controllers\Report\MemberExpiredListController;
 use App\Http\Controllers\Report\MemberListController;
@@ -10,6 +13,7 @@ use App\Http\Controllers\Report\TrainerGoListController;
 use App\Http\Controllers\Staff\StaffController;
 use App\Http\Controllers\Trainer\TrainerSessionCheckInController;
 use App\Http\Controllers\Trainer\TrainerSessionController;
+use App\Http\Controllers\Trainer\TrainerSessionOverController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -36,7 +40,10 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     Route::resource('member-package-type', '\App\Http\Controllers\Member\MemberPackageTypeController');
     Route::resource('member-package-category', '\App\Http\Controllers\Member\MemberPackageCategoryController');
     Route::resource('member-payment', '\App\Http\Controllers\Member\MemberPaymentController');
-    Route::post('member-second-store', [MemberController::class, 'memberSecondStore'])->name('member-second-store');
+    Route::post('member-second-store', [MemberRegistrationController::class, 'memberSecondStore'])->name('member-second-store');
+    // Route::get('print-member-card', [MemberController::class, 'print_member_card'])->name('print-member-card');
+    Route::resource('print-member-card', '\App\Http\Controllers\Member\MemberPrintCardController');
+    Route::resource('member-check-in', '\App\Http\Controllers\Member\MemberCheckInController');
 
     Route::resource('trainer', '\App\Http\Controllers\Trainer\TrainerController');
     Route::resource('trainer-package', '\App\Http\Controllers\Trainer\TrainerPackageController');
@@ -67,10 +74,14 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     Route::resource('studio-transactions', '\App\Http\Controllers\Admin\StudioTransactionController');
 
     Route::resource('trainer-session', '\App\Http\Controllers\Trainer\TrainerSessionController');
+    Route::resource('trainer-session-over', '\App\Http\Controllers\Trainer\TrainerSessionOverController');
+    Route::get('trainer-session-over-pdf', [TrainerSessionOverController::class, 'pdfReport'])->name('trainer-session-over-pdf');
     Route::resource('trainer-session-check-in', '\App\Http\Controllers\Trainer\TrainerSessionCheckInController');
     Route::resource('running-session', '\App\Http\Controllers\Trainer\RunningSessionController');
+
     Route::resource('trainer-session-FO', '\App\Http\Controllers\Trainer\TrainerSessionFOController');
     Route::get('cetak-trainer-session-pdf', [TrainerSessionController::class, 'cetak_pdf'])->name('cetak-trainer-session-pdf');
+    Route::get('print-trainer-session-detail-pdf', [TrainerSessionController::class, 'print_trainer_session_detail_pdf'])->name('print-trainer-session-detail-pdf');
 
     Route::resource('buddy-referral', '\App\Http\Controllers\Admin\BuddyReferralController');
     Route::resource('appointment', '\App\Http\Controllers\Admin\AppointmentController');
@@ -92,10 +103,14 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     Route::get('appointment-filter', [AppointmentListController::class, 'filter'])->name('appointment-filter');
 
     Route::resource('member-list', '\App\Http\Controllers\Report\MemberListController');
+    Route::resource('member-registration', '\App\Http\Controllers\Member\MemberRegistrationController');
+    Route::resource('member-registration-over', '\App\Http\Controllers\Member\MemberRegistrationOverController');
+    Route::resource('members', '\App\Http\Controllers\Member\MemberController');
     Route::get('all-member', [MemberListController::class, 'allData'])->name('all-member');
     Route::get('member-filter', [MemberListController::class, 'filter'])->name('member-filter');
-    // Route::get('/member/cetak_member_pdf', 'MemberController@cetak_pdf');
-    Route::get('cetak-member-pdf', [MemberController::class, 'cetak_pdf'])->name('cetak-member-pdf');
+    Route::get('print-member-registration-over-pdf', [MemberRegistrationOverController::class, 'pdfReport'])->name('print-member-registration-over-pdf');
+    Route::get('print-member-registration-detail-pdf', [MemberRegistrationController::class, 'print_detail_pdf'])->name('print-member-registration-detail-pdf');
+    Route::get('member-report', [MemberController::class, 'cetak_pdf'])->name('member-report');
 
     Route::resource('member-expired-list', '\App\Http\Controllers\Report\MemberListController');
     Route::get('all-member-expired', [MemberListController::class, 'allData'])->name('all-member-expired');

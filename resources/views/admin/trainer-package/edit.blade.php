@@ -1,8 +1,8 @@
 <!-- Modal Edit -->
 @foreach ($trainerPackage as $item => $value)
-    <div class="modal fade" id="modalEdit{{ $value->id }}" tabindex="-1" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-center">
+    <div class="modal fade bd-example-modal-lg" id="modalEdit{{ $value->id }}" tabindex="-1"
+        aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <form action="{{ route('trainer-package.update', $value->id) }}" method="POST"
                     enctype="multipart/form-data">
@@ -23,7 +23,7 @@
                             </div>
                         @endif
                         <div class="row">
-                            <div class="col-xl-12">
+                            <div class="col-xl-6">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Package Name</label>
                                     <input type="text" name="package_name"
@@ -31,7 +31,7 @@
                                         id="exampleFormControlInput1" autocomplete="off" required>
                                 </div>
                             </div>
-                            <div class="col-xl-6">
+                            {{-- <div class="col-xl-6">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Package Type</label>
                                     <select name="package_type_id" class="form-control"
@@ -44,7 +44,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="col-xl-6">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Number Of Session</label>

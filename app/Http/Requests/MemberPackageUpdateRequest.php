@@ -24,13 +24,12 @@ class MemberPackageUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'package_name'          => 'required|string',
-            'days'                  => 'required|numeric',
+            'package_name'          => 'string',
+            'days'                  => 'numeric',
             'package_type_id'       => 'exists:member_package_types,id',
             'package_category_id'   => 'exists:member_package_categories,id',
-            'package_price'         => 'required|numeric',
-            'admin_price'           => 'required|numeric',
-            'joining_price'         => 'required|numeric',
+            'package_price'         => 'numeric',
+            'admin_price'           => 'numeric',
             'description'           => 'nullable',
         ];
     }
@@ -40,7 +39,6 @@ class MemberPackageUpdateRequest extends FormRequest
         $this->merge([
             'package_price' => str_replace(',', '', $this->package_price),
             'admin_price' => str_replace(',', '', $this->admin_price),
-            'joining_price' => str_replace(',', '', $this->joining_price),
         ]);
     }
 }

@@ -187,9 +187,15 @@
                             <tbody>
                                 @foreach ($administrator as $item)
                                     <tr>
-                                        <td>{{ $item->full_name }}</td>
-                                        <td>{{ $item->email }}</td>
-                                        <td>{{ $item->gender }}</td>
+                                        <td>
+                                            <h6>{{ $item->full_name }}</h6>
+                                        </td>
+                                        <td>
+                                            <h6>{{ $item->email }}</h6>
+                                        </td>
+                                        <td>
+                                            <h6>{{ $item->gender }}</h6>
+                                        </td>
                                         <td>
                                             <div>
                                                 <button type="button"

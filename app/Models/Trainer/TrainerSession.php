@@ -19,10 +19,10 @@ class TrainerSession extends Model
         'trainer_id',
         'start_date',
         'trainer_package_id',
-        'remaining_session',
-        'check_in',
-        'status',
-        'user_id'
+        'user_id',
+        'package_price',
+        'admin_price',
+        'description'
     ];
 
     protected $hidden = [];

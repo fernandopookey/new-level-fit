@@ -23,8 +23,7 @@
         <thead>
             <tr>
                 <th>No</th>
-                <th>Member Name</th>
-                <th>Member Code</th>
+                <th>Member's Data</th>
                 <th>Trainer Name</th>
                 <th>Trainer Package</th>
                 <th>Start Date</th>
@@ -35,48 +34,35 @@
             </tr>
         </thead>
         <tbody>
-            @php $i=1 @endphp
-            @foreach ($trainerSession as $item)
+            @foreach ($trainerSessions as $item)
                 <tr>
-                    @php
-                        $remainingSessions = optional($item->trainerSession)->remaining_session ?? 0;
-                        $remainingSessions = $item->trainerSessionCheckIn->count();
-                        $totalSessions = $item->trainerPackages->number_of_session;
-                        $result = $remainingSessions - $totalSessions;
-                    @endphp
                     <td>{{ $loop->iteration }}</td>
                     <td>
-                        {{ !empty($item->members->full_name) ? $item->members->full_name : 'Member has  been deleted' }}
+                        {{ $item->member_name }}, <br />
+                        {{ $item->member_code }}
                     </td>
                     <td>
-                        {{ !empty($item->members->member_code) ? $item->members->member_code : 'Member has  been deleted' }}
+                        {{ $item->trainer_name }}
                     </td>
                     <td>
-                        {{ !empty($item->personalTrainers->full_name) ? $item->personalTrainers->full_name : 'Trainer has  been deleted' }}
-                    </td>
-                    <td>
-                        {{ !empty($item->trainerPackages->package_name) ? $item->trainerPackages->package_name : 'Trainer has  been deleted' }}
+                        {{ $item->package_name }}
                     </td>
                     <td>{{ $item->start_date }}</td>
                     <td>
-                        {{ !empty($item->trainerPackages->number_of_session) ? $item->trainerPackages->number_of_session : 'Trainer package has  been deleted' }}
+                        {{ $item->number_of_session }}
                     </td>
                     <td>
-                        {{ abs($result) }}
+                        {{ $item->remaining_sessions }}
                     </td>
                     <td>
-                        @if ($result == 0)
-                            <div class="badge bg-danger">
-                                Trainer session is Over
-                            </div>
+                        @if ($item->session_status == 'Running')
+                            <span class="badge badge-primary">Running</span>
                         @else
-                            <div class="badge bg-primary">
-                                Running
-                            </div>
+                            <span class="badge badge-danger">Over</span>
                         @endif
                     </td>
                     <td>
-                        {{ !empty($item->users->full_name) ? $item->users->full_name : 'User has  been deleted' }}
+                        {{ $item->staff_name }}
                     </td>
                 </tr>
             @endforeach
