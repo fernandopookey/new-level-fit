@@ -30,20 +30,6 @@
                         </div>
                         <div class="col-xl-6">
                             <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label">Source Code</label>
-                                <select name="source_code_id" class="form-control" aria-label="Default select example"
-                                    disabled>
-                                    <option value="{{ $memberRegistration->source_code_id }}" selected>
-                                        {{ old('source_code_id', $memberRegistration->sourceCode->name) }}
-                                    </option>
-                                    @foreach ($sourceCode as $item)
-                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-xl-6">
-                            <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Member Package</label>
                                 <select name="member_package_id" class="form-control" id="single-select" disabled>
                                     <option value="{{ $memberRegistration->member_package_id }}" selected>

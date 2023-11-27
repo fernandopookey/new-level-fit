@@ -6,23 +6,6 @@
                     <div>
                         <a href="{{ route('trainer-session-over-pdf') }}" target="_blank" class="btn btn-info">Cetak
                             PDF</a>
-                        {{-- <button class="btn btn-info">
-                            @if (!empty($trainerSessions))
-                                <?php
-                                $earliestDate = \Carbon\Carbon::parse($trainerSessions->min('earliest_created_at'))->format('Y-m-d');
-                                $latestDate = \Carbon\Carbon::parse($trainerSessions->max('latest_created_at'))->format('Y-m-d');
-                                ?>
-                                <div class="date-section">
-                                    <p><b>{{ $earliestDate }} to {{ $latestDate }}</b></p>
-
-                                    @foreach ($trainerSessions as $session)
-                                        <!-- Your display logic for each session goes here -->
-                                    @endforeach
-                                </div>
-                            @else
-                                <p>No trainer sessions found.</p>
-                            @endif
-                        </button> --}}
                     </div>
                     <div>
                         @if (!empty($trainerSessions))
@@ -31,7 +14,7 @@
                             $latestDate = \Carbon\Carbon::parse($trainerSessions->max('latest_created_at'))->format('Y-m-d');
                             ?>
                             <div class="date-section">
-                                <p><b>{{ $earliestDate }} to {{ $latestDate }}</b></p>
+                                <p>{{ $earliestDate }} <b>to</b> {{ $latestDate }}</p>
 
                                 @foreach ($trainerSessions as $session)
                                     <!-- Your display logic for each session goes here -->

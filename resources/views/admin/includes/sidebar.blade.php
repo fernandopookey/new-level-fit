@@ -27,12 +27,10 @@
                         <span class="nav-text">Member</span>
                     </a>
                     <ul aria-expanded="false">
-                        <li><a href="{{ route('members.index') }}">Members</a></li>
+                        <li><a href="{{ route('members.index') }}">Member's Data</a></li>
                         <li><a href="{{ route('member-registration.index') }}">Member Registration List</a></li>
                         <li><a href="{{ route('member-registration.create') }}">Create Member Registration</a></li>
                         {{-- <li><a href="{{ route('member-payment.index') }}">Member Payment</a></li> --}}
-                        {{-- <li><a href="#">Member Visit</a></li> --}}
-                        {{-- <li><a href="#">Member Expired</a></li> --}}
 
                     </ul>
                 </li>
@@ -60,31 +58,18 @@
                     <li><a href="{{ route('trainer-session.index') }}">Trainer Session</a></li>
                     {{-- <li><a href="{{ route('trainer-session-FO.index') }}">Trainer Session GO</a></li> --}}
                     {{-- <li><a href="#">Trainer Session PGT</a></li> --}}
-                    {{-- <li><a href="{{ route('running-session.index') }}">Running Session</a></li> --}}
                 </ul>
 
             </li>
             <li>
                 <a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
                     <i class="material-icons"> assessment </i>
-                    <span class="nav-text">Report Over</span>
+                    <span class="nav-text">Report</span>
                 </a>
                 <ul aria-expanded="false">
                     <li><a href="{{ route('member-registration-over.index') }}">Member Registration Over</a></li>
                     <li><a href="{{ route('trainer-session-over.index') }}">Trainer Session Over</a></li>
                 </ul>
-            </li>
-            <li>
-                <a href="{{ route('running-session.index') }}" aria-expanded="false">
-                    <i class="material-icons"> assessment </i>
-                    <span class="nav-text">Running Session</span>
-                </a>
-                {{-- <ul aria-expanded="false">
-                        <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                        <li><a href="{{ route('member.index') }}">Member List</a></li>
-                        <li><a href="{{ route('trainer.index') }}">Trainer List</a></li>
-                    </ul> --}}
-
             </li>
             {{-- <li>
                 <a class="has-arrow " href="javascript:void(0);" aria-expanded="false">

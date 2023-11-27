@@ -20,7 +20,6 @@ class MemberRegistration extends Model
 
     protected $fillable = [
         'member_id',
-        'source_code_id',
         'member_package_id',
         'package_price',
         'admin_price',
@@ -36,11 +35,6 @@ class MemberRegistration extends Model
     public function members()
     {
         return $this->belongsTo(Member::class, 'member_id', 'id');
-    }
-
-    public function sourceCode()
-    {
-        return $this->belongsTo(SourceCode::class, 'source_code_id', 'id');
     }
 
     public function memberPackage()

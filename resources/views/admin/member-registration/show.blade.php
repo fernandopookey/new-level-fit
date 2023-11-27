@@ -81,33 +81,44 @@
         <div class="card-body">
             <div class="teacher-deatails">
                 <h3 class="heading">Check In:</h3>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Check In Date</th>
-                            <th>Staff</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($memberRegistrationCheckIn as $item)
+                <form action="{{ route('bulk-delete') }}" method="post"
+                    onsubmit="return confirm('Delete selected data?');">
+                    @csrf
+                    @method('delete')
+                    <table class="table">
+                        <thead>
                             <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $item->check_in_date }}</td>
-                                <td>{{ $item->users->full_name }}</td>
-                                <td>
-                                    <form action="{{ route('member-check-in.destroy', $item->id) }}"
-                                        onclick="return confirm('Delete Data ?')" method="POST">
-                                        @method('delete')
-                                        @csrf
-                                        <button type="submit" class="btn light btn-danger btn-xs mb-1">Delete</button>
-                                    </form>
-                                </td>
+                                <th>Select</th>
+                                <th>No</th>
+                                <th>Check In Date</th>
+                                <th>Staff</th>
+                                <th>Action</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach ($memberRegistrationCheckIn as $item)
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" name="selectedItems[]" value="{{ $item->id }}">
+                                    </td>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $item->check_in_date }}</td>
+                                    <td>{{ $item->users->full_name }}</td>
+                                    <td>
+                                        <form action="{{ route('member-check-in.destroy', $item->id) }}"
+                                            method="POST">
+                                            @method('delete')
+                                            @csrf
+                                            <button type="submit"
+                                                class="btn light btn-danger btn-xs mb-1">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    <button type="submit" class="btn light btn-danger btn-xs mb-1">Delete Selected</button>
+                </form>
             </div>
         </div>
     </div>

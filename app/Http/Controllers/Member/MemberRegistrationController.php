@@ -21,11 +21,13 @@ class MemberRegistrationController extends Controller
 {
     public function index()
     {
-        $query = DB::table('member_registrations as a')
+        $memberRegistrations = DB::table('member_registrations as a')
             ->select(
                 'a.id',
                 'a.start_date',
                 'a.description',
+                'a.package_price as mr_package_price',
+                'a.admin_price as mr_admin_price',
                 'b.full_name as member_name', // alias for members table name column
                 'c.package_name',
                 'c.days',
@@ -36,11 +38,8 @@ class MemberRegistrationController extends Controller
                 'c.package_name',
                 'c.package_price',
                 'c.days',
-                'd.name as source_code_name', // alias for source_codes table name column
                 'e.name as method_payment_name', // alias for method_payments table name column
                 'f.full_name as staff_name', // alias for users table name column
-                DB::raw('MIN(a.created_at) as earliest_created_at'),
-                DB::raw('MAX(a.created_at) as latest_created_at')
             )
             ->addSelect(
                 DB::raw('DATE_ADD(a.start_date, INTERVAL c.days DAY) as expired_date'),
@@ -48,16 +47,17 @@ class MemberRegistrationController extends Controller
             )
             ->join('members as b', 'a.member_id', '=', 'b.id')
             ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
-            ->join('source_codes as d', 'a.source_code_id', '=', 'd.id')
             ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
             ->join('users as f', 'a.user_id', '=', 'f.id')
             ->whereRaw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END = ?', ['Running'])
-            // ->orderBy('status', 'desc')
+            ->orderBy('status', 'desc')
             ->get();
+
+        // dd($query);
 
         $data = [
             'title'                 => 'Member Registration List',
-            'memberRegistration'    => $query,
+            'memberRegistrations'   => $memberRegistrations,
             'content'               => 'admin/member-registration/index'
         ];
 
@@ -137,7 +137,6 @@ class MemberRegistrationController extends Controller
         $data = $request->validate(
             [
                 'member_id'             => 'required|exists:members,id',
-                'source_code_id'        => 'required|exists:source_codes,id',
                 'member_package_id'     => 'required|exists:member_packages,id',
                 'start_date'            => '',
                 'method_payment_id'     => 'required|exists:method_payments,id',

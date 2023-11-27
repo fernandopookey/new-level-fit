@@ -29,20 +29,6 @@
                     </div>
                     <div class="col-xl-6">
                         <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">Source Code</label>
-                            <select name="source_code_id" class="form-control" aria-label="Default select example"
-                                required>
-                                <option disabled selected value>
-                                    <- Choose ->
-                                </option>
-                                @foreach ($sourceCode as $item)
-                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-xl-6">
-                        <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Member Package</label>
                             <select id="single-select" name="member_package_id" class="form-control" required>
                                 <option>

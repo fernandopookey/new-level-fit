@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AppointmentStatusChangeController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Member\MemberCheckInController;
 use App\Http\Controllers\Member\MemberController;
 use App\Http\Controllers\Member\MemberRegistrationController;
 use App\Http\Controllers\Member\MemberRegistrationOverController;
@@ -44,6 +45,8 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     // Route::get('print-member-card', [MemberController::class, 'print_member_card'])->name('print-member-card');
     Route::resource('print-member-card', '\App\Http\Controllers\Member\MemberPrintCardController');
     Route::resource('member-check-in', '\App\Http\Controllers\Member\MemberCheckInController');
+    // Route::delete('/bulk-delete', '\App\Http\Controllers\Member\MemberCheckInController')->name('bulk-delete');
+    Route::delete('bulk-delete', [MemberCheckInController::class, 'bulkDelete'])->name('bulk-delete');
 
     Route::resource('trainer', '\App\Http\Controllers\Trainer\TrainerController');
     Route::resource('trainer-package', '\App\Http\Controllers\Trainer\TrainerPackageController');

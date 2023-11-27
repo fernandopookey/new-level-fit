@@ -8,8 +8,6 @@
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#checkIn2"
                         id="checkInButton">Check
                         In</button>
-                    <a href="{{ route('print-member-registration-pdf') }}" target="_blank" class="btn btn-info">Print
-                        PDF</a>
                 </div>
             </div>
             <div class="col-xl-12">
@@ -41,7 +39,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($memberRegistration as $item)
+                            @foreach ($memberRegistrations as $item)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>
