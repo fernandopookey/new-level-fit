@@ -31,7 +31,6 @@ class DashboardController extends Controller
                 'c.package_name',
                 'c.package_price',
                 'c.days',
-                'd.name as source_code_name',
                 'e.name as method_payment_name',
                 'f.full_name as staff_name'
             )
@@ -41,7 +40,6 @@ class DashboardController extends Controller
             )
             ->join('members as b', 'a.member_id', '=', 'b.id')
             ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
-            ->join('source_codes as d', 'a.source_code_id', '=', 'd.id')
             ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
             ->join('users as f', 'a.user_id', '=', 'f.id')
             ->where(DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END'), '=', 'Running')
@@ -62,7 +60,6 @@ class DashboardController extends Controller
                 'c.package_name',
                 'c.package_price',
                 'c.days',
-                'd.name as source_code_name',
                 'e.name as method_payment_name',
                 'f.full_name as staff_name'
             )
@@ -72,7 +69,6 @@ class DashboardController extends Controller
             )
             ->join('members as b', 'a.member_id', '=', 'b.id')
             ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
-            ->join('source_codes as d', 'a.source_code_id', '=', 'd.id')
             ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
             ->join('users as f', 'a.user_id', '=', 'f.id')
             ->where(DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END'), '=', 'Over')
@@ -93,7 +89,6 @@ class DashboardController extends Controller
                 'c.package_name',
                 'c.package_price',
                 'c.days',
-                'd.name as source_code_name',
                 'e.name as method_payment_name',
                 'f.full_name as staff_name'
             )
@@ -103,7 +98,6 @@ class DashboardController extends Controller
             )
             ->join('members as b', 'a.member_id', '=', 'b.id')
             ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
-            ->join('source_codes as d', 'a.source_code_id', '=', 'd.id')
             ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
             ->join('users as f', 'a.user_id', '=', 'f.id')
             ->where(DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END'), '=', 'Running')
