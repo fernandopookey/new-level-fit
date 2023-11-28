@@ -3,14 +3,9 @@
 namespace App\Models\Member;
 
 // use Alfa6661\AutoNumber\AutoNumberTrait;
-use App\Models\SourceCode;
 use App\Models\MethodPayment;
-use App\Models\Refferal;
-use App\Models\Sold;
 use App\Models\Staff\FitnessConsultant;
-use App\Models\Trainer\TrainerSession;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 

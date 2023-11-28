@@ -88,7 +88,6 @@ class MemberRegistrationController extends Controller
             'full_name'             => 'required',
             'gender'                => 'required',
             'phone_number'          => 'required',
-            'source_code_id'        => 'required|exists:source_codes,id',
             'member_package_id'     => 'required|exists:member_packages,id',
             'start_date'            => '',
             'expired_date'          => '',
@@ -149,7 +148,6 @@ class MemberRegistrationController extends Controller
             [
                 'full_name.required'        => 'Full Name tidak boleh kosong',
                 'gender.required'           => 'Gender tidak boleh kosong',
-                'source_code_id.exists'     => 'Source Code tidak boleh kosong',
                 'member_package_id.exists'  => 'Member Package tidak boleh kosong',
                 'method_payment_id.exists'  => 'Method Payment tidak boleh kosong',
             ]
@@ -185,7 +183,6 @@ class MemberRegistrationController extends Controller
                 'c.package_name',
                 'c.package_price',
                 'c.days',
-                'd.name as source_code_name',
                 'e.name as method_payment_name',
                 'f.full_name as staff_name'
             )
@@ -195,11 +192,11 @@ class MemberRegistrationController extends Controller
             )
             ->join('members as b', 'a.member_id', '=', 'b.id')
             ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
-            ->join('source_codes as d', 'a.source_code_id', '=', 'd.id')
             ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
             ->join('users as f', 'a.user_id', '=', 'f.id')
             ->where('a.id', $id)
             ->get();
+        // dd($id);
 
         $checkInMemberRegistration = MemberRegistration::find($id);
 
@@ -247,7 +244,6 @@ class MemberRegistrationController extends Controller
             'full_name'            => '',
             'gender'                => '',
             'phone_number'          => '',
-            'source_code_id'        => 'exists:source_codes,id',
             'member_package_id'     => 'exists:member_packages,id',
             'start_date'            => '',
             'method_payment_id'     => 'exists:method_payments,id',
@@ -320,7 +316,6 @@ class MemberRegistrationController extends Controller
                 'c.package_name',
                 'c.package_price',
                 'c.days',
-                'd.name as source_code_name', // alias for source_codes table name column
                 'e.name as method_payment_name', // alias for method_payments table name column
                 'f.full_name as staff_name' // alias for users table name column
             )
@@ -330,7 +325,6 @@ class MemberRegistrationController extends Controller
             )
             ->join('members as b', 'a.member_id', '=', 'b.id')
             ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
-            ->join('source_codes as d', 'a.source_code_id', '=', 'd.id')
             ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
             ->join('users as f', 'a.user_id', '=', 'f.id')
             ->get();
@@ -359,7 +353,6 @@ class MemberRegistrationController extends Controller
                 'c.package_name',
                 'c.package_price',
                 'c.days',
-                'd.name as source_code_name',
                 'e.name as method_payment_name',
                 'f.full_name as staff_name'
             )
@@ -369,7 +362,6 @@ class MemberRegistrationController extends Controller
             )
             ->join('members as b', 'a.member_id', '=', 'b.id')
             ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
-            ->join('source_codes as d', 'a.source_code_id', '=', 'd.id')
             ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
             ->join('users as f', 'a.user_id', '=', 'f.id')
             ->where('a.id', $id) // Assuming 'id' is the primary key of the 'member_registrations' table
