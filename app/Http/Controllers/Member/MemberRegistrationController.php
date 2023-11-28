@@ -145,22 +145,23 @@ class MemberRegistrationController extends Controller
                 'user_id'               => ''
             ],
             // This is custom error message
-            [
-                'full_name.required'        => 'Full Name tidak boleh kosong',
-                'gender.required'           => 'Gender tidak boleh kosong',
-                'member_package_id.exists'  => 'Member Package tidak boleh kosong',
-                'method_payment_id.exists'  => 'Method Payment tidak boleh kosong',
-            ]
+            // [
+            //     'full_name.required'        => 'Full Name tidak boleh kosong',
+            //     'gender.required'           => 'Gender tidak boleh kosong',
+            //     'member_package_id.exists'  => 'Member Package tidak boleh kosong',
+            //     'method_payment_id.exists'  => 'Method Payment tidak boleh kosong',
+            // ]
         );
 
         $package = MemberPackage::findOrFail($data['member_package_id']);
 
-        $member = $request->member_code;
+        // $member = $request->member_code;
         $data['user_id'] = Auth::user()->id;
         $data['package_price'] = $package->package_price;
         $data['admin_price'] = $package->admin_price;
 
-        $data['member_code'] = 'GG-' . $member . '-M';
+        // $data['member_code'] = 'GG-' . $member . '-M';
+        // dd($data);
         MemberRegistration::create($data);
         return redirect()->back()->with('message', 'Member Added Successfully');
     }
@@ -241,38 +242,19 @@ class MemberRegistrationController extends Controller
     {
         $item = MemberRegistration::find($id);
         $data = $request->validate([
-            'full_name'            => '',
-            'gender'                => '',
-            'phone_number'          => '',
-            'member_package_id'     => 'exists:member_packages,id',
-            'start_date'            => '',
-            'method_payment_id'     => 'exists:method_payments,id',
-            'fc_id'                 => 'exists:fitness_consultants,id',
-            'refferal_id'           => '',
-            'status'                => '',
-            'description'           => '',
-            'photos'                => 'mimes:png,jpg,jpeg|max:2048'
+            // 'member_id'            => '',
+            // 'member_package_id'     => 'required|exists:member_packages,id',
+            'start_date'            => 'required',
+            // 'method_payment_id'     => 'exists:method_payments,id',
+            // // 'fc_id'                 => 'exists:fitness_consultants,id',
+            // // 'refferal_id'           => '',
+            // 'status'                => '',
+            'description'           => 'required',
         ]);
         $data['user_id'] = Auth::user()->id;
 
-        if ($request->hasFile('photos')) {
+        $package = MemberPackage::findOrFail($item->member_package_id);
 
-            if ($request->photos != null) {
-                $realLocation = "storage/" . $request->photos;
-                if (file_exists($realLocation) && !is_dir($realLocation)) {
-                    unlink($realLocation);
-                }
-            }
-
-            $photos = $request->file('photos');
-            $file_name = time() . '-' . $photos->getClientOriginalName();
-
-            $data['photos'] = $request->file('photos')->store('assets/member', 'public');
-        } else {
-            $data['photos'] = $request->photos;
-        }
-
-        $package = MemberPackage::findOrFail($data['member_package_id']);
         $data['package_price'] = $package->package_price;
         $data['admin_price'] = $package->admin_price;
 
