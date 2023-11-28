@@ -75,11 +75,14 @@
 <div class="col-xl-12">
     <div class="card">
         <div class="card-body">
-            <div class="teacher-deatails">
-                <h3 class="heading">Check In:</h3>
+            <h3 class="heading">Check In:</h3>
+            <form action="{{ route('bulk-delete-member-registration') }}" method="POST">
+                @csrf
+                @method('delete')
                 <table class="table">
                     <thead>
                         <tr>
+                            <td>Checklist</td>
                             <th>No</th>
                             <th>Check In Date</th>
                             <th>Staff</th>
@@ -89,6 +92,7 @@
                     <tbody>
                         @foreach ($memberRegistrationCheckIn as $item)
                             <tr>
+                                <td><input type="checkbox" name="selectedItems[]" value="{{ $item->id }}"></td>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $item->check_in_date }}</td>
                                 <td>{{ $item->users->full_name }}</td>
@@ -104,7 +108,9 @@
                         @endforeach
                     </tbody>
                 </table>
-            </div>
+                <button type="submit" class="btn btn-danger btn-sm"
+                    onclick="return confirm('Delete Data Checklist ?')">Delete Check</button>
+            </form>
         </div>
     </div>
 </div>

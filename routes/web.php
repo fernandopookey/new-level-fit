@@ -46,7 +46,8 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     Route::resource('print-member-card', '\App\Http\Controllers\Member\MemberPrintCardController');
     Route::resource('member-check-in', '\App\Http\Controllers\Member\MemberCheckInController');
     // Route::delete('/bulk-delete', '\App\Http\Controllers\Member\MemberCheckInController')->name('bulk-delete');
-    Route::delete('bulk-delete', [MemberCheckInController::class, 'bulkDelete'])->name('bulk-delete');
+    Route::delete('bulk-delete-member-registration', [MemberCheckInController::class, 'bulkDelete'])->name('bulk-delete-member-registration');
+    Route::delete('bulk-delete-trainer-session', [TrainerSessionCheckInController::class, 'bulkDelete'])->name('bulk-delete-trainer-session');
 
     Route::resource('trainer', '\App\Http\Controllers\Trainer\TrainerController');
     Route::resource('trainer-package', '\App\Http\Controllers\Trainer\TrainerPackageController');

@@ -64,4 +64,17 @@ class TrainerSessionCheckInController extends Controller
             return redirect()->back()->with('error', 'Deleted Failed, please check other page where using this check in');
         }
     }
+
+    public function bulkDelete(Request $request)
+    {
+        $selectedItems = $request->input('selectedItems');
+
+        if (!empty($selectedItems)) {
+            // Use the IDs in $selectedItems to delete the selected rows
+            CheckInTrainerSession::whereIn('id', $selectedItems)->delete();
+            return redirect()->back()->with('message', 'Selected Check In Dates Deleted Successfully');
+        } else {
+            return redirect()->back()->with('error', 'No items selected for deletion');
+        }
+    }
 }
