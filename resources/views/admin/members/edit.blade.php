@@ -31,6 +31,14 @@
                             </div>
                             <div class="col-xl-6">
                                 <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Member Code</label>
+                                    <input type="text" name="member_code"
+                                        value="{{ old('member_code', $item->member_code) }}" class="form-control"
+                                        id="exampleFormControlInput1" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="col-xl-6">
+                                <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Gender</label>
                                     <select name="gender" class="form-control" aria-label="Default select example">
                                         <option value="{{ $item->gender }}" selected>

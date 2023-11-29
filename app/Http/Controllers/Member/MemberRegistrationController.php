@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 
 class MemberRegistrationController extends Controller
@@ -139,29 +140,26 @@ class MemberRegistrationController extends Controller
                 'member_package_id'     => 'required|exists:member_packages,id',
                 'start_date'            => '',
                 'method_payment_id'     => 'required|exists:method_payments,id',
-                // 'fc_id'                 => 'required|exists:fitness_consultants,id',
                 'refferal_id'           => '',
                 'description'           => '',
-                'user_id'               => ''
+                'user_id'               => '',
+                'member_code'           => [
+                    '',
+                    Rule::exists('members', 'member_code')->where(function ($query) use ($request) {
+                        $query->where('member_code', $request->member_code);
+                    }),
+                ],
             ],
-            // This is custom error message
-            // [
-            //     'full_name.required'        => 'Full Name tidak boleh kosong',
-            //     'gender.required'           => 'Gender tidak boleh kosong',
-            //     'member_package_id.exists'  => 'Member Package tidak boleh kosong',
-            //     'method_payment_id.exists'  => 'Method Payment tidak boleh kosong',
-            // ]
+            [
+                'member_code.exists' => 'Member code doesn\'t exist. Please input a valid member code.',
+            ]
         );
 
         $package = MemberPackage::findOrFail($data['member_package_id']);
-
-        // $member = $request->member_code;
         $data['user_id'] = Auth::user()->id;
         $data['package_price'] = $package->package_price;
         $data['admin_price'] = $package->admin_price;
 
-        // $data['member_code'] = 'GG-' . $member . '-M';
-        // dd($data);
         MemberRegistration::create($data);
         return redirect()->back()->with('message', 'Member Added Successfully');
     }
@@ -242,14 +240,8 @@ class MemberRegistrationController extends Controller
     {
         $item = MemberRegistration::find($id);
         $data = $request->validate([
-            // 'member_id'            => '',
-            // 'member_package_id'     => 'required|exists:member_packages,id',
             'start_date'            => 'required',
-            // 'method_payment_id'     => 'exists:method_payments,id',
-            // // 'fc_id'                 => 'exists:fitness_consultants,id',
-            // // 'refferal_id'           => '',
-            // 'status'                => '',
-            'description'           => 'required',
+            'description'           => '',
         ]);
         $data['user_id'] = Auth::user()->id;
 
@@ -259,6 +251,46 @@ class MemberRegistrationController extends Controller
         $data['admin_price'] = $package->admin_price;
 
         $item->update($data);
+
+        $status = DB::table('member_registrations as a')
+            ->select(
+                'a.id',
+                'a.start_date',
+                'a.description',
+                'a.package_price as mr_package_price',
+                'a.admin_price as mr_admin_price',
+                'b.full_name as member_name', // alias for members table name column
+                'c.package_name',
+                'c.days',
+                'b.member_code',
+                'b.phone_number',
+                'b.photos',
+                'b.gender',
+                'c.package_name',
+                'c.package_price',
+                'c.days',
+                'e.name as method_payment_name', // alias for method_payments table name column
+                'f.full_name as staff_name', // alias for users table name column
+            )
+            ->addSelect(
+                DB::raw('DATE_ADD(a.start_date, INTERVAL c.days DAY) as expired_date'),
+                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END as status')
+            )
+            ->join('members as b', 'a.member_id', '=', 'b.id')
+            ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
+            ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
+            ->join('users as f', 'a.user_id', '=', 'f.id')
+            ->whereRaw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END = ?', ['Running'])
+            ->orderBy('status', 'desc')
+            ->get();
+
+        if ($status['status'] = 'Over') {
+            // Assuming you have a relationship between MemberRegistration and Member
+            $member = $item->members;
+
+            // Update the member_code to null
+            $member->update(['member_code' => null]);
+        }
         return redirect()->route('member-registration.index')->with('message', 'Member Updated Successfully');
     }
 

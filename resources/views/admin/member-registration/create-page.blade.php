@@ -22,7 +22,8 @@
                                 </option>
                                 @foreach ($members as $item)
                                     <option value="{{ $item->id }}">{{ $item->full_name }} |
-                                        {{ $item->member_code }} | {{ $item->gender }}</option>
+                                        {{ $item->member_code ?? 'No member code' }} | {{ $item->gender }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>

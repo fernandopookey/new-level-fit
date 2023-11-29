@@ -19,6 +19,7 @@ class Member extends Model
         'address',
         'description',
         'photos',
+        'member_code',
         'user_id',
     ];
 
