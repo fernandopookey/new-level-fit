@@ -70,8 +70,51 @@ class MemberController extends Controller
 
         $data['member_code'] = 'GG-' . $member . '-M';
         Member::create($data);
-        return redirect()->route('member.index')->with('message', 'Member Added Successfully');
+        return redirect()->back()->with('message', 'Member Added Successfully');
     }
+
+    // public function store(Request $request)
+    // {
+    //     $data = $request->validate([
+    //         'full_name'     => 'required',
+    //         'gender'        => 'required',
+    //         'phone_number'  => '',
+    //         'address'       => '',
+    //         'description'   => '',
+    //         'photos'        => 'mimes:png,jpg,jpeg|max:2048'
+    //     ]);
+
+    //     $data['user_id'] = Auth::user()->id;
+    //     $member = $request->member_code;
+    //     $memberCode = 'GG-' . $member . '-M';
+
+    //     $existingRecord = Member::where('member_code', $memberCode)->first();
+
+    //     if ($existingRecord) {
+    //         return redirect()->back()->with('error', 'Code already exists');
+    //     }
+
+    //     if ($request->hasFile('photos')) {
+
+    //         if ($request->photos != null) {
+    //             $realLocation = "storage/" . $request->photos;
+    //             if (file_exists($realLocation) && !is_dir($realLocation)) {
+    //                 unlink($realLocation);
+    //             }
+    //         }
+
+    //         $photos = $request->file('photos');
+    //         $file_name = time() . '-' . $photos->getClientOriginalName();
+
+    //         $data['photos'] = $request->file('photos')->store('assets/member', 'public');
+    //     } else {
+    //         $data['photos'] = $request->photos;
+    //     }
+
+    //     $data['member_code'] = 'GG-' . $member . '-M';
+    //     Member::create($data);
+    //     return redirect()->route('member.index')->with('message', 'Member Added Successfully');
+    // }
 
     public function edit(string $id)
     {
@@ -144,6 +187,32 @@ class MemberController extends Controller
         } catch (\Throwable $e) {
             // Alert::error('Error', $e->getMessage());
             return redirect()->back()->with('error', 'Member Deleted Failed, please check other session where using this member');
+        }
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        $selectedItems = $request->input('selected_members');
+
+        try {
+            foreach ($selectedItems as $itemId) {
+                $member = Member::find($itemId);
+
+                if (!empty($member)) {
+                    if ($member->photos != null) {
+                        $realLocation = "storage/" . $member->photos;
+                        if (file_exists($realLocation) && !is_dir($realLocation)) {
+                            unlink($realLocation);
+                        }
+                    }
+
+                    $member->delete();
+                }
+            }
+
+            return redirect()->back()->with('message', 'Members Deleted Successfully');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Members Deleted Failed, Please check other pages that are using this member');
         }
     }
 

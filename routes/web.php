@@ -7,6 +7,7 @@ use App\Http\Controllers\Member\MemberController;
 use App\Http\Controllers\Member\MemberRegistrationController;
 use App\Http\Controllers\Member\MemberRegistrationOverController;
 use App\Http\Controllers\Member\MemberVisitController;
+use App\Http\Controllers\MergeCreateDataController;
 use App\Http\Controllers\Report\AppointmentListController;
 use App\Http\Controllers\Report\MemberExpiredListController;
 use App\Http\Controllers\Report\MemberListController;
@@ -36,7 +37,11 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
+    Route::get('/add-data', [MergeCreateDataController::class, 'index'])->name('add-data');
+
     Route::resource('member', '\App\Http\Controllers\Member\MemberController');
+    Route::delete('members-bulk-delete', [MemberController::class, 'bulkDelete'])->name('members-bulk-delete');
+
     Route::resource('member-package', '\App\Http\Controllers\Member\MemberPackageController');
     Route::resource('member-package-type', '\App\Http\Controllers\Member\MemberPackageTypeController');
     Route::resource('member-package-category', '\App\Http\Controllers\Member\MemberPackageCategoryController');
@@ -114,6 +119,7 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     Route::get('member-filter', [MemberListController::class, 'filter'])->name('member-filter');
     Route::get('print-member-registration-over-pdf', [MemberRegistrationOverController::class, 'pdfReport'])->name('print-member-registration-over-pdf');
     Route::get('print-member-registration-detail-pdf', [MemberRegistrationController::class, 'print_detail_pdf'])->name('print-member-registration-detail-pdf');
+    Route::put('member-registration-freeze/{id}/freeze', [MemberRegistrationController::class, 'freeze'])->name('member-registration-freeze');
     Route::get('member-report', [MemberController::class, 'cetak_pdf'])->name('member-report');
 
     Route::resource('member-expired-list', '\App\Http\Controllers\Report\MemberListController');

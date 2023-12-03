@@ -10,13 +10,13 @@
                         In</button>
                 </div>
             </div>
-            <div class="col-xl-12">
+            {{-- <div class="col-xl-12">
                 <div class="page-title flex-wrap justify-content-between">
                     <a href="{{ route('member-registration.create') }}" target="_blank" class="btn btn-primary">+ New
                         Member
                         Registration</a>
                 </div>
-            </div>
+            </div> --}}
             <!--column-->
             <div class="col-xl-12 wow fadeInUp" data-wow-delay="1.5s">
                 <div class="table-responsive full-data">
@@ -30,6 +30,7 @@
                                 <th>Image</th>
                                 <th>Member's Data</th>
                                 <th>Package Data</th>
+                                <th>Days</th>
                                 <th>Start Date</th>
                                 <th>Expired Date</th>
                                 <th>Description</th>
@@ -56,7 +57,10 @@
                                     <td>
                                         <h6>{{ $item->package_name }}</h6>
                                         <h6>{{ formatRupiah($item->package_price) }}</h6>
-                                        <h6>{{ $item->days }} Days</h6>
+                                        {{-- <h6>{{ $item->days }} Days</h6> --}}
+                                    </td>
+                                    <td>
+                                        <h6>{{ $item->member_registration_days }}</h6>
                                     </td>
                                     <td>
                                         <h6>{{ $item->start_date }}</h6>
@@ -83,9 +87,9 @@
                                                 class="btn light btn-info btn-xs mb-1 btn-block">Detail</a>
                                             <a href="{{ route('member-registration.edit', $item->id) }}"
                                                 class="btn light btn-warning btn-xs mb-1 btn-block">Edit</a>
-                                            {{-- <a href="{{ route('print-member-registration-detail-pdf') }}"
-                                                class="btn light btn-primary btn-xs mb-1 btn-block"
-                                                target="_blank">Detail PDF</a> --}}
+                                            <button type="button" class="btn light btn-dark btn-xs mb-1 btn-block"
+                                                data-bs-toggle="modal" data-bs-target=".freeze{{ $item->id }}"
+                                                id="checkInButton">Freeze</button>
                                             <form action="{{ route('member-registration.destroy', $item->id) }}"
                                                 onclick="return confirm('Delete Data ?')" method="POST">
                                                 @method('delete')

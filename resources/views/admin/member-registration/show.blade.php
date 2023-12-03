@@ -30,12 +30,12 @@
                             <th>{{ $memberRegistration->description }}</th>
                         </tr>
                         <tr>
-                            <th><b>Expired Date</b></th>
-                            <th>{{ $memberRegistration->expired_date }}</th>
-                        </tr>
-                        <tr>
                             <th><b>Start Date</b></th>
                             <th>{{ $memberRegistration->start_date }}</th>
+                        </tr>
+                        <tr>
+                            <th><b>Expired Date</b></th>
+                            <th>{{ $memberRegistration->expired_date }}</th>
                         </tr>
                     </thead>
                 </table>

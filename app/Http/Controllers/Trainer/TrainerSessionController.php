@@ -64,8 +64,19 @@ class TrainerSessionController extends Controller
         $data['package_price'] = $package->package_price;
         $data['admin_price'] = $package->admin_price;
         TrainerSession::create($data);
-        return redirect()->route('trainer-session.index')->with('message', 'Trainer Session Added Successfully');
+        return redirect()->back()->with('message', 'Trainer Session Added Successfully');
     }
+
+    // public function store(TrainerSessionStoreRequest $request)
+    // {
+    //     $data = $request->all();
+    //     $package = TrainerPackage::findOrFail($data['trainer_package_id']);
+    //     $data['user_id'] = Auth::user()->id;
+    //     $data['package_price'] = $package->package_price;
+    //     $data['admin_price'] = $package->admin_price;
+    //     TrainerSession::create($data);
+    //     return redirect()->route('trainer-session.index')->with('message', 'Trainer Session Added Successfully');
+    // }
 
     public function show($id)
     {

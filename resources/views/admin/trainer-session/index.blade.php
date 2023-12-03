@@ -2,7 +2,7 @@
     <div class="col-xl-12">
         <div class="row">
             <div class="col-xl-12">
-                <div class="page-title flex-wrap">
+                {{-- <div class="page-title flex-wrap">
                     <div>
                         <a href="{{ route('trainer-session.create') }}" class="btn btn-primary"><i class="fa fa-plus"></i>
                             New Trainer Session</a>
@@ -11,7 +11,7 @@
                         <a href="{{ route('cetak-trainer-session-pdf') }}" target="_blank" class="btn btn-info">Cetak
                             PDF</a>
                     </div>
-                </div>
+                </div> --}}
                 <div class="page-title flex-wrap">
                     <div>
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#checkIn2"
