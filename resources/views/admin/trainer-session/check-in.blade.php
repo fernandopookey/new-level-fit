@@ -1,8 +1,10 @@
-@foreach ($trainerSessions as $trainerSession => $value)
-    <div class="modal fade" id="modalEdit{{ $value->id }}" tabindex="-1" role="dialog" aria-hidden="true">
+@foreach ($trainerSessions as $trainerSession => $item)
+    <div class="modal fade freeze{{ $item->id }}" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <form action="{{ route('trainer-session-check-in.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('trainer-session-freeze', $item->id) }}" method="POST"
+                    enctype="multipart/form-data">
+                    @method('PUT')
                     @csrf
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Check In Member</h1>
@@ -19,23 +21,48 @@
                             </div>
                         @endif
                         <div class="row">
-                            <input type="hidden" name="trainer_session_id" value="{{ $value->id }}">
                             <div class="col-xl-6">
                                 <div class="mb-3">
-                                    <h4>Member Name</h4>
-                                    {{ old('member_id', $value->members->full_name) }}
+                                    <h5>Member Name</h5>
+                                    <input type="text" name="member_code" id="memberCode"
+                                        value="{{ old('member_id', $item->member_name) }}" class="form-control"
+                                        disabled>
                                 </div>
                             </div>
                             <div class="col-xl-6">
                                 <div class="mb-3">
-                                    <h4>Trainer Name</h4>
-                                    {{ old('member_id', $value->personalTrainers->full_name) }}
+                                    <h5>Member Code</h5>
+                                    <input type="text" name="member_code" id="memberCode"
+                                        value="{{ old('member_id', $item->member_code) }}" class="form-control"
+                                        disabled>
+                                </div>
+                            </div>
+                            <div class="col-xl-6">
+                                <div class="mb-3">
+                                    <h5>Trainer Package</h5>
+                                    <input type="text" name="member_code" id="memberCode"
+                                        value="{{ old('member_id', $item->package_name) }}" class="form-control"
+                                        disabled>
+                                </div>
+                            </div>
+                            <div class="col-xl-6">
+                                <div class="mb-3">
+                                    <h5>Days Of Trainer Package</h5>
+                                    <input type="text" name="member_code" id="memberCode"
+                                        value="{{ old('member_id', $item->days) }}" class="form-control" disabled>
+                                </div>
+                            </div>
+                            <div class="col-xl-12">
+                                <div class="mb-3">
+                                    <h5>Days Off</h5>
+                                    <input type="number" name="days_off" id="memberCode" class="form-control"
+                                        autocomplete="off">
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Check In</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
                         <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Close</button>
                     </div>
                 </form>

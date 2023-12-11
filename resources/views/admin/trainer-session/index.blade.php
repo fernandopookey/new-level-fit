@@ -27,12 +27,14 @@
                         id="myTable">
                         <thead>
                             <tr>
+                                <th>No</th>
                                 <th>Member Data</th>
                                 <th>Trainer Name</th>
                                 <th>Trainer Package</th>
                                 <th>Start Date</th>
-                                <th>Session Total</th>
-                                <th>Remaining Session</th>
+                                <th>Expired Date</th>
+                                <th>Session</th>
+                                {{-- <th>Number Of Days</th> --}}
                                 <th>Status</th>
                                 <th>Description</th>
                                 <th>Staff Name</th>
@@ -42,6 +44,7 @@
                         <tbody>
                             @foreach ($trainerSessions as $item)
                                 <tr>
+                                    <td>{{ $loop->iteration }}</td>
                                     <td>
                                         <h6>{{ $item->member_name }},</h6>
                                         <h6>{{ $item->member_code }}</h6>
@@ -50,17 +53,27 @@
                                         <h6>{{ $item->trainer_name }}</h6>
                                     </td>
                                     <td>
-                                        <h6>{{ $item->package_name }}</h6>
+                                        <h6>{{ $item->package_name }}, <br /></h6>
+                                        <h6>{{ formatRupiah($item->package_price) }}</h6>
                                     </td>
                                     <td>
                                         <h6>{{ $item->start_date }}</h6>
                                     </td>
                                     <td>
-                                        <h6>{{ $item->number_of_session }}</h6>
+                                        <h6>{{ $item->expired_date }} | @if ($item->expired_date_status == 'Running')
+                                                <span class="badge badge-primary">Running</span>
+                                            @else
+                                                <span class="badge badge-danger">Over</span>
+                                            @endif
+                                        </h6>
                                     </td>
                                     <td>
-                                        <h6>{{ $item->remaining_sessions }}</h6>
+                                        <h6>Session Total : {{ $item->number_of_session }}</h6>
+                                        <h6>Remaining Session : {{ $item->remaining_sessions }}</h6>
                                     </td>
+                                    {{-- <td>
+                                        <h6>{{ $item->days }}</h6>
+                                    </td> --}}
                                     <td>
                                         @if ($item->session_status == 'Running')
                                             <span class="badge badge-primary">Running</span>
@@ -73,17 +86,24 @@
                                         {{ $item->staff_name }}
                                     </td>
                                     <td class="btn-group-vertical">
-                                        <a href="{{ route('trainer-session.edit', $item->id) }}"
-                                            class="btn light btn-warning btn-xs mb-1">Edit</a>
+                                        @if (Auth::user()->role == 'ADMIN')
+                                            <a href="{{ route('trainer-session.edit', $item->id) }}"
+                                                class="btn light btn-warning btn-xs mb-1">Edit</a>
+                                        @endif
                                         <a href="{{ route('trainer-session.show', $item->id) }}"
                                             class="btn light btn-info btn-xs mb-1">Detail</a>
-                                        <form action="{{ route('trainer-session.destroy', $item->id) }}"
-                                            onclick="return confirm('Delete Data ?')" method="POST">
-                                            @method('delete')
-                                            @csrf
-                                            <button type="submit"
-                                                class="btn light btn-danger btn-xs mb-1 btn-block">Delete</button>
-                                        </form>
+                                        <button type="button" class="btn light btn-dark btn-xs mb-1 btn-block"
+                                            data-bs-toggle="modal" data-bs-target=".freeze{{ $item->id }}"
+                                            id="checkInButton">Freeze</button>
+                                        @if (Auth::user()->role == 'ADMIN')
+                                            <form action="{{ route('trainer-session.destroy', $item->id) }}"
+                                                onclick="return confirm('Delete Data ?')" method="POST">
+                                                @method('delete')
+                                                @csrf
+                                                <button type="submit"
+                                                    class="btn light btn-danger btn-xs mb-1 btn-block">Delete</button>
+                                            </form>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
@@ -97,3 +117,4 @@
 </div>
 
 @include('admin.trainer-session.check-in-2')
+@include('admin.trainer-session.check-in')

@@ -23,7 +23,7 @@
                         <div class="row">
                             <div class="col-xl-6">
                                 <div class="mb-3">
-                                    <h5>Member Code</h5>
+                                    <h5>Member Name</h5>
                                     <input type="text" name="member_code" id="memberCode"
                                         value="{{ old('member_id', $item->member_name) }}" class="form-control"
                                         disabled>

@@ -72,6 +72,7 @@
                 <th>Trainer Name</th>
                 <th>Trainer Package</th>
                 <th>Start Date</th>
+                <th>Expired Date</th>
                 <th>Session Total</th>
                 <th>Remaining Session</th>
                 <th>Status</th>
@@ -93,6 +94,7 @@
                         {{ $item->package_name }}
                     </td>
                     <td>{{ $item->start_date }}</td>
+                    <td>{{ $item->expired_date }}</td>
                     <td>
                         {{ $item->number_of_session }}
                     </td>

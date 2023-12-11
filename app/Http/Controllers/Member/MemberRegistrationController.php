@@ -171,11 +171,12 @@ class MemberRegistrationController extends Controller
             [
                 'member_id'             => 'required|exists:members,id',
                 'member_package_id'     => 'required|exists:member_packages,id',
-                'start_date'            => '',
+                'start_date'            => 'required',
+                'start_time'            => 'required',
                 'method_payment_id'     => 'required|exists:method_payments,id',
-                'refferal_id'           => '',
-                'description'           => '',
-                'user_id'               => '',
+                'refferal_id'           => 'nullable',
+                'description'           => 'nullable',
+                'user_id'               => 'nullable',
                 'member_code'           => [
                     '',
                     Rule::exists('members', 'member_code')->where(function ($query) use ($request) {
@@ -191,6 +192,12 @@ class MemberRegistrationController extends Controller
         $package = MemberPackage::findOrFail($data['member_package_id']);
         $data['user_id'] = Auth::user()->id;
         $data['package_price'] = $package->package_price;
+
+        $data['start_date'] =  $data['start_date'] . ' ' .  $data['start_time'];
+        $dateTime = new \DateTime($data['start_date']);
+        $data['start_date'] = $dateTime->format('Y-m-d H:i:s');
+        unset($data['start_time']);
+
         $data['admin_price'] = $package->admin_price;
         $data['days'] = $package->days;
 
@@ -274,8 +281,9 @@ class MemberRegistrationController extends Controller
     {
         $item = MemberRegistration::find($id);
         $data = $request->validate([
-            'start_date'            => 'required',
-            'description'           => '',
+            'start_date'        => 'nullable',
+            'start_time'        => 'nullable',
+            'description'       => 'nullable',
         ]);
         $data['user_id'] = Auth::user()->id;
 
@@ -283,6 +291,9 @@ class MemberRegistrationController extends Controller
 
         $data['package_price'] = $package->package_price;
         $data['admin_price'] = $package->admin_price;
+
+        $data['start_date'] =  $data['start_date'] . ' ' .  $data['start_time'];
+        unset($data['start_time']);
 
         $item->update($data);
 
@@ -332,8 +343,8 @@ class MemberRegistrationController extends Controller
     {
         $item = MemberRegistration::find($id);
         $data = $request->validate([
-            'start_date'            => '',
-            'description'           => '',
+            'start_date'            => 'nullable',
+            'description'           => 'nullable',
         ]);
         $data['user_id'] = Auth::user()->id;
 
@@ -402,21 +413,51 @@ class MemberRegistrationController extends Controller
             }
 
             Storage::delete($memberRegistration->photos);
+
             $memberRegistration->delete();
             return redirect()->back()->with('message', 'Member Deleted Successfully');
         } catch (\Throwable $e) {
             // Alert::error('Error', $e->getMessage());
-            return redirect()->back()->with('error', 'Member Deleted Failed, please check other session where using this member');
+            return redirect()->back()->with('error', 'Deleted Failed, Delete Member Check In First');
         }
     }
 
+    // public function bulkDelete(Request $request)
+    // {
+    //     $selectedItems = $request->input('selected_member_registrations');
+
+    //     try {
+    //         foreach ($selectedItems as $itemId) {
+    //             $member = MemberRegistration::find($itemId);
+
+    //             if (!empty($member)) {
+    //                 if ($member->photos != null) {
+    //                     $realLocation = "storage/" . $member->photos;
+    //                     if (file_exists($realLocation) && !is_dir($realLocation)) {
+    //                         unlink($realLocation);
+    //                     }
+    //                 }
+
+    //                 $member->delete();
+    //             }
+    //         }
+
+    //         return redirect()->back()->with('message', 'Member Registration Deleted Successfully');
+    //     } catch (\Throwable $th) {
+    //         return redirect()->back()->with('error', 'Deleted Failed, Dehgtrhtrheck In First');
+    //     }
+    // }
+
     public function cetak_pdf()
     {
-        $query = DB::table('member_registrations as a')
+        $memberRegistrations = DB::table('member_registrations as a')
             ->select(
                 'a.id',
                 'a.start_date',
                 'a.description',
+                'a.package_price as mr_package_price',
+                'a.admin_price as mr_admin_price',
+                'a.days as member_registration_days',
                 'b.full_name as member_name', // alias for members table name column
                 'c.package_name',
                 'c.days',
@@ -428,71 +469,23 @@ class MemberRegistrationController extends Controller
                 'c.package_price',
                 'c.days',
                 'e.name as method_payment_name', // alias for method_payments table name column
-                'f.full_name as staff_name' // alias for users table name column
+                'f.full_name as staff_name', // alias for users table name column
             )
             ->addSelect(
-                DB::raw('DATE_ADD(a.start_date, INTERVAL c.days DAY) as expired_date'),
-                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END as status')
+                DB::raw('DATE_ADD(a.start_date, INTERVAL a.days DAY) as expired_date'),
+                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.days DAY) THEN "Over" ELSE "Running" END as status')
             )
             ->join('members as b', 'a.member_id', '=', 'b.id')
             ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
             ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
             ->join('users as f', 'a.user_id', '=', 'f.id')
+            ->whereRaw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.days DAY) THEN "Over" ELSE "Running" END = ?', ['Running'])
+            ->orderBy('status', 'desc')
             ->get();
 
         $pdf = Pdf::loadView('admin/member-registration/member-registration-pdf', [
-            'memberRegistrations'   => $query,
+            'memberRegistrations'   => $memberRegistrations,
         ])->setPaper('a4', 'landscape');
         return $pdf->stream('member-registration-report.pdf');
-    }
-
-    public function print_detail_pdf($id)
-    {
-        $query = DB::table('member_registrations as a')
-            ->select(
-                'a.id',
-                'a.start_date',
-                'a.description',
-                'b.full_name as member_name',
-                'b.address',
-                'b.member_code',
-                'b.phone_number',
-                'b.photos',
-                'b.gender',
-                'c.package_name',
-                'c.days',
-                'c.package_name',
-                'c.package_price',
-                'c.days',
-                'e.name as method_payment_name',
-                'f.full_name as staff_name'
-            )
-            ->addSelect(
-                DB::raw('DATE_ADD(a.start_date, INTERVAL c.days DAY) as expired_date'),
-                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END as status')
-            )
-            ->join('members as b', 'a.member_id', '=', 'b.id')
-            ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
-            ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
-            ->join('users as f', 'a.user_id', '=', 'f.id')
-            ->where('a.id', $id) // Assuming 'id' is the primary key of the 'member_registrations' table
-            ->get();
-
-        $data = [
-            'title'                 => 'Detail Member Registration',
-            'memberRegistration'    => $query->first(),
-            'members'               => Member::get(),
-            'memberLastCode'        => Member::latest('id')->first(),
-            'sourceCode'            => SourceCode::get(),
-            'memberPackage'         => MemberPackage::get(),
-            'methodPayment'         => MethodPayment::get(),
-            'fitnessConsultant'     => FitnessConsultant::get(),
-            'referralName'          => FitnessConsultant::get(),
-        ];
-
-        $pdf = Pdf::loadView('admin/member-registration/member-registration-detail-pdf', [
-            'memberRegistrations'   => $query,
-        ])->setPaper('a4', 'landscape');
-        return $pdf->stream('member-registration-detail.pdf');
     }
 }

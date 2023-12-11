@@ -20,8 +20,58 @@ class TrainerSessionController extends Controller
 {
     public function index()
     {
+        // $trainerSessions = DB::table('trainer_sessions as a')
+        //     ->select(
+        //         'a.id',
+        //         'a.start_date',
+        //         'a.description',
+        //         'a.days',
+        //         'b.full_name as member_name',
+        //         'b.member_code',
+        //         'c.package_name',
+        //         'c.number_of_session',
+        //         'c.package_price',
+        //         'd.full_name as trainer_name',
+        //         'e.full_name as staff_name',
+        //         DB::raw('DATE_ADD(a.start_date, INTERVAL a.days DAY) as expired_date'),
+        //         DB::raw(
+        //             '
+        //     CASE 
+        //         WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.days DAY) THEN "Over"
+        //         WHEN IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) <= 0 THEN "Over"
+        //         ELSE "Running" 
+        //     END as status'
+        //         ),
+        //     )
+        //     ->join('members as b', 'a.member_id', '=', 'b.id')
+        //     ->join('trainer_packages as c', 'a.trainer_package_id', '=', 'c.id')
+        //     ->join('personal_trainers as d', 'a.trainer_id', '=', 'd.id')
+        //     ->join('users as e', 'a.user_id', '=', 'e.id')
+        //     ->leftJoin(DB::raw('(SELECT trainer_session_id, COUNT(id) as check_in_count FROM check_in_trainer_sessions GROUP BY trainer_session_id) as e'), 'e.trainer_session_id', '=', 'a.id')
+        //     ->addSelect(DB::raw('IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) as remaining_sessions'))
+        //     // ->addSelect(DB::raw('CASE WHEN IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) > 0 THEN "Running" WHEN IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) < 0 THEN "kelebihan" ELSE "over" END AS session_status'))
+        //     // ->whereRaw('CASE WHEN IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) > 0 THEN "Running" WHEN IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) < 0 THEN "kelebihan" ELSE "over" END = "Running"')
+        //     ->get();
+
+        // Code below not using expired date, only using session remaining
         $trainerSessions = DB::table('trainer_sessions as a')
-            ->select('a.id', 'a.start_date', 'a.description', 'b.full_name as member_name', 'b.member_code', 'c.package_name', 'c.number_of_session', 'd.full_name as trainer_name', 'e.full_name as staff_name')
+            ->select(
+                'a.id',
+                'a.start_date',
+                'a.description',
+                'a.days',
+                'b.full_name as member_name',
+                'b.member_code',
+                'c.package_name',
+                'c.number_of_session',
+                'c.package_price',
+                'd.full_name as trainer_name',
+                'e.full_name as staff_name',
+            )
+            ->addSelect(
+                DB::raw('DATE_ADD(a.start_date, INTERVAL a.days DAY) as expired_date'),
+                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.days DAY) THEN "Over" ELSE "Running" END as expired_date_status')
+            )
             ->join('members as b', 'a.member_id', '=', 'b.id')
             ->join('trainer_packages as c', 'a.trainer_package_id', '=', 'c.id')
             ->join('personal_trainers as d', 'a.trainer_id', '=', 'd.id')
@@ -59,11 +109,22 @@ class TrainerSessionController extends Controller
     public function store(TrainerSessionStoreRequest $request)
     {
         $data = $request->all();
+
         $package = TrainerPackage::findOrFail($data['trainer_package_id']);
+
         $data['user_id'] = Auth::user()->id;
+
+        $data['days'] = $package->days;
+
+        $data['start_date'] =  $data['start_date'] . ' ' .  $data['start_time2'];
+        $dateTime = new \DateTime($data['start_date']);
+        $data['start_date'] = $dateTime->format('Y-m-d H:i:s');
+        unset($data['start_time2']);
+
         $data['package_price'] = $package->package_price;
         $data['admin_price'] = $package->admin_price;
         TrainerSession::create($data);
+
         return redirect()->back()->with('message', 'Trainer Session Added Successfully');
     }
 
@@ -131,11 +192,77 @@ class TrainerSessionController extends Controller
     public function update(TrainerSessionUpdateRequest $request, string $id)
     {
         $item = TrainerSession::find($id);
+
+        // $package = TrainerSession::findOrFail($item->trainer_package_id);
+
         $data = $request->all();
         $data['user_id'] = Auth::user()->id;
 
+        $data['start_date'] =  $data['start_date'] . ' ' .  $data['start_time'];
+        unset($data['start_time']);
+
+        $status = DB::table('trainer_sessions as a')
+            ->select(
+                'a.id',
+                'a.start_date',
+                'a.description',
+                'a.days',
+                'b.full_name as member_name',
+                'b.member_code',
+                'c.package_name',
+                'c.number_of_session',
+                'c.package_price',
+                'd.full_name as trainer_name',
+                'e.full_name as staff_name',
+            )
+            ->addSelect(
+                DB::raw('DATE_ADD(a.start_date, INTERVAL a.days DAY) as expired_date'),
+                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.days DAY) THEN "Over" ELSE "Running" END as expired_date_status')
+            )
+            ->join('members as b', 'a.member_id', '=', 'b.id')
+            ->join('trainer_packages as c', 'a.trainer_package_id', '=', 'c.id')
+            ->join('personal_trainers as d', 'a.trainer_id', '=', 'd.id')
+            ->join('users as e', 'a.user_id', '=', 'e.id')
+            ->leftJoin(DB::raw('(SELECT trainer_session_id, COUNT(id) as check_in_count FROM check_in_trainer_sessions GROUP BY trainer_session_id) as e'), 'e.trainer_session_id', '=', 'a.id')
+            ->addSelect(DB::raw('IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) as remaining_sessions'))
+            ->addSelect(DB::raw('CASE WHEN IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) > 0 THEN "Running" WHEN IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) < 0 THEN "kelebihan" ELSE "over" END AS session_status'))
+            ->whereRaw('CASE WHEN IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) > 0 THEN "Running" WHEN IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) < 0 THEN "kelebihan" ELSE "over" END = "Running"')
+            ->get();
+
+        if ($status['status'] = 'Over') {
+            // Assuming you have a relationship between MemberRegistration and Member
+            $member = $item->members;
+
+            // Update the member_code to null
+            $member->update(['member_code' => null]);
+        }
+
         $item->update($data);
         return redirect()->route('trainer-session.index')->with('message', 'Trainer Session Updated Successfully');
+    }
+
+    public function freeze(Request $request, string $id)
+    {
+        $item = TrainerSession::find($id);
+        $data = $request->validate([
+            'start_date'            => 'nullable',
+            'description'           => 'nullable',
+        ]);
+        $data['user_id'] = Auth::user()->id;
+
+        $package = TrainerPackage::findOrFail($item->trainer_package_id);
+
+        $data['package_price'] = $package->package_price;
+        $data['admin_price'] = $package->admin_price;
+
+        $item->update($data);
+
+        $inputDays = $request->input('days_off');
+        $sumDays = $item->days + $inputDays;
+
+        $item->update(['days' => $sumDays]);
+
+        return redirect()->route('trainer-session.index')->with('message', 'Trainer Session Freeze Successfully');
     }
 
     public function destroy(TrainerSession $trainerSession)
@@ -148,10 +275,52 @@ class TrainerSessionController extends Controller
         }
     }
 
+    public function bulkDelete(Request $request)
+    {
+        $selectedItems = $request->input('selectedTrainerSession');
+
+        try {
+            foreach ($selectedItems as $itemId) {
+                $member = TrainerSession::find($itemId);
+
+                if (!empty($member)) {
+                    // if ($member->photos != null) {
+                    //     $realLocation = "storage/" . $member->photos;
+                    //     if (file_exists($realLocation) && !is_dir($realLocation)) {
+                    //         unlink($realLocation);
+                    //     }
+                    // }
+
+                    $member->delete();
+                }
+            }
+
+            return redirect()->back()->with('message', 'Trainer Session Deleted Successfully');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Trainer Session Deleted Failed, Please check other pages that are using this member');
+        }
+    }
+
     public function cetak_pdf()
     {
         $trainerSessions = DB::table('trainer_sessions as a')
-            ->select('a.id', 'a.start_date', 'b.full_name as member_name', 'b.member_code', 'c.package_name', 'c.number_of_session', 'd.full_name as trainer_name', 'e.full_name as staff_name')
+            ->select(
+                'a.id',
+                'a.start_date',
+                'a.description',
+                'a.days',
+                'b.full_name as member_name',
+                'b.member_code',
+                'c.package_name',
+                'c.number_of_session',
+                'c.package_price',
+                'd.full_name as trainer_name',
+                'e.full_name as staff_name',
+            )
+            ->addSelect(
+                DB::raw('DATE_ADD(a.start_date, INTERVAL a.days DAY) as expired_date'),
+                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.days DAY) THEN "Over" ELSE "Running" END as expired_date_status')
+            )
             ->join('members as b', 'a.member_id', '=', 'b.id')
             ->join('trainer_packages as c', 'a.trainer_package_id', '=', 'c.id')
             ->join('personal_trainers as d', 'a.trainer_id', '=', 'd.id')
@@ -159,29 +328,12 @@ class TrainerSessionController extends Controller
             ->leftJoin(DB::raw('(SELECT trainer_session_id, COUNT(id) as check_in_count FROM check_in_trainer_sessions GROUP BY trainer_session_id) as e'), 'e.trainer_session_id', '=', 'a.id')
             ->addSelect(DB::raw('IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) as remaining_sessions'))
             ->addSelect(DB::raw('CASE WHEN IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) > 0 THEN "Running" WHEN IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) < 0 THEN "kelebihan" ELSE "over" END AS session_status'))
+            ->whereRaw('CASE WHEN IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) > 0 THEN "Running" WHEN IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) < 0 THEN "kelebihan" ELSE "over" END = "Running"')
             ->get();
 
         $pdf = Pdf::loadView('admin/trainer-session/trainer-session-pdf', [
             'trainerSessions'        => $trainerSessions,
         ])->setPaper('a4', 'landscape');
         return $pdf->stream('trainer-session-report.pdf');
-    }
-
-    public function print_trainer_session_detail_pdf()
-    {
-        $trainerSessionCheckIn = CheckInTrainerSession::with('trainerSession')->get();
-        $members            = Member::orderBy('full_name')->get();
-        $trainerSessions    = TrainerSession::orderBy('status', 'DESC')->get();
-        $personalTrainers   = PersonalTrainer::all();
-        $trainerPackages    = TrainerPackage::all();
-
-        $pdf = Pdf::loadView('admin/trainer-session/trainer-session-pdf', [
-            'trainerSession'        => $trainerSessions,
-            'members'               => $members,
-            'trainerSessionCheckIn' => $trainerSessionCheckIn,
-            'personalTrainers'      => $personalTrainers,
-            'trainerPackages'       => $trainerPackages,
-        ])->setPaper('a4', 'landscape');
-        return $pdf->stream('detail-trainer-session-report.pdf');
     }
 }

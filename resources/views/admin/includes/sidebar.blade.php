@@ -40,29 +40,25 @@
                 </a>
             </li>
 
-            @if (Auth::user()->role == 'ADMIN')
-                <li>
-                    <a href="{{ route('members.index') }}" href="javascript:void(0);" aria-expanded="false">
-                        <i class="material-symbols-outlined">person</i>
-                        <span class="nav-text">Members</span>
-                    </a>
-                </li>
-            @endif
+            <li>
+                <a href="{{ route('members.index') }}" href="javascript:void(0);" aria-expanded="false">
+                    <i class="material-symbols-outlined">person</i>
+                    <span class="nav-text">Members</span>
+                </a>
+            </li>
 
-            @if (Auth::user()->role == 'ADMIN')
-                <li>
-                    <a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
-                        <i class="material-symbols-outlined">person</i>
-                        <span class="nav-text">Member Regist</span>
-                    </a>
-                    <ul aria-expanded="false">
-                        <li><a href="{{ route('member-registration.index') }}">Member Registration</a></li>
-                        <li><a href="{{ route('member-registration-over.index') }}">Member Registration Over</a></li>
-                        {{-- <li><a href="{{ route('member-payment.index') }}">Member Payment</a></li> --}}
+            <li>
+                <a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
+                    <i class="material-symbols-outlined">person</i>
+                    <span class="nav-text">Member Regist</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li><a href="{{ route('member-registration.index') }}">Member Registration</a></li>
+                    <li><a href="{{ route('member-registration-over.index') }}">Member Registration Over</a></li>
+                    {{-- <li><a href="{{ route('member-payment.index') }}">Member Payment</a></li> --}}
 
-                    </ul>
-                </li>
-            @endif
+                </ul>
+            </li>
             {{-- <li>
                 <a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
                     <i class="material-symbols-outlined">person</i>
@@ -136,52 +132,50 @@
                     <li><a href="{{ route('report-gym.index') }}">GYM Club</a></li>
                 </ul>
             </li> --}}
-            @if (Auth::user()->role == 'ADMIN')
-                <li>
-                    <a href="{{ route('staff.index') }}" href="javascript:void(0);" aria-expanded="false">
-                        <i class="material-symbols-outlined">person</i>
-                        <span class="nav-text">Staff List</span>
-                    </a>
-                </li>
-            @endif
-            @if (Auth::user()->role == 'ADMIN')
-                <li>
-                    <a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
-                        <i class="material-icons"> insert_drive_file </i>
-                        <span class="nav-text">Setting</span>
-                    </a>
-                    <ul aria-expanded="false">
-                        <li>
-                            <a class="has-arrow" href="javascript:void(0);" aria-expanded="false">Member</a>
-                            <ul aria-expanded="false">
-                                <li><a href="{{ route('member-package.index') }}">Member Package</a></li>
-                                {{-- <li><a href="{{ route('member-package-type.index') }}">Member Package Type</a></li>
+            <li>
+                <a href="{{ route('staff.index') }}" href="javascript:void(0);" aria-expanded="false">
+                    <i class="material-symbols-outlined">person</i>
+                    <span class="nav-text">Staff List</span>
+                </a>
+            </li>
+            <li>
+                <a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
+                    <i class="material-icons"> insert_drive_file </i>
+                    <span class="nav-text">Setting</span>
+                </a>
+                <ul aria-expanded="false">
+                    {{-- <li>
+                        <a class="has-arrow" href="javascript:void(0);" aria-expanded="false">Member</a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ route('member-package.index') }}">Member Package</a></li>
+                             <li><a href="{{ route('member-package-type.index') }}">Member Package Type</a></li>
                                 <li><a href="{{ route('member-package-category.index') }}">Member Package Category</a>
-                                </li> --}}
-                            </ul>
-                        </li>
-                        {{-- <li><a href="#">Class Name</a></li> --}}
-                        {{-- <li><a href="#">Locker Package</a></li> --}}
-                        <li><a href="{{ route('payment-method.index') }}">Payment Method</a></li>
-                        {{-- <li><a href="#">Physiotherapy Package</a></li> --}}
-                        {{-- <li><a href="{{ route('referral.index') }}">Referral</a></li> --}}
-                        {{-- <li><a href="{{ route('sold-by.index') }}">Sold By</a></li> --}}
-                        {{-- <li><a href="{{ route('studio.index') }}">Studio Name</a></li>
+                                </li>
+                        </ul>
+                    </li> --}}
+                    {{-- <li><a href="#">Class Name</a></li> --}}
+                    {{-- <li><a href="#">Locker Package</a></li> --}}
+                    <li><a href="{{ route('member-package.index') }}">Member Package</a></li>
+                    <li><a href="{{ route('payment-method.index') }}">Payment Method</a></li>
+                    <li><a href="{{ route('trainer-package.index') }}">Trainer Package</a></li>
+                    {{-- <li><a href="#">Physiotherapy Package</a></li> --}}
+                    {{-- <li><a href="{{ route('referral.index') }}">Referral</a></li> --}}
+                    {{-- <li><a href="{{ route('sold-by.index') }}">Sold By</a></li> --}}
+                    {{-- <li><a href="{{ route('studio.index') }}">Studio Name</a></li>
                         <li><a href="{{ route('studio-package.index') }}">Studio Package</a></li> --}}
-                        <li>
-                            <a class="has-arrow" href="javascript:void(0);" aria-expanded="false">Trainer</a>
-                            <ul aria-expanded="false">
-                                <li><a href="{{ route('trainer-package.index') }}">Trainer Package</a></li>
-                                {{-- <li><a href="{{ route('trainer-package-type.index') }}">Trainer Package Type</a></li>
+                    {{-- <li>
+                        <a class="has-arrow" href="javascript:void(0);" aria-expanded="false">Trainer</a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ route('trainer-package.index') }}">Trainer Package</a></li> --}}
+                    {{-- <li><a href="{{ route('trainer-package-type.index') }}">Trainer Package Type</a></li>
                                 <li><a href="{{ route('trainer-transaction-type.index') }}">Trainer Transaction
                                         Type</a>
                                 </li> --}}
-                            </ul>
-                        </li>
-                        {{-- <li><a href="{{ route('transfer-package.index') }}">Transfer Package</a></li> --}}
-                    </ul>
-                </li>
-            @endif
+                    {{-- </ul>
+                    </li> --}}
+                    {{-- <li><a href="{{ route('transfer-package.index') }}">Transfer Package</a></li> --}}
+                </ul>
+            </li>
         </ul>
         <div class="copyright">
             <p>Hi, <b>{{ Auth::user()->full_name }}</b></p>

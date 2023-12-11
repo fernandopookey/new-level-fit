@@ -19,7 +19,9 @@
 
                             <thead>
                                 <tr>
-                                    <th></th>
+                                    @if (Auth::user()->role == 'ADMIN')
+                                        <th></th>
+                                    @endif
                                     <th>No</th>
                                     <th>Image</th>
                                     <th>Member Name</th>
@@ -35,9 +37,11 @@
                             <tbody>
                                 @foreach ($members as $item)
                                     <tr>
-                                        <td><input type="checkbox" name="selected_members[]"
-                                                value="{{ $item->id }}">
-                                        </td>
+                                        @if (Auth::user()->role == 'ADMIN')
+                                            <td><input type="checkbox" name="selected_members[]"
+                                                    value="{{ $item->id }}" />
+                                            </td>
+                                        @endif
                                         <td>{{ $loop->iteration }}</td>
                                         <td>
                                             <div class="trans-list">
@@ -78,21 +82,25 @@
                                                     data-bs-toggle="modal"
                                                     data-bs-target=".bd-example-modal-lg-edit{{ $item->id }}">Edit
                                                     Member</button>
-                                                <form action="{{ route('member.destroy', $item->id) }}"
-                                                    onclick="return confirm('Delete Data ?')" method="POST">
-                                                    @method('delete')
-                                                    @csrf
-                                                    <button type="submit"
-                                                        class="btn light btn-danger btn-xs btn-block mb-1">Delete</button>
-                                                </form>
+                                                @if (Auth::user()->role == 'ADMIN')
+                                                    <form action="{{ route('member.destroy', $item->id) }}"
+                                                        onclick="return confirm('Delete Data ?')" method="POST">
+                                                        @method('delete')
+                                                        @csrf
+                                                        <button type="submit"
+                                                            class="btn light btn-danger btn-xs btn-block mb-1">Delete</button>
+                                                    </form>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
-                        <button type="submit" class="btn btn-danger mb-2"
-                            onclick="return confirm('Delete selected members?')">Delete Selected</button>
+                        @if (Auth::user()->role == 'ADMIN')
+                            <button type="submit" class="btn btn-danger mb-2"
+                                onclick="return confirm('Delete selected members?')">Delete Selected</button>
+                        @endif
                     </div>
                 </div>
             </form>

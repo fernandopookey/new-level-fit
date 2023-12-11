@@ -125,19 +125,36 @@ class MemberController extends Controller
     {
         $item = Member::find($id);
         $data = $request->validate([
-            'full_name'     => '',
-            'gender'        => '',
-            'phone_number'  => '',
-            'address'       => '',
-            'description'   => '',
-            'member_code'   => '',
+            'full_name'     => 'nullable',
+            'gender'        => 'nullable',
+            'phone_number'  => 'nullable',
+            'address'       => 'nullable',
+            'description'   => 'nullable',
+            'member_code'   => 'nullable',
             'photos'        => 'mimes:png,jpg,jpeg|max:2048'
         ]);
 
         $data['user_id'] = Auth::user()->id;
 
-        if ($data['member_code'] !== null) {
-            $member = $request->member_code;
+        // if ($data['member_code'] !== null) {
+        //     $member = $request->member_code;
+        //     $memberCode = 'GG-' . $member . '-M';
+
+        //     // Check if a record with the same member code already exists
+        //     $existingRecord = Member::where('member_code', $memberCode)->first();
+        //     if ($existingRecord && $existingRecord->id != $id) {
+        //         return redirect()->back()->with('error', 'Code already exists');
+        //     }
+        //     $data['member_code'] = $memberCode;
+        // } else {
+        //     $data['member_code'] = null;
+        // }
+
+        if (!isset($data['member_code'])) {
+            $data['member_code'] = $item->member_code;
+        } elseif ($data['member_code'] !== $item->member_code) {
+            // If member_code is provided and different from the existing one, validate and update it
+            $member = $data['member_code'];
             $memberCode = 'GG-' . $member . '-M';
 
             // Check if a record with the same member code already exists
@@ -146,8 +163,6 @@ class MemberController extends Controller
                 return redirect()->back()->with('error', 'Code already exists');
             }
             $data['member_code'] = $memberCode;
-        } else {
-            $data['member_code'] = null;
         }
 
         if ($request->hasFile('photos')) {

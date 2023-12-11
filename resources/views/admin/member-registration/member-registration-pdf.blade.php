@@ -23,8 +23,9 @@
         <thead>
             <tr>
                 <th>No</th>
-                <th>Member's Data</th>
-                <th>Package's Data</th>
+                <th>Member Data</th>
+                <th>Package Data</th>
+                <th>Days</th>
                 <th>Start Date</th>
                 <th>Expired Date</th>
                 <th>Description</th>
@@ -33,7 +34,6 @@
             </tr>
         </thead>
         <tbody>
-            @php $i=1 @endphp
             @foreach ($memberRegistrations as $item)
                 <tr>
                     <td>{{ $loop->iteration }}</td>

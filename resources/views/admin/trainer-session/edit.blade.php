@@ -33,7 +33,7 @@
                     <div class="col-xl-6">
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Trainer Name</label>
-                            <select id="single-select" name="trainer_id" class="form-control">
+                            <select id="single-select2" name="trainer_id" class="form-control">
                                 <option value="{{ $trainerSession->trainer_id }}" selected>
                                     {{ old('trainer_id', $trainerSession->personalTrainers->full_name) }}
                                 </option>
@@ -60,12 +60,24 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-xl-6">
+                    <div class="col-xl-3">
                         <div class="mb-3">
                             <label class="form-label">Start Date</label>
                             <input type="text" name="start_date"
                                 value="{{ old('start_date', $trainerSession->start_date) }}" class="form-control"
                                 id="mdate">
+                        </div>
+                    </div>
+                    <div class="col-xl-3">
+                        <div class="mb-3">
+                            <label class="form-label">Start Time</label>
+                            <div class="input-group clockpicker" data-placement="left" data-align="top"
+                                data-autobtn-close="true">
+                                <input type="text" class="form-control" name="start_time"
+                                    value="{{ old('start_time', date('H:i', strtotime($trainerSession->start_date))) }}"
+                                    autocomplete="off">
+                                <span class="input-group-text"><i class="far fa-clock"></i></span>
+                            </div>
                         </div>
                     </div>
                     <div class="col-xl-6">

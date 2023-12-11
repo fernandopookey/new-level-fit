@@ -26,10 +26,12 @@ class TrainerSessionStoreRequest extends FormRequest
         return [
             'member_id'             => 'required|exists:members,id',
             'trainer_id'            => 'required|exists:personal_trainers,id',
-            'start_date'            => 'required|string',
+            'start_date'            => 'required',
+            'start_time2'           => 'required',
+            'days'                  => 'nullable',
             'trainer_package_id'    => 'required|exists:trainer_packages,id',
-            'user_id'               => '',
-            'description'           => ''
+            'user_id'               => 'nullable',
+            'description'           => 'nullable'
         ];
     }
 }

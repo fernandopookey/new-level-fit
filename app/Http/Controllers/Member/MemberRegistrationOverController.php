@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Member;
 
 use App\Http\Controllers\Controller;
+use App\Models\Member\MemberRegistration;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -66,7 +67,57 @@ class MemberRegistrationOverController extends Controller
         return view('admin.layouts.wrapper', $data);
     }
 
+    public function bulkDeleteOver(Request $request)
+    {
+        $selectedItems = $request->input('selectedMemberRegistrationOver');
 
+        try {
+            foreach ($selectedItems as $itemId) {
+                $member = MemberRegistration::find($itemId);
+
+                if (!empty($member)) {
+                    // if ($member->photos != null) {
+                    //     $realLocation = "storage/" . $member->photos;
+                    //     if (file_exists($realLocation) && !is_dir($realLocation)) {
+                    //         unlink($realLocation);
+                    //     }
+                    // }
+
+                    $member->delete();
+                }
+            }
+
+            return redirect()->back()->with('message', 'Member Registration Deleted Successfully');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Member Registration Deleted Failed, Please check other pages that are using this member');
+        }
+    }
+
+    public function bulkDeleteRunning(Request $request)
+    {
+        $selectedItems = $request->input('selected_member_registrations');
+
+        try {
+            foreach ($selectedItems as $itemId) {
+                $member = MemberRegistration::find($itemId);
+
+                if (!empty($member)) {
+                    if ($member->photos != null) {
+                        $realLocation = "storage/" . $member->photos;
+                        if (file_exists($realLocation) && !is_dir($realLocation)) {
+                            unlink($realLocation);
+                        }
+                    }
+
+                    $member->delete();
+                }
+            }
+
+            return redirect()->back()->with('message', 'Member Registration Deleted Successfully');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Deleted Failed, Dehgtrhtrheck In First');
+        }
+    }
 
     public function pdfReport()
     {

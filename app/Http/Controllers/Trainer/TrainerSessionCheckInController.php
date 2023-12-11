@@ -23,6 +23,19 @@ class TrainerSessionCheckInController extends Controller
         ]);
 
         $trainerSession = DB::table('trainer_sessions as a')
+            ->select(
+                'a.id',
+                'a.start_date',
+                'a.description',
+                'a.days',
+                'b.full_name as member_name',
+                'b.member_code',
+                'c.package_name',
+                'c.number_of_session',
+                'c.package_price',
+                'd.full_name as trainer_name',
+                'e.full_name as staff_name',
+            )
             ->leftJoin('members as b', 'a.member_id', '=', 'b.id')
             ->leftJoin('trainer_packages as c', 'a.trainer_package_id', '=', 'c.id')
             ->leftJoin('users as d', 'a.user_id', '=', 'd.id')
@@ -32,13 +45,17 @@ class TrainerSessionCheckInController extends Controller
             ->select('a.id', 'a.start_date', 'b.full_name as member_name', 'b.member_code', 'c.package_name', 'c.number_of_session', 'd.full_name as trainer_name', 'e.full_name as staff_name')
             ->addSelect(DB::raw('IFNULL(c.number_of_session - f.check_in_count, c.number_of_session) as remaining_sessions'))
             ->addSelect(DB::raw('CASE WHEN IFNULL(c.number_of_session - f.check_in_count, c.number_of_session) > 0 THEN "Running" WHEN IFNULL(c.number_of_session - f.check_in_count, c.number_of_session) < 0 THEN "kelebihan" ELSE "over" END AS session_status'))
+            ->addSelect(
+                DB::raw('DATE_ADD(a.start_date, INTERVAL a.days DAY) as expired_date'),
+                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.days DAY) THEN "Over" ELSE "Running" END as expired_date_status')
+            )
             ->first();
 
         if (!$trainerSession) {
             return redirect()->back()->with('error', 'Trainer session not found or has ended');
         }
 
-        if ($trainerSession->remaining_sessions == 0) {
+        if ($trainerSession->remaining_sessions == 0 || $trainerSession->expired_date_status == 'Over') {
             return redirect()->back()->with('error', 'Trainer session has ended');
         }
 

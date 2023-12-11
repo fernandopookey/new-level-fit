@@ -26,7 +26,8 @@ class TrainerSessionUpdateRequest extends FormRequest
         return [
             'member_id'             => 'exists:members,id',
             'trainer_id'            => 'exists:personal_trainers,id',
-            'start_date'            => 'string',
+            'start_date'            => 'nullable',
+            'start_time2'           => 'nullable',
             'trainer_package_id'    => 'exists:trainer_packages,id',
             'user_id'               => '',
             'description'           => ''

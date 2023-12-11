@@ -16,6 +16,7 @@ class TrainerPackage extends Model
         'package_name',
         'package_type_id',
         'number_of_session',
+        'days',
         'package_price',
         'admin_price',
         'description',

@@ -71,43 +71,64 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <td>Checklist</td>
+                            @if (Auth::user()->role == 'ADMIN')
+                                <td>Checklist</td>
+                            @endif
                             <th>No</th>
                             <th>Check In Date</th>
                             <th>Staff</th>
-                            <th>Action</th>
+                            @if (Auth::user()->role == 'ADMIN')
+                                <th>Action</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($checkInTrainerSession as $item)
                             <tr>
-                                <td><input type="checkbox" name="selectedItems[]" value="{{ $item->id }}"></td>
+                                @if (Auth::user()->role == 'ADMIN')
+                                    <td><input type="checkbox" name="selectedItems[]" value="{{ $item->id }}"></td>
+                                @endif
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $item->check_in_date }}</td>
                                 <td>{{ $item->users->full_name }}</td>
-                                <td>
-                                    <form action="{{ route('trainer-session-check-in.destroy', $item->id) }}"
-                                        onclick="return confirm('Delete Data ?')" method="POST">
-                                        @method('delete')
-                                        @csrf
-                                        <button type="submit" class="btn light btn-danger btn-xs mb-1">Delete</button>
-                                    </form>
+                                @if (Auth::user()->role == 'ADMIN')
+                                    <td>
+                                        <form action="{{ route('trainer-session-check-in.destroy', $item->id) }}"
+                                            onclick="return confirm('Delete Data ?')" method="POST">
+                                            @method('delete')
+                                            @csrf
+                                            <button type="submit"
+                                                class="btn light btn-danger btn-xs mb-1">Delete</button>
+                                        </form>
+                                @endif
                                 </td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
-                <button type="submit" class="btn btn-danger btn-sm"
-                    onclick="return confirm('Delete Data Checklist ?')">Delete Check</button>
+                @if (Auth::user()->role == 'ADMIN')
+                    <button type="submit" class="btn btn-danger btn-sm"
+                        onclick="return confirm('Delete Data Checklist ?')">Delete Check</button>
+                @endif
             </form>
         </div>
     </div>
 </div>
 
-<div class="col-xl-12">
-    <div class="card">
-        <div class="card-body">
-            <a href="{{ route('trainer-session.index') }}" class="btn btn-primary">Back</a>
+@if ($remainingSessions == 0)
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-body">
+                <a href="{{ route('trainer-session-over.index') }}" class="btn btn-primary">Back</a>
+            </div>
         </div>
     </div>
-</div>
+@else
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-body">
+                <a href="{{ route('trainer-session.index') }}" class="btn btn-primary">Back</a>
+            </div>
+        </div>
+    </div>
+@endif

@@ -1,4 +1,4 @@
-<!-- Modal Add -->
+{{-- <!-- Modal Add -->
 <div class="modal fade" id="modalAddCustomerService" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-center">
         <div class="modal-content">
@@ -143,11 +143,11 @@
             </div>
         </div>
     </div>
-@endforeach
+@endforeach --}}
 
 
 
-<div class="tab-pane fade" id="customerService" role="tabpanel">
+<div class="tab-pane fade show active" id="customerService" role="tabpanel">
     <div class="card">
         <div class="card-body">
             <div class="col-xl-12">

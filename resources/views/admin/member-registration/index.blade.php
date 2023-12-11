@@ -28,7 +28,7 @@
                             <tr>
                                 <th>No</th>
                                 <th>Image</th>
-                                <th>Member's Data</th>
+                                <th>Member Data</th>
                                 <th>Package Data</th>
                                 <th>Days</th>
                                 <th>Start Date</th>
@@ -83,20 +83,26 @@
                                     </td>
                                     <td>
                                         <div>
+
+                                            @if (Auth::user()->role == 'ADMIN')
+                                                <a href="{{ route('member-registration.edit', $item->id) }}"
+                                                    class="btn light btn-warning btn-xs mb-1 btn-block">Edit</a>
+                                            @endif
                                             <a href="{{ route('member-registration.show', $item->id) }}"
                                                 class="btn light btn-info btn-xs mb-1 btn-block">Detail</a>
-                                            <a href="{{ route('member-registration.edit', $item->id) }}"
-                                                class="btn light btn-warning btn-xs mb-1 btn-block">Edit</a>
                                             <button type="button" class="btn light btn-dark btn-xs mb-1 btn-block"
                                                 data-bs-toggle="modal" data-bs-target=".freeze{{ $item->id }}"
                                                 id="checkInButton">Freeze</button>
-                                            <form action="{{ route('member-registration.destroy', $item->id) }}"
-                                                onclick="return confirm('Delete Data ?')" method="POST">
-                                                @method('delete')
-                                                @csrf
-                                                <button type="submit"
-                                                    class="btn light btn-danger btn-xs btn-block mb-1">Delete</button>
-                                            </form>
+                                            @if (Auth::user()->role == 'ADMIN')
+                                                <form action="{{ route('member-registration.destroy', $item->id) }}"
+                                                    onclick="return confirm('Delete Data ?')" method="POST">
+                                                    @method('delete')
+                                                    @csrf
+                                                    <button type="submit"
+                                                        class="btn light btn-danger btn-xs btn-block mb-1"
+                                                        onclick="return confirm('Delete data ?')">Delete</button>
+                                                </form>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>

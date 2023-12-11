@@ -38,14 +38,47 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-xl-6">
+                        <div class="col-xl-3">
+                            <div class="mb-3">
+                                <label class="form-label">Start Date</label>
+                                <input type="text" name="start_date"
+                                    value="{{ old('start_date', date('Y-m-d', strtotime($memberRegistration->start_date))) }}"
+                                    class="form-control" id="mdate" required autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="col-xl-3">
+                            <div class="mb-3">
+                                <label class="form-label">Start Time</label>
+                                <div class="input-group clockpicker" data-placement="left" data-align="top"
+                                    data-autobtn-close="true">
+                                    <input type="text" class="form-control" name="start_time"
+                                        value="{{ old('start_time', date('H:i', strtotime($memberRegistration->start_date))) }}"
+                                        autocomplete="off">
+                                    <span class="input-group-text"><i class="far fa-clock"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        {{-- <div class="col-xl-3">
                             <div class="mb-3">
                                 <label class="form-label">Start Date</label>
                                 <input type="text" name="start_date"
                                     value="{{ old('start_date', $memberRegistration->start_date) }}"
-                                    class="form-control" placeholder="Choose start date" id="mdate" required>
+                                    class="form-control" placeholder="Choose start date" id="mdate" required
+                                    autocomplete="off">
                             </div>
                         </div>
+                        <div class="col-xl-3">
+                            <div class="mb-3">
+                                <label class="form-label">Start Time</label>
+                                <div class="input-group clockpicker" data-placement="left" data-align="top"
+                                    data-autobtn-close="true">
+                                    <input type="text" class="form-control" name="start_time"
+                                        value="{{ old('start_time', $memberRegistration->start_time) }}"
+                                        autocomplete="off">
+                                    <span class="input-group-text"><i class="far fa-clock"></i></span>
+                                </div>
+                            </div>
+                        </div> --}}
                         <div class="col-xl-6">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Method Payment</label>

@@ -20,6 +20,7 @@
                                 <th>Package Name</th>
                                 {{-- <th>Package Type</th> --}}
                                 <th>Number Of Session</th>
+                                <th>Number Of Days</th>
                                 <th>Package Price</th>
                                 <th>Admin Price</th>
                                 <th>Description</th>
@@ -39,6 +40,9 @@
                                     </td> --}}
                                     <td>
                                         <h6>{{ $item->number_of_session }}</h6>
+                                    </td>
+                                    <td>
+                                        <h6>{{ $item->days }}</h6>
                                     </td>
                                     <td>
                                         <h6>{{ formatRupiah($item->package_price) }}</h6>

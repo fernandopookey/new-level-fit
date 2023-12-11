@@ -283,6 +283,47 @@
     });
 </script>
 
+<!-- Add this script at the end of your HTML body or in a script section -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Set default date value
+        var defaultDate = new Date(); // You can set your desired default date here
+        var formattedDate = defaultDate.getFullYear() + '-' + ('0' + (defaultDate.getMonth() + 1)).slice(-2) +
+            '-' + ('0' + defaultDate.getDate()).slice(-2);
+        document.getElementById("mdate").value = formattedDate;
+
+        // Set default time value
+        var defaultTime = defaultDate.getHours() + ':' + ('0' + defaultDate.getMinutes()).slice(-2);
+        document.getElementsByName("start_time")[0].value = defaultTime;
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Set default date value
+        var defaultDate = new Date(); // You can set your desired default date here
+        var formattedDate = defaultDate.getFullYear() + '-' + ('0' + (defaultDate.getMonth() + 1)).slice(-2) +
+            '-' + ('0' + defaultDate.getDate()).slice(-2);
+        document.getElementById("mdate2").value = formattedDate;
+
+        // Set default time value
+        var defaultTime = defaultDate.getHours() + ':' + ('0' + defaultDate.getMinutes()).slice(-2);
+        document.getElementsByName("start_time2")[0].value = defaultTime;
+    });
+</script>
+
+<script>
+    function showForm(formId) {
+        // Hide all forms
+        document.getElementById('memberForm').style.display = 'none';
+        document.getElementById('memberRegistrationForm').style.display = 'none';
+        document.getElementById('trainerSessionForm').style.display = 'none';
+
+        // Show the selected form
+        document.getElementById(formId).style.display = 'block';
+    }
+</script>
+
 
 </body>
 

@@ -23,10 +23,11 @@
         <thead>
             <tr>
                 <th>No</th>
-                <th>Member's Data</th>
+                <th>Member Data</th>
                 <th>Trainer Name</th>
                 <th>Trainer Package</th>
                 <th>Start Date</th>
+                <th>Expired Date</th>
                 <th>Session Total</th>
                 <th>Remaining Session</th>
                 <th>Status</th>

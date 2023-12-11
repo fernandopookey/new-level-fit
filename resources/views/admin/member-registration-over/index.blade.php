@@ -122,18 +122,19 @@
                                         <div>
                                             <a href="{{ route('member-registration.show', $item->id) }}"
                                                 class="btn light btn-info btn-xs mb-1 btn-block">Detail</a>
-                                            <a href="{{ route('member-registration.edit', $item->id) }}"
-                                                class="btn light btn-warning btn-xs mb-1 btn-block">Edit</a>
-                                            {{-- <a href="{{ route('print-member-registration-detail-pdf') }}"
-                                                class="btn light btn-primary btn-xs mb-1 btn-block"
-                                                target="_blank">Detail PDF</a> --}}
-                                            <form action="{{ route('member-registration.destroy', $item->id) }}"
-                                                onclick="return confirm('Delete Data ?')" method="POST">
-                                                @method('delete')
-                                                @csrf
-                                                <button type="submit"
-                                                    class="btn light btn-danger btn-xs btn-block mb-1">Delete</button>
-                                            </form>
+                                            @if (Auth::user()->role == 'ADMIN')
+                                                <a href="{{ route('member-registration.edit', $item->id) }}"
+                                                    class="btn light btn-warning btn-xs mb-1 btn-block">Edit</a>
+                                            @endif
+                                            @if (Auth::user()->role == 'ADMIN')
+                                                <form action="{{ route('member-registration.destroy', $item->id) }}"
+                                                    onclick="return confirm('Delete Data ?')" method="POST">
+                                                    @method('delete')
+                                                    @csrf
+                                                    <button type="submit"
+                                                        class="btn light btn-danger btn-xs btn-block mb-1">Delete</button>
+                                                </form>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>

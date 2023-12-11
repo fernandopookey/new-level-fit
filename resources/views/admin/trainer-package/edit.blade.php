@@ -45,11 +45,18 @@
                                     </select>
                                 </div>
                             </div> --}}
-                            <div class="col-xl-6">
+                            <div class="col-xl-3">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Number Of Session</label>
                                     <input type="number" name="number_of_session"
                                         value="{{ old('number_of_session', $value->number_of_session) }}"
+                                        class="form-control" id="exampleFormControlInput1" autocomplete="off" required>
+                                </div>
+                            </div>
+                            <div class="col-xl-3">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Number Of Days</label>
+                                    <input type="number" name="days" value="{{ old('days', $value->days) }}"
                                         class="form-control" id="exampleFormControlInput1" autocomplete="off" required>
                                 </div>
                             </div>

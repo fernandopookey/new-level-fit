@@ -1,5 +1,16 @@
-{{-- Create Member Data --}}
+{{-- Button --}}
 <div class="row">
+    <div class="card">
+        <div class="card-body">
+            <button class="btn btn-primary" onclick="showForm('memberForm')">Add Member</button>
+            <button class="btn btn-primary" onclick="showForm('memberRegistrationForm')">Add Member Registration</button>
+            <button class="btn btn-primary" onclick="showForm('trainerSessionForm')">Add Trainer Session</button>
+        </div>
+    </div>
+</div>
+
+{{-- Create Member Data --}}
+<div class="row" id="memberForm">
     <div class="card">
         <div class="card-body">
             <form action="{{ route('members.store') }}" method="POST" enctype="multipart/form-data">
@@ -93,7 +104,7 @@
 </div>
 
 {{-- Create Member Registration --}}
-<div class="row mt-4">
+<div class="row mt-4" id="memberRegistrationForm">
     <div class="card">
         <div class="card-body">
             <form action="{{ route('member-second-store') }}" method="POST" enctype="multipart/form-data">
@@ -138,11 +149,24 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-xl-6">
+                    <div class="col-xl-3">
                         <div class="mb-3">
                             <label class="form-label">Start Date</label>
                             <input type="text" name="start_date" value="{{ old('start_date') }}"
                                 class="form-control" placeholder="Choose start date" id="mdate" required>
+                        </div>
+                    </div>
+                    <div class="col-xl-3">
+                        <div class="mb-3">
+                            <label class="form-label">Start Time</label>
+                            <div class="input-group clockpicker" data-placement="left" data-align="top"
+                                data-autobtn-close="true">
+                                <input type="text" class="form-control" name="start_time" autocomplete="off"
+                                    required>
+                                <span class="input-group-text"><i class="far fa-clock"></i></span>
+                            </div>
+                            {{-- <input type="text" name="start_time" value="{{ old('start_time') }}"
+                                class="form-control" placeholder="Choose start date" id="mdate" required> --}}
                         </div>
                     </div>
                     <div class="col-xl-6">
@@ -180,7 +204,7 @@
 </div>
 
 {{-- Create Trainer Session --}}
-<div class="row mt-4">
+<div class="row mt-4" id="trainerSessionForm">
     <div class="card">
         <div class="card-body">
             <form action="{{ route('trainer-session.store') }}" method="POST" enctype="multipart/form-data">
@@ -199,13 +223,13 @@
                     <div class="col-xl-6">
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Member Name</label>
-                            <select id="single-select" name="member_id" class="form-control">
+                            <select id="single-select5" name="member_id" class="form-control">
                                 <option disabled selected value>
                                     <- Choose ->
                                 </option>
                                 @foreach ($members as $item)
                                     <option value="{{ $item->id }}">
-                                        {{ $item->full_name }} | {{ $item->member_code }}
+                                        {{ $item->full_name }} | {{ $item->member_code ?? 'No member code' }}
                                     </option>
                                 @endforeach
                             </select>
@@ -214,7 +238,7 @@
                     <div class="col-xl-6">
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Trainer Name</label>
-                            <select id="single-select2" name="trainer_id" class="form-control">
+                            <select id="single-select6" name="trainer_id" class="form-control">
                                 <option disabled selected value>
                                     <- Choose ->
                                 </option>
@@ -237,19 +261,39 @@
                                     <option value="{{ $item->id }}"
                                         data-session="{{ $item->number_of_session }}">
                                         {{ $item->package_name }} | {{ formatRupiah($item->package_price) }} |
-                                        {{ $item->number_of_session }} Sessions
+                                        {{ $item->number_of_session }} Sessions | {{ $item->days }} Days
                                     </option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
-                    <div class="col-xl-6">
+                    <div class="col-xl-3">
+                        <div class="mb-3">
+                            <label class="form-label">Start Date</label>
+                            <input type="text" name="start_date" value="{{ old('start_date') }}"
+                                class="form-control" placeholder="Choose start date" id="mdate2" required>
+                        </div>
+                    </div>
+                    <div class="col-xl-3">
+                        <div class="mb-3">
+                            <label class="form-label">Start Time</label>
+                            <div class="input-group clockpicker2" data-placement="left" data-align="top"
+                                data-autobtn-close="true">
+                                <input type="text" class="form-control" name="start_time2" autocomplete="off"
+                                    required>
+                                <span class="input-group-text"><i class="far fa-clock"></i></span>
+                            </div>
+                            {{-- <input type="text" name="start_time" value="{{ old('start_time') }}"
+                                class="form-control" placeholder="Choose start date" id="mdate" required> --}}
+                        </div>
+                    </div>
+                    {{-- <div class="col-xl-6">
                         <div class="mb-3">
                             <label class="form-label">Start Date</label>
                             <input type="text" name="start_date" value="{{ old('start_date') }}"
                                 class="form-control" id="mdate2">
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="col-xl-6">
                         <div class="mb-3">
                             <label for="exampleFormControlTextarea1" class="form-label text-primary">

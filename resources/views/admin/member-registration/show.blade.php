@@ -115,10 +115,20 @@
     </div>
 </div>
 
-<div class="col-xl-12">
-    <div class="card">
-        <div class="card-body">
-            <a href="{{ route('member-registration.index') }}" class="btn btn-primary">Back</a>
+@if ($memberRegistration->status == 'Running')
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-body">
+                <a href="{{ route('member-registration.index') }}" class="btn btn-primary">Back</a>
+            </div>
         </div>
     </div>
-</div>
+@else
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-body">
+                <a href="{{ route('member-registration-over.index') }}" class="btn btn-primary">Back</a>
+            </div>
+        </div>
+    </div>
+@endif
