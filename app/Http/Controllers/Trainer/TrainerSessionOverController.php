@@ -21,9 +21,11 @@ class TrainerSessionOverController extends Controller
                 'a.days',
                 'b.full_name as member_name',
                 'b.member_code',
+                'b.phone_number as member_phone',
                 'c.package_name',
                 'c.number_of_session',
                 'd.full_name as trainer_name',
+                'd.phone_number as trainer_phone',
                 'e.full_name as staff_name',
                 DB::raw('MIN(a.created_at) as earliest_created_at'), // Added this line
                 DB::raw('MAX(a.created_at) as latest_created_at')    // Added this line
@@ -39,7 +41,7 @@ class TrainerSessionOverController extends Controller
             ->join('personal_trainers as d', 'a.trainer_id', '=', 'd.id')
             ->join('users as e', 'a.user_id', '=', 'e.id')
             ->leftJoin(DB::raw('(SELECT trainer_session_id, COUNT(id) as check_in_count FROM check_in_trainer_sessions GROUP BY trainer_session_id) as e'), 'e.trainer_session_id', '=', 'a.id')
-            ->groupBy('a.id', 'a.start_date', 'a.description', 'a.package_price', 'a.admin_price', 'a.days', 'b.full_name', 'b.member_code', 'c.package_name', 'c.number_of_session', 'd.full_name', 'e.full_name', 'e.check_in_count')
+            ->groupBy('a.id', 'a.start_date', 'a.description', 'a.package_price', 'a.admin_price', 'a.days', 'b.full_name', 'b.member_code', 'b.phone_number', 'c.package_name', 'c.number_of_session', 'd.full_name', 'd.phone_number', 'e.full_name', 'e.check_in_count')
             ->addSelect(DB::raw('IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) as remaining_sessions'))
             ->addSelect(DB::raw('CASE WHEN IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) > 0 THEN "Running" WHEN IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) < 0 THEN "kelebihan" ELSE "over" END AS session_status'))
             // ->whereRaw('')

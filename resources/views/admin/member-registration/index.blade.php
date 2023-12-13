@@ -27,10 +27,8 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Image</th>
                                 <th>Member Data</th>
                                 <th>Package Data</th>
-                                <th>Days</th>
                                 <th>Start Date</th>
                                 <th>Expired Date</th>
                                 <th>Description</th>
@@ -43,12 +41,12 @@
                             @foreach ($memberRegistrations as $item)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>
+                                    {{-- <td>
                                         <div class="trans-list">
                                             <img src="{{ Storage::url($item->photos ?? '') }}" class="lazyload"
                                                 width="150" alt="image">
                                         </div>
-                                    </td>
+                                    </td> --}}
                                     <td>
                                         <h6>{{ $item->member_name }}</h6>
                                         <h6>{{ $item->member_code }}</h6>
@@ -57,10 +55,7 @@
                                     <td>
                                         <h6>{{ $item->package_name }}</h6>
                                         <h6>{{ formatRupiah($item->package_price) }}</h6>
-                                        {{-- <h6>{{ $item->days }} Days</h6> --}}
-                                    </td>
-                                    <td>
-                                        <h6>{{ $item->member_registration_days }}</h6>
+                                        <h6>{{ $item->member_registration_days }} Days</h6>
                                     </td>
                                     <td>
                                         <h6>{{ $item->start_date }}</h6>

@@ -129,7 +129,7 @@
                                 </option>
                                 @foreach ($members as $item)
                                     <option value="{{ $item->id }}">{{ $item->full_name }} |
-                                        {{ $item->member_code ?? 'No member code' }} | {{ $item->gender }}
+                                        {{ $item->member_code ?? 'No member code' }} | {{ $item->phone_number }}
                                     </option>
                                 @endforeach
                             </select>
@@ -144,7 +144,9 @@
                                 </option>
                                 @foreach ($memberPackage as $item)
                                     <option value="{{ $item->id }}">{{ $item->package_name }} |
-                                        {{ formatRupiah($item->package_price) }} | {{ $item->days }} Days</option>
+                                        {{ $item->days }} Days |
+                                        {{ formatRupiah($item->package_price) }} |
+                                        {{ formatRupiah($item->admin_price) }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -153,7 +155,8 @@
                         <div class="mb-3">
                             <label class="form-label">Start Date</label>
                             <input type="text" name="start_date" value="{{ old('start_date') }}"
-                                class="form-control" placeholder="Choose start date" id="mdate" required>
+                                class="form-control editDate" placeholder="Choose start date" id="mdate"
+                                required>
                         </div>
                     </div>
                     <div class="col-xl-3">
@@ -161,8 +164,8 @@
                             <label class="form-label">Start Time</label>
                             <div class="input-group clockpicker" data-placement="left" data-align="top"
                                 data-autobtn-close="true">
-                                <input type="text" class="form-control" name="start_time" autocomplete="off"
-                                    required>
+                                <input type="text" class="form-control editTime" name="start_time"
+                                    autocomplete="off" required>
                                 <span class="input-group-text"><i class="far fa-clock"></i></span>
                             </div>
                             {{-- <input type="text" name="start_time" value="{{ old('start_time') }}"
@@ -229,7 +232,8 @@
                                 </option>
                                 @foreach ($members as $item)
                                     <option value="{{ $item->id }}">
-                                        {{ $item->full_name }} | {{ $item->member_code ?? 'No member code' }}
+                                        {{ $item->full_name }} | {{ $item->member_code ?? 'No member code' }} |
+                                        {{ $item->phone_number }}
                                     </option>
                                 @endforeach
                             </select>
@@ -244,7 +248,7 @@
                                 </option>
                                 @foreach ($personalTrainers as $item)
                                     <option value="{{ $item->id }}">
-                                        {{ $item->full_name }}
+                                        {{ $item->full_name }} | {{ $item->phone_number }} | {{ $item->gender }}
                                     </option>
                                 @endforeach
                             </select>
@@ -260,8 +264,10 @@
                                 @foreach ($trainerPackages as $item)
                                     <option value="{{ $item->id }}"
                                         data-session="{{ $item->number_of_session }}">
-                                        {{ $item->package_name }} | {{ formatRupiah($item->package_price) }} |
-                                        {{ $item->number_of_session }} Sessions | {{ $item->days }} Days
+                                        {{ $item->package_name }} | {{ $item->days }} Days |
+                                        {{ formatRupiah($item->package_price) }} |
+                                        {{ formatRupiah($item->admin_price) }} |
+                                        {{ $item->number_of_session }} Sessions
                                     </option>
                                 @endforeach
                             </select>
@@ -271,7 +277,8 @@
                         <div class="mb-3">
                             <label class="form-label">Start Date</label>
                             <input type="text" name="start_date" value="{{ old('start_date') }}"
-                                class="form-control" placeholder="Choose start date" id="mdate2" required>
+                                class="form-control editDate" placeholder="Choose start date" id="mdate2"
+                                required>
                         </div>
                     </div>
                     <div class="col-xl-3">
@@ -279,8 +286,8 @@
                             <label class="form-label">Start Time</label>
                             <div class="input-group clockpicker2" data-placement="left" data-align="top"
                                 data-autobtn-close="true">
-                                <input type="text" class="form-control" name="start_time2" autocomplete="off"
-                                    required>
+                                <input type="text" class="form-control editTime" name="start_time2"
+                                    autocomplete="off" required>
                                 <span class="input-group-text"><i class="far fa-clock"></i></span>
                             </div>
                             {{-- <input type="text" name="start_time" value="{{ old('start_time') }}"

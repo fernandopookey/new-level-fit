@@ -290,11 +290,11 @@
         var defaultDate = new Date(); // You can set your desired default date here
         var formattedDate = defaultDate.getFullYear() + '-' + ('0' + (defaultDate.getMonth() + 1)).slice(-2) +
             '-' + ('0' + defaultDate.getDate()).slice(-2);
-        document.getElementById("mdate").value = formattedDate;
+        document.getElementsByClassName("editDate")[0].value = formattedDate;
 
         // Set default time value
         var defaultTime = defaultDate.getHours() + ':' + ('0' + defaultDate.getMinutes()).slice(-2);
-        document.getElementsByName("start_time")[0].value = defaultTime;
+        document.getElementsByClassName("editTime")[0].value = defaultTime;
     });
 </script>
 

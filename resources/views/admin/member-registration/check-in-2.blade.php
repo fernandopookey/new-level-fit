@@ -22,7 +22,7 @@
                         <div class="col-xl-12">
                             <div class="mb-3">
                                 <p>Member Code</p>
-                                <input type="text" name="member_code" id="memberCode" class="form-control">
+                                <input type="text" name="member_code" id="memberCode" class="form-control" autofocus>
                             </div>
                         </div>
                     </div>

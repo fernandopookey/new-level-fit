@@ -327,15 +327,28 @@ class MemberRegistrationController extends Controller
             ->join('users as f', 'a.user_id', '=', 'f.id')
             ->whereRaw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END = ?', ['Running'])
             ->orderBy('status', 'desc')
-            ->get();
+            ->first();
 
-        if ($status['status'] = 'Over') {
-            // Assuming you have a relationship between MemberRegistration and Member
-            $member = $item->members;
+        // dd($status);
 
-            // Update the member_code to null
-            $member->update(['member_code' => null]);
-        }
+        // if ($status['status'] = 'Over') {
+        //     // Assuming you have a relationship between MemberRegistration and Member
+        //     $member = $item->members;
+
+        //     // Update the member_code to null
+        //     $member->update(['member_code' => null]);
+        // }
+
+        // if (
+        //     $status && $status->status === 'Over'
+        // ) {
+        //     // Assuming you have a relationship between MemberRegistration and Member
+        //     $member = $item->members;
+
+        //     // Update the member_code to null
+        //     $member->update(['member_code' => null]);
+        // }
+
         return redirect()->route('member-registration.index')->with('message', 'Member Updated Successfully');
     }
 

@@ -79,12 +79,16 @@
                                     <td>
                                         <h6>{{ $item->member_name }},</h6>
                                         <h6>{{ $item->member_code }}</h6>
+                                        <h6>{{ $item->member_phone }}</h6>
                                     </td>
                                     <td>
                                         <h6>{{ $item->trainer_name }}</h6>
+                                        <h6>{{ $item->trainer_phone }}</h6>
                                     </td>
                                     <td>
                                         <h6>{{ $item->package_name }}</h6>
+                                        <h6>{{ formatRupiah($item->package_price) }}</h6>
+                                        <h6>{{ $item->days }}</h6>
                                     </td>
                                     <td>
                                         <h6>{{ $item->start_date }}</h6>

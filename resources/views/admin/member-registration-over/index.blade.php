@@ -68,7 +68,6 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Image</th>
                                 <th>Member's Data</th>
                                 <th>Package Data</th>
                                 <th>Start Date</th>
@@ -83,12 +82,6 @@
                             @foreach ($memberRegistrationsOver as $item)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>
-                                        <div class="trans-list">
-                                            <img src="{{ Storage::url($item->photos ?? '') }}" class="lazyload"
-                                                width="150" alt="image">
-                                        </div>
-                                    </td>
                                     <td>
                                         <h6>{{ $item->member_name }}</h6>
                                         <h6>{{ $item->member_code }}</h6>

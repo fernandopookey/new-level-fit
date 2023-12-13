@@ -64,8 +64,8 @@
                         <div class="mb-3">
                             <label class="form-label">Start Date</label>
                             <input type="text" name="start_date"
-                                value="{{ old('start_date', $trainerSession->start_date) }}" class="form-control"
-                                id="mdate">
+                                value="{{ old('start_date', date('Y-m-d', strtotime($trainerSession->start_date))) }}"
+                                class="form-control" id="mdate">
                         </div>
                     </div>
                     <div class="col-xl-3">

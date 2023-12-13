@@ -62,10 +62,12 @@ class TrainerSessionController extends Controller
                 'a.days',
                 'b.full_name as member_name',
                 'b.member_code',
+                'b.phone_number as member_phone',
                 'c.package_name',
                 'c.number_of_session',
                 'c.package_price',
                 'd.full_name as trainer_name',
+                'd.phone_number as trainer_phone',
                 'e.full_name as staff_name',
             )
             ->addSelect(
@@ -225,17 +227,17 @@ class TrainerSessionController extends Controller
             ->join('users as e', 'a.user_id', '=', 'e.id')
             ->leftJoin(DB::raw('(SELECT trainer_session_id, COUNT(id) as check_in_count FROM check_in_trainer_sessions GROUP BY trainer_session_id) as e'), 'e.trainer_session_id', '=', 'a.id')
             ->addSelect(DB::raw('IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) as remaining_sessions'))
-            ->addSelect(DB::raw('CASE WHEN IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) > 0 THEN "Running" WHEN IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) < 0 THEN "kelebihan" ELSE "over" END AS session_status'))
+            ->addSelect(DB::raw('CASE WHEN IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) > 0 THEN "Running" WHEN IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) < 0 THEN "kelebihan" ELSE "over" END AS status'))
             ->whereRaw('CASE WHEN IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) > 0 THEN "Running" WHEN IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) < 0 THEN "kelebihan" ELSE "over" END = "Running"')
             ->get();
 
-        if ($status['status'] = 'Over') {
-            // Assuming you have a relationship between MemberRegistration and Member
-            $member = $item->members;
+        // if ($status['status'] == 'over') {
+        //     // Assuming you have a relationship between MemberRegistration and Member
+        //     $member = $item->members;
 
-            // Update the member_code to null
-            $member->update(['member_code' => null]);
-        }
+        //     // Update the member_code to null
+        //     $member->update(['member_code' => null]);
+        // }
 
         $item->update($data);
         return redirect()->route('trainer-session.index')->with('message', 'Trainer Session Updated Successfully');

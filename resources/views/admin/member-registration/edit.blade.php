@@ -43,6 +43,18 @@
                             </div>
                             <div class="col-xl-6">
                                 <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Gender</label>
+                                    <select name="gender" class="form-control" aria-label="Default select example">
+                                        <option value="{{ $value->gender }}" selected>
+                                            {{ old('gender', $value->gender) }}
+                                        </option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xl-6">
+                                <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Phone Number</label>
                                     <input type="text" name="phone_number"
                                         value="{{ old('phone_number', $value->phone_number) }}" class="form-control"
@@ -110,7 +122,8 @@
                             <div class="col-xl-6">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Refferal Name</label>
-                                    <select name="refferal_id" class="form-control" aria-label="Default select example">
+                                    <select name="refferal_id" class="form-control"
+                                        aria-label="Default select example">
                                         <option value="{{ $value->refferal_id }}" selected>
                                             @if (isset($value->referralName->name))
                                                 {{ old('refferal_id', $value->referralName->name) }}
