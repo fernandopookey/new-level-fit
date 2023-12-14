@@ -156,6 +156,7 @@
 
 {{-- Datatables --}}
 <script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script>
     $(document).ready(function() {
         let table = new DataTable('#myTable', {
@@ -323,6 +324,18 @@
         document.getElementById(formId).style.display = 'block';
     }
 </script>
+
+<script>
+    $('#checkIn2').on('shown.bs.modal', function() {
+        $(this).find('[autofocus]').focus();
+    });
+</script>
+
+{{-- <script>
+    $('.checkIn2').on('shown.bs.modal', function() {
+        $(this).find('[autofocus]').focus();
+    });
+</script> --}}
 
 
 </body>
