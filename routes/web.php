@@ -92,7 +92,9 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     Route::resource('trainer-session-FO', '\App\Http\Controllers\Trainer\TrainerSessionFOController');
     Route::get('cetak-trainer-session-pdf', [TrainerSessionController::class, 'cetak_pdf'])->name('cetak-trainer-session-pdf');
     Route::get('print-trainer-session-detail-pdf', [TrainerSessionController::class, 'print_trainer_session_detail_pdf'])->name('print-trainer-session-detail-pdf');
-    Route::delete('trainer-session-bulk-delete', [TrainerSessionController::class, 'bulkDelete'])->name('trainer-session-bulk-delete');
+    // Route::delete('trainer-session-bulk-delete', [TrainerSessionController::class, 'bulkDelete'])->name('trainer-session-bulk-delete');
+    Route::post('/delete-selected-trainer-sessions', [TrainerSessionController::class, 'deleteSelectedTrainerSessions'])->name('delete-selected-trainer-sessions');
+    Route::post('/delete-selected-trainer-sessions-over', [TrainerSessionOverController::class, 'deleteSelectedTrainerSessionsOver'])->name('delete-selected-trainer-sessions-over');
 
     Route::resource('buddy-referral', '\App\Http\Controllers\Admin\BuddyReferralController');
     Route::resource('appointment', '\App\Http\Controllers\Admin\AppointmentController');
@@ -122,9 +124,10 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     Route::get('print-member-registration-over-pdf', [MemberRegistrationOverController::class, 'pdfReport'])->name('print-member-registration-over-pdf');
     Route::get('print-member-registration-detail-pdf', [MemberRegistrationController::class, 'print_detail_pdf'])->name('print-member-registration-detail-pdf');
     Route::put('member-registration-freeze/{id}/freeze', [MemberRegistrationController::class, 'freeze'])->name('member-registration-freeze');
-    Route::delete('member-registration-bulk-delete', [MemberRegistrationOverController::class, 'bulkDeleteRunning'])->name('member-registration-bulk-delete');
-    Route::delete('member-registration-over-bulk-delete', [MemberRegistrationOverController::class, 'bulkDeleteOver'])->name('member-registration-over-bulk-delete');
     Route::get('member-report', [MemberController::class, 'cetak_pdf'])->name('member-report');
+    // Route::post('/delete-selected-members', 'MemberRegistrationController@deleteSelectedMembers')->name('delete-selected-members');
+    Route::post('/delete-selected-members', [MemberRegistrationController::class, 'deleteSelectedMembers'])->name('delete-selected-members');
+    Route::post('/delete-selected-members-over', [MemberRegistrationOverController::class, 'deleteSelectedMembersOver'])->name('delete-selected-members-over');
 
     Route::resource('member-expired-list', '\App\Http\Controllers\Report\MemberListController');
     Route::get('all-member-expired', [MemberListController::class, 'allData'])->name('all-member-expired');

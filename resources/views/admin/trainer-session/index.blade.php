@@ -2,16 +2,6 @@
     <div class="col-xl-12">
         <div class="row">
             <div class="col-xl-12">
-                {{-- <div class="page-title flex-wrap">
-                    <div>
-                        <a href="{{ route('trainer-session.create') }}" class="btn btn-primary"><i class="fa fa-plus"></i>
-                            New Trainer Session</a>
-                    </div>
-                    <div>
-                        <a href="{{ route('cetak-trainer-session-pdf') }}" target="_blank" class="btn btn-info">Cetak
-                            PDF</a>
-                    </div>
-                </div> --}}
                 <div class="page-title flex-wrap">
                     <div>
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#checkIn2"
@@ -27,6 +17,9 @@
                         id="myTable">
                         <thead>
                             <tr>
+                                @if (Auth::user()->role == 'ADMIN')
+                                    <th>Select</th>
+                                @endif
                                 <th>No</th>
                                 <th>Member Data</th>
                                 <th>Trainer Name</th>
@@ -34,7 +27,6 @@
                                 <th>Start Date</th>
                                 <th>Expired Date</th>
                                 <th>Session</th>
-                                {{-- <th>Number Of Days</th> --}}
                                 <th>Status</th>
                                 <th>Description</th>
                                 <th>Staff Name</th>
@@ -44,6 +36,12 @@
                         <tbody>
                             @foreach ($trainerSessions as $item)
                                 <tr>
+                                    @if (Auth::user()->role == 'ADMIN')
+                                        <td>
+                                            <input type="checkbox" name="selectedTrainerSessions[]"
+                                                value="{{ $item->id }}">
+                                        </td>
+                                    @endif
                                     <td>{{ $loop->iteration }}</td>
                                     <td>
                                         <h6>{{ $item->member_name }},</h6>
@@ -74,9 +72,6 @@
                                         <h6>Session Total : {{ $item->number_of_session }}</h6>
                                         <h6>Remaining Session : {{ $item->remaining_sessions }}</h6>
                                     </td>
-                                    {{-- <td>
-                                        <h6>{{ $item->days }}</h6>
-                                    </td> --}}
                                     <td>
                                         @if ($item->session_status == 'Running')
                                             <span class="badge badge-primary">Running</span>
@@ -112,6 +107,10 @@
                             @endforeach
                         </tbody>
                     </table>
+                    @if (Auth::user()->role == 'ADMIN')
+                        <button type="button" class="btn btn-danger" id="deleteSelectedTrainerSessions">Delete
+                            Selected</button>
+                    @endif
                 </div>
             </div>
             <!--/column-->

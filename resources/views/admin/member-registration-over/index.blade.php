@@ -67,6 +67,7 @@
                         id="myTable">
                         <thead>
                             <tr>
+                                <th>Select</th>
                                 <th>No</th>
                                 <th>Member's Data</th>
                                 <th>Package Data</th>
@@ -81,6 +82,9 @@
                         <tbody>
                             @foreach ($memberRegistrationsOver as $item)
                                 <tr>
+                                    <td>
+                                        <input type="checkbox" name="selectedMembersOver[]" value="{{ $item->id }}">
+                                    </td>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>
                                         <h6>{{ $item->member_name }}</h6>
@@ -134,6 +138,8 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <button type="button" class="btn btn-danger" id="deleteSelectedMembersOver">Delete
+                        Selected</button>
                 </div>
             </div>
             <!--/column-->

@@ -277,30 +277,15 @@ class TrainerSessionController extends Controller
         }
     }
 
-    public function bulkDelete(Request $request)
+    public function deleteSelectedTrainerSessions(Request $request)
     {
-        $selectedItems = $request->input('selectedTrainerSession');
+        $selectedTrainerSessions = $request->input('selectedTrainerSessions', []);
 
-        try {
-            foreach ($selectedItems as $itemId) {
-                $member = TrainerSession::find($itemId);
+        // Add your logic to delete the selected members from the database
+        TrainerSession::whereIn('id', $selectedTrainerSessions)->delete();
 
-                if (!empty($member)) {
-                    // if ($member->photos != null) {
-                    //     $realLocation = "storage/" . $member->photos;
-                    //     if (file_exists($realLocation) && !is_dir($realLocation)) {
-                    //         unlink($realLocation);
-                    //     }
-                    // }
-
-                    $member->delete();
-                }
-            }
-
-            return redirect()->back()->with('message', 'Trainer Session Deleted Successfully');
-        } catch (\Throwable $th) {
-            return redirect()->back()->with('error', 'Trainer Session Deleted Failed, Please check other pages that are using this member');
-        }
+        // Redirect back or return a response as needed
+        return redirect()->back()->with('message', 'Selected trainer sessions deleted successfully');
     }
 
     public function cetak_pdf()

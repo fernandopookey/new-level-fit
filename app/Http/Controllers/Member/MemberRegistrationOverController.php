@@ -172,4 +172,15 @@ class MemberRegistrationOverController extends Controller
         ])->setPaper('a4', 'landscape');
         return $pdf->stream('member-registration-over-report.pdf');
     }
+
+    public function deleteSelectedMembersOver(Request $request)
+    {
+        $selectedMembers = $request->input('selectedMembersOver', []);
+
+        // Add your logic to delete the selected members from the database
+        MemberRegistration::whereIn('id', $selectedMembers)->delete();
+
+        // Redirect back or return a response as needed
+        return redirect()->back()->with('message', 'Selected member registration deleted successfully');
+    }
 }

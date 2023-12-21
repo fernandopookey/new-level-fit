@@ -26,6 +26,9 @@
                         id="myTable">
                         <thead>
                             <tr>
+                                @if (Auth::user()->role == 'ADMIN')
+                                    <th>Select</th>
+                                @endif
                                 <th>No</th>
                                 <th>Member Data</th>
                                 <th>Package Data</th>
@@ -40,6 +43,11 @@
                         <tbody>
                             @foreach ($memberRegistrations as $item)
                                 <tr>
+                                    @if (Auth::user()->role == 'ADMIN')
+                                        <td>
+                                            <input type="checkbox" name="selectedMembers[]" value="{{ $item->id }}">
+                                        </td>
+                                    @endif
                                     <td>{{ $loop->iteration }}</td>
                                     {{-- <td>
                                         <div class="trans-list">
@@ -104,6 +112,9 @@
                             @endforeach
                         </tbody>
                     </table>
+                    @if (Auth::user()->role == 'ADMIN')
+                        <button type="button" class="btn btn-danger" id="deleteSelected">Delete Selected</button>
+                    @endif
                 </div>
             </div>
             <!--/column-->

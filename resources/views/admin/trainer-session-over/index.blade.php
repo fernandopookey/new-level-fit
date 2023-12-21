@@ -62,6 +62,10 @@
                         id="myTable">
                         <thead>
                             <tr>
+                                @if (Auth::user()->role == 'ADMIN')
+                                    <th>Select</th>
+                                @endif
+                                <th>No</th>
                                 <th>Member Data</th>
                                 <th>Trainer Name</th>
                                 <th>Trainer Package</th>
@@ -76,6 +80,13 @@
                         <tbody>
                             @foreach ($trainerSessions as $item)
                                 <tr>
+                                    @if (Auth::user()->role == 'ADMIN')
+                                        <td>
+                                            <input type="checkbox" name="selectedTrainerSessionsOver[]"
+                                                value="{{ $item->id }}">
+                                        </td>
+                                    @endif
+                                    <td>{{ $loop->iteration }}</td>
                                     <td>
                                         <h6>{{ $item->member_name }},</h6>
                                         <h6>{{ $item->member_code }}</h6>
@@ -136,6 +147,10 @@
                             @endforeach
                         </tbody>
                     </table>
+                    @if (Auth::user()->role == 'ADMIN')
+                        <button type="button" class="btn btn-danger" id="deleteSelectedTrainerSessionsOver">Delete
+                            Selected</button>
+                    @endif
                 </div>
             </div>
             <!--/column-->

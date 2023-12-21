@@ -331,11 +331,189 @@
     });
 </script>
 
-{{-- <script>
-    $('.checkIn2').on('shown.bs.modal', function() {
-        $(this).find('[autofocus]').focus();
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Add an event listener to the "Delete Selected" button
+        document.getElementById("deleteSelected").addEventListener("click", function() {
+            // Get all selected checkboxes
+            var selectedCheckboxes = document.querySelectorAll(
+                'input[name="selectedMembers[]"]:checked');
+
+            if (selectedCheckboxes.length > 0) {
+                // Confirm deletion
+                if (confirm("Delete selected data ?")) {
+                    // Create a form element
+                    var deleteForm = document.createElement("form");
+                    deleteForm.action = "{{ route('delete-selected-members') }}";
+                    deleteForm.method = "post";
+                    deleteForm.style.display = "none"; // Hide the form
+
+                    // Append CSRF token to the form
+                    var csrfTokenInput = document.createElement("input");
+                    csrfTokenInput.type = "hidden";
+                    csrfTokenInput.name = "_token";
+                    csrfTokenInput.value = "{{ csrf_token() }}";
+                    deleteForm.appendChild(csrfTokenInput);
+
+                    // Append selected checkboxes to the form
+                    selectedCheckboxes.forEach(function(checkbox) {
+                        var input = document.createElement("input");
+                        input.type = "hidden";
+                        input.name = "selectedMembers[]";
+                        input.value = checkbox.value;
+                        deleteForm.appendChild(input);
+                    });
+
+                    // Append the form to the document body
+                    document.body.appendChild(deleteForm);
+
+                    // Submit the form
+                    deleteForm.submit();
+                }
+            } else {
+                alert("Please select at least one item to delete.");
+            }
+        });
     });
-</script> --}}
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Add an event listener to the "Delete Selected" button
+        document.getElementById("deleteSelectedMembersOver").addEventListener("click", function() {
+            // Get all selected checkboxes
+            var selectedCheckboxes = document.querySelectorAll(
+                'input[name="selectedMembersOver[]"]:checked');
+
+            if (selectedCheckboxes.length > 0) {
+                // Confirm deletion
+                if (confirm("Delete selected data ?")) {
+                    // Create a form element
+                    var deleteForm = document.createElement("form");
+                    deleteForm.action = "{{ route('delete-selected-members-over') }}";
+                    deleteForm.method = "post";
+                    deleteForm.style.display = "none"; // Hide the form
+
+                    // Append CSRF token to the form
+                    var csrfTokenInput = document.createElement("input");
+                    csrfTokenInput.type = "hidden";
+                    csrfTokenInput.name = "_token";
+                    csrfTokenInput.value = "{{ csrf_token() }}";
+                    deleteForm.appendChild(csrfTokenInput);
+
+                    // Append selected checkboxes to the form
+                    selectedCheckboxes.forEach(function(checkbox) {
+                        var input = document.createElement("input");
+                        input.type = "hidden";
+                        input.name = "selectedMembersOver[]";
+                        input.value = checkbox.value;
+                        deleteForm.appendChild(input);
+                    });
+
+                    // Append the form to the document body
+                    document.body.appendChild(deleteForm);
+
+                    // Submit the form
+                    deleteForm.submit();
+                }
+            } else {
+                alert("Please select at least one item to delete.");
+            }
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Add an event listener to the "Delete Selected" button
+        document.getElementById("deleteSelectedTrainerSessions").addEventListener("click", function() {
+            // Get all selected checkboxes
+            var selectedCheckboxes = document.querySelectorAll(
+                'input[name="selectedTrainerSessions[]"]:checked');
+
+            if (selectedCheckboxes.length > 0) {
+                // Confirm deletion
+                if (confirm("Delete selected data ?")) {
+                    // Create a form element
+                    var deleteForm = document.createElement("form");
+                    deleteForm.action = "{{ route('delete-selected-trainer-sessions') }}";
+                    deleteForm.method = "post";
+                    deleteForm.style.display = "none"; // Hide the form
+
+                    // Append CSRF token to the form
+                    var csrfTokenInput = document.createElement("input");
+                    csrfTokenInput.type = "hidden";
+                    csrfTokenInput.name = "_token";
+                    csrfTokenInput.value = "{{ csrf_token() }}";
+                    deleteForm.appendChild(csrfTokenInput);
+
+                    // Append selected checkboxes to the form
+                    selectedCheckboxes.forEach(function(checkbox) {
+                        var input = document.createElement("input");
+                        input.type = "hidden";
+                        input.name = "selectedTrainerSessions[]";
+                        input.value = checkbox.value;
+                        deleteForm.appendChild(input);
+                    });
+
+                    // Append the form to the document body
+                    document.body.appendChild(deleteForm);
+
+                    // Submit the form
+                    deleteForm.submit();
+                }
+            } else {
+                alert("Please select at least one item to delete.");
+            }
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Add an event listener to the "Delete Selected" button
+        document.getElementById("deleteSelectedTrainerSessionsOver").addEventListener("click", function() {
+            // Get all selected checkboxes
+            var selectedCheckboxes = document.querySelectorAll(
+                'input[name="selectedTrainerSessionsOver[]"]:checked');
+
+            if (selectedCheckboxes.length > 0) {
+                // Confirm deletion
+                if (confirm("Delete selected data ?")) {
+                    // Create a form element
+                    var deleteForm = document.createElement("form");
+                    deleteForm.action = "{{ route('delete-selected-trainer-sessions-over') }}";
+                    deleteForm.method = "post";
+                    deleteForm.style.display = "none"; // Hide the form
+
+                    // Append CSRF token to the form
+                    var csrfTokenInput = document.createElement("input");
+                    csrfTokenInput.type = "hidden";
+                    csrfTokenInput.name = "_token";
+                    csrfTokenInput.value = "{{ csrf_token() }}";
+                    deleteForm.appendChild(csrfTokenInput);
+
+                    // Append selected checkboxes to the form
+                    selectedCheckboxes.forEach(function(checkbox) {
+                        var input = document.createElement("input");
+                        input.type = "hidden";
+                        input.name = "selectedTrainerSessionsOver[]";
+                        input.value = checkbox.value;
+                        deleteForm.appendChild(input);
+                    });
+
+                    // Append the form to the document body
+                    document.body.appendChild(deleteForm);
+
+                    // Submit the form
+                    deleteForm.submit();
+                }
+            } else {
+                alert("Please select at least one item to delete.");
+            }
+        });
+    });
+</script>
 
 
 </body>

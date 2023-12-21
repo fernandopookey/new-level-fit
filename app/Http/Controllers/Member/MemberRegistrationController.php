@@ -428,38 +428,23 @@ class MemberRegistrationController extends Controller
             Storage::delete($memberRegistration->photos);
 
             $memberRegistration->delete();
-            return redirect()->back()->with('message', 'Member Deleted Successfully');
+            return redirect()->back()->with('message', 'Member Registration Deleted Successfully');
         } catch (\Throwable $e) {
             // Alert::error('Error', $e->getMessage());
             return redirect()->back()->with('error', 'Deleted Failed, Delete Member Check In First');
         }
     }
 
-    // public function bulkDelete(Request $request)
-    // {
-    //     $selectedItems = $request->input('selected_member_registrations');
+    public function deleteSelectedMembers(Request $request)
+    {
+        $selectedMembers = $request->input('selectedMembers', []);
 
-    //     try {
-    //         foreach ($selectedItems as $itemId) {
-    //             $member = MemberRegistration::find($itemId);
+        // Add your logic to delete the selected members from the database
+        MemberRegistration::whereIn('id', $selectedMembers)->delete();
 
-    //             if (!empty($member)) {
-    //                 if ($member->photos != null) {
-    //                     $realLocation = "storage/" . $member->photos;
-    //                     if (file_exists($realLocation) && !is_dir($realLocation)) {
-    //                         unlink($realLocation);
-    //                     }
-    //                 }
-
-    //                 $member->delete();
-    //             }
-    //         }
-
-    //         return redirect()->back()->with('message', 'Member Registration Deleted Successfully');
-    //     } catch (\Throwable $th) {
-    //         return redirect()->back()->with('error', 'Deleted Failed, Dehgtrhtrheck In First');
-    //     }
-    // }
+        // Redirect back or return a response as needed
+        return redirect()->back()->with('message', 'Selected member registration deleted successfully');
+    }
 
     public function cetak_pdf()
     {

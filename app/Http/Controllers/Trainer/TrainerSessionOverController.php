@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Trainer;
 
 use App\Http\Controllers\Controller;
+use App\Models\Trainer\TrainerSession;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -55,6 +56,17 @@ class TrainerSessionOverController extends Controller
         ];
 
         return view('admin.layouts.wrapper', $data);
+    }
+
+    public function deleteSelectedTrainerSessionsOver(Request $request)
+    {
+        $selectedTrainerSessionsOver = $request->input('selectedTrainerSessionsOver', []);
+
+        // Add your logic to delete the selected members from the database
+        TrainerSession::whereIn('id', $selectedTrainerSessionsOver)->delete();
+
+        // Redirect back or return a response as needed
+        return redirect()->back()->with('message', 'Selected trainer sessions over deleted successfully');
     }
 
     public function pdfReport()
