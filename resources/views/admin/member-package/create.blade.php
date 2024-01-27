@@ -28,39 +28,11 @@
                         </div>
                         <div class="col-xl-6">
                             <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label">Number Of Days</label>
-                                <input type="number" name="days" value="{{ old('days') }}" class="form-control"
+                                <label for="exampleFormControlInput1" class="form-label">Number Of Months</label>
+                                <input type="number" name="months" value="{{ old('months') }}" class="form-control"
                                     id="exampleFormControlInput1" autocomplete="off" required>
                             </div>
                         </div>
-                        {{-- <div class="col-xl-6">
-                            <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label">Package Type</label>
-                                <select name="package_type_id" class="form-control" aria-label="Default select example"
-                                    required>
-                                    <option disabled selected value>
-                                        <- Choose ->
-                                    </option>
-                                    @foreach ($memberPackageType as $item)
-                                        <option value="{{ $item->id }}">{{ $item->package_type_name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div> --}}
-                        {{-- <div class="col-xl-6">
-                            <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label">Package Category</label>
-                                <select name="package_category_id" class="form-control"
-                                    aria-label="Default select example" required>
-                                    <option disabled selected value>
-                                        <- Choose ->
-                                    </option>
-                                    @foreach ($memberPackageCategories as $item)
-                                        <option value="{{ $item->id }}">{{ $item->package_category_name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div> --}}
                         <div class="col-xl-6">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Package Price</label>

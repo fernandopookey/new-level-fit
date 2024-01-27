@@ -63,7 +63,7 @@
                                     <td>
                                         <h6>{{ $item->package_name }}</h6>
                                         <h6>{{ formatRupiah($item->package_price) }}</h6>
-                                        <h6>{{ $item->member_registration_days }} Days</h6>
+                                        <h6>{{ $item->member_registration_months }} Months</h6>
                                     </td>
                                     <td>
                                         <h6>{{ $item->start_date }}</h6>

@@ -19,7 +19,7 @@ class MemberRegistration extends Model
         'package_price',
         'admin_price',
         'start_date',
-        'days',
+        'months',
         'method_payment_id',
         'refferal_id',
         'description',

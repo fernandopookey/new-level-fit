@@ -23,26 +23,26 @@ class DashboardController extends Controller
                 'a.description',
                 'b.full_name as member_name',
                 'c.package_name',
-                'c.days',
+                'c.months',
                 'b.member_code',
                 'b.phone_number',
                 'b.photos',
                 'b.gender',
                 'c.package_name',
                 'c.package_price',
-                'c.days',
+                'c.months',
                 'e.name as method_payment_name',
                 'f.full_name as staff_name'
             )
             ->addSelect(
-                DB::raw('DATE_ADD(a.start_date, INTERVAL c.days DAY) as expired_date'),
-                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END as status')
+                DB::raw('DATE_ADD(a.start_date, INTERVAL c.months DAY) as expired_date'),
+                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.months DAY) THEN "Over" ELSE "Running" END as status')
             )
             ->join('members as b', 'a.member_id', '=', 'b.id')
             ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
             ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
             ->join('users as f', 'a.user_id', '=', 'f.id')
-            ->where(DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END'), '=', 'Running')
+            ->where(DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.months DAY) THEN "Over" ELSE "Running" END'), '=', 'Running')
             ->count();
 
         $overRegistrationsMemberCount = DB::table('member_registrations as a')
@@ -52,26 +52,26 @@ class DashboardController extends Controller
                 'a.description',
                 'b.full_name as member_name',
                 'c.package_name',
-                'c.days',
+                'c.months',
                 'b.member_code',
                 'b.phone_number',
                 'b.photos',
                 'b.gender',
                 'c.package_name',
                 'c.package_price',
-                'c.days',
+                'c.months',
                 'e.name as method_payment_name',
                 'f.full_name as staff_name'
             )
             ->addSelect(
-                DB::raw('DATE_ADD(a.start_date, INTERVAL c.days DAY) as expired_date'),
-                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END as status')
+                DB::raw('DATE_ADD(a.start_date, INTERVAL c.months DAY) as expired_date'),
+                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.months DAY) THEN "Over" ELSE "Running" END as status')
             )
             ->join('members as b', 'a.member_id', '=', 'b.id')
             ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
             ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
             ->join('users as f', 'a.user_id', '=', 'f.id')
-            ->where(DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END'), '=', 'Over')
+            ->where(DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.months DAY) THEN "Over" ELSE "Running" END'), '=', 'Over')
             ->count();
 
         $memberRegistrationTotalAmount = DB::table('member_registrations as a')
@@ -87,10 +87,10 @@ class DashboardController extends Controller
                 'b.photos',
                 'b.gender',
                 'c.package_name',
-                'c.days',
+                'c.months',
                 'e.name as method_payment_name',
                 'f.full_name as staff_name',
-                DB::raw('DATE_ADD(a.start_date, INTERVAL c.days DAY) as expired_date'),
+                DB::raw('DATE_ADD(a.start_date, INTERVAL c.months DAY) as expired_date'),
                 DB::raw('"Over" as status'),
                 DB::raw('SUM(a.package_price) as total_price'),
                 DB::raw('SUM(a.admin_price) as admin_price')
@@ -99,7 +99,7 @@ class DashboardController extends Controller
             ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
             ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
             ->join('users as f', 'a.user_id', '=', 'f.id')
-            ->whereRaw('NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY)')
+            ->whereRaw('NOW() > DATE_ADD(a.start_date, INTERVAL c.months DAY)')
             ->groupBy(
                 'a.id',
                 'a.start_date',
@@ -112,7 +112,7 @@ class DashboardController extends Controller
                 'b.photos',
                 'b.gender',
                 'c.package_name',
-                'c.days',
+                'c.months',
                 'e.name',
                 'f.full_name',
                 'expired_date',

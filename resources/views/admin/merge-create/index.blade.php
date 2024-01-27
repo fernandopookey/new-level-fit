@@ -144,7 +144,7 @@
                                 </option>
                                 @foreach ($memberPackage as $item)
                                     <option value="{{ $item->id }}">{{ $item->package_name }} |
-                                        {{ $item->days }} Days |
+                                        {{ $item->months }} Month |
                                         {{ formatRupiah($item->package_price) }} |
                                         {{ formatRupiah($item->admin_price) }}</option>
                                 @endforeach

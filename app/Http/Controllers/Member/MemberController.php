@@ -41,9 +41,12 @@ class MemberController extends Controller
             'photos'        => 'mimes:png,jpg,jpeg|max:2048'
         ]);
 
+
         $data['user_id'] = Auth::user()->id;
         $member = $request->member_code;
-        $memberCode = 'GG-' . $member . '-M';
+        // $memberCode = 'GG-' . $member . '-M';
+        $memberCode = $member;
+        // dd($memberCode);
 
         $existingRecord = Member::where('member_code', $memberCode)->first();
 
@@ -68,7 +71,8 @@ class MemberController extends Controller
             $data['photos'] = $request->photos;
         }
 
-        $data['member_code'] = 'GG-' . $member . '-M';
+        // $data['member_code'] = 'GG-' . $member . '-M';
+        $data['member_code'] = $member;
         Member::create($data);
         return redirect()->back()->with('message', 'Member Added Successfully');
     }
@@ -155,7 +159,8 @@ class MemberController extends Controller
         } elseif ($data['member_code'] !== $item->member_code) {
             // If member_code is provided and different from the existing one, validate and update it
             $member = $data['member_code'];
-            $memberCode = 'GG-' . $member . '-M';
+            // $memberCode = 'GG-' . $member . '-M';
+            $memberCode = $member;
 
             // Check if a record with the same member code already exists
             $existingRecord = Member::where('member_code', $memberCode)->first();

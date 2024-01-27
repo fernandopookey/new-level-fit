@@ -49,14 +49,14 @@
                                 <div class="mb-3">
                                     <h5>Days Of Member Package</h5>
                                     <input type="text" name="member_code" id="memberCode"
-                                        value="{{ old('member_id', $item->days) }}" class="form-control" disabled>
+                                        value="{{ old('member_id', $item->months) }}" class="form-control" disabled>
                                 </div>
                             </div>
                             <div class="col-xl-12">
                                 <div class="mb-3">
                                     <h5>Days Off</h5>
                                     <input type="number" name="days_off" id="memberCode" class="form-control"
-                                        autocomplete="off">
+                                        autocomplete="off" required>
                                 </div>
                             </div>
                         </div>

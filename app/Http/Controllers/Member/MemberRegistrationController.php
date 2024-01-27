@@ -29,6 +29,7 @@ class MemberRegistrationController extends Controller
         //         'a.description',
         //         'a.package_price as mr_package_price',
         //         'a.admin_price as mr_admin_price',
+        //         'a.days as member_registration_days',
         //         'b.full_name as member_name', // alias for members table name column
         //         'c.package_name',
         //         'c.days',
@@ -43,14 +44,14 @@ class MemberRegistrationController extends Controller
         //         'f.full_name as staff_name', // alias for users table name column
         //     )
         //     ->addSelect(
-        //         DB::raw('DATE_ADD(a.start_date, INTERVAL c.days DAY) as expired_date'),
-        //         DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END as status')
+        //         DB::raw('DATE_ADD(a.start_date, INTERVAL a.days DAY) as expired_date'),
+        //         DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.days DAY) THEN "Over" ELSE "Running" END as status')
         //     )
         //     ->join('members as b', 'a.member_id', '=', 'b.id')
         //     ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
         //     ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
         //     ->join('users as f', 'a.user_id', '=', 'f.id')
-        //     ->whereRaw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END = ?', ['Running'])
+        //     ->whereRaw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.days DAY) THEN "Over" ELSE "Running" END = ?', ['Running'])
         //     ->orderBy('status', 'desc')
         //     ->get();
 
@@ -61,33 +62,36 @@ class MemberRegistrationController extends Controller
                 'a.description',
                 'a.package_price as mr_package_price',
                 'a.admin_price as mr_admin_price',
-                'a.days as member_registration_days',
+                'a.months as member_registration_months',
                 'b.full_name as member_name', // alias for members table name column
                 'c.package_name',
-                'c.days',
+                'c.months',
                 'b.member_code',
                 'b.phone_number',
                 'b.photos',
                 'b.gender',
                 'c.package_name',
                 'c.package_price',
-                'c.days',
+                'c.months',
                 'e.name as method_payment_name', // alias for method_payments table name column
                 'f.full_name as staff_name', // alias for users table name column
             )
             ->addSelect(
-                DB::raw('DATE_ADD(a.start_date, INTERVAL a.days DAY) as expired_date'),
-                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.days DAY) THEN "Over" ELSE "Running" END as status')
+                DB::raw('DATE_ADD(a.start_date, INTERVAL c.months MONTH) as expired_date'),
+                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.months MONTH) THEN "Over" ELSE "Running" END as status')
             )
             ->join('members as b', 'a.member_id', '=', 'b.id')
             ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
             ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
-            ->join('users as f', 'a.user_id', '=', 'f.id')
-            ->whereRaw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.days DAY) THEN "Over" ELSE "Running" END = ?', ['Running'])
+            ->join(
+                'users as f',
+                'a.user_id',
+                '=',
+                'f.id'
+            )
+            ->whereRaw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.months MONTH) THEN "Over" ELSE "Running" END = ?', ['Running'])
             ->orderBy('status', 'desc')
             ->get();
-
-        // dd($query);
 
         $data = [
             'title'                 => 'Member Registration List',
@@ -199,7 +203,7 @@ class MemberRegistrationController extends Controller
         unset($data['start_time']);
 
         $data['admin_price'] = $package->admin_price;
-        $data['days'] = $package->days;
+        $data['months'] = $package->months;
 
         MemberRegistration::create($data);
         return redirect()->back()->with('message', 'Member Registration Added Successfully');
@@ -219,16 +223,16 @@ class MemberRegistrationController extends Controller
                 'b.photos',
                 'b.gender',
                 'c.package_name',
-                'c.days',
+                'c.months',
                 'c.package_name',
                 'c.package_price',
-                'c.days',
+                'c.months',
                 'e.name as method_payment_name',
                 'f.full_name as staff_name'
             )
             ->addSelect(
-                DB::raw('DATE_ADD(a.start_date, INTERVAL a.days DAY) as expired_date'),
-                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.days DAY) THEN "Over" ELSE "Running" END as status')
+                DB::raw('DATE_ADD(a.start_date, INTERVAL a.months DAY) as expired_date'),
+                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.months DAY) THEN "Over" ELSE "Running" END as status')
             )
             ->join('members as b', 'a.member_id', '=', 'b.id')
             ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
@@ -306,26 +310,26 @@ class MemberRegistrationController extends Controller
                 'a.admin_price as mr_admin_price',
                 'b.full_name as member_name', // alias for members table name column
                 'c.package_name',
-                'c.days',
+                'c.months',
                 'b.member_code',
                 'b.phone_number',
                 'b.photos',
                 'b.gender',
                 'c.package_name',
                 'c.package_price',
-                'c.days',
+                'c.months',
                 'e.name as method_payment_name', // alias for method_payments table name column
                 'f.full_name as staff_name', // alias for users table name column
             )
             ->addSelect(
-                DB::raw('DATE_ADD(a.start_date, INTERVAL c.days DAY) as expired_date'),
-                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END as status')
+                DB::raw('DATE_ADD(a.start_date, INTERVAL c.months DAY) as expired_date'),
+                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.months DAY) THEN "Over" ELSE "Running" END as status')
             )
             ->join('members as b', 'a.member_id', '=', 'b.id')
             ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
             ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
             ->join('users as f', 'a.user_id', '=', 'f.id')
-            ->whereRaw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END = ?', ['Running'])
+            ->whereRaw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.months DAY) THEN "Over" ELSE "Running" END = ?', ['Running'])
             ->orderBy('status', 'desc')
             ->first();
 
@@ -382,26 +386,25 @@ class MemberRegistrationController extends Controller
                 'a.admin_price as mr_admin_price',
                 'b.full_name as member_name', // alias for members table name column
                 'c.package_name',
-                'c.days',
+                'c.months',
                 'b.member_code',
                 'b.phone_number',
                 'b.photos',
                 'b.gender',
                 'c.package_name',
                 'c.package_price',
-                'c.days',
                 'e.name as method_payment_name', // alias for method_payments table name column
                 'f.full_name as staff_name', // alias for users table name column
             )
             ->addSelect(
-                DB::raw('DATE_ADD(a.start_date, INTERVAL c.days DAY) as expired_date'),
-                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END as status')
+                DB::raw('DATE_ADD(a.start_date, INTERVAL c.months DAY) as expired_date'),
+                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.months DAY) THEN "Over" ELSE "Running" END as status')
             )
             ->join('members as b', 'a.member_id', '=', 'b.id')
             ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
             ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
             ->join('users as f', 'a.user_id', '=', 'f.id')
-            ->whereRaw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END = ?', ['Running'])
+            ->whereRaw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.months DAY) THEN "Over" ELSE "Running" END = ?', ['Running'])
             ->orderBy('status', 'desc')
             ->get();
 
