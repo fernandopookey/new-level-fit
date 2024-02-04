@@ -160,10 +160,9 @@
 <script>
     $(document).ready(function() {
         let table = new DataTable('#myTable', {
-            // Code below useless
             order: [
                 [1, 'asc']
-            ] // 1 is the column index, 'asc' is for ascending order
+            ]
         });
     });
 </script>
@@ -190,11 +189,10 @@
         var url = "<?php echo URL::to('/trainer-session/'); ?>" + id;
 
         var leftPosition, topPosition;
-        //Allow for borders.
         leftPosition = (window.screen.width / 2) - ((width / 2) + 10);
-        //Allow for title and status bars.
+
         topPosition = (window.screen.height / 2) - ((height / 2) + 50);
-        //Open the window.
+
         window.open(url, "Window2",
             "status=no,height=" + height + ",width=" + width + ",resizable=yes,left=" +
             leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" +
@@ -214,13 +212,10 @@
 </script>
 
 <script>
-    // Add this script to handle automatic data saving
     $(document).ready(function() {
         $('#memberCode').on('input', function() {
-            // Get the member code value
             var memberCode = $(this).val();
 
-            // Make an AJAX request to save the member code
             $.ajax({
                 url: '{{ route('member-check-in.store') }}',
                 method: 'POST',
@@ -230,11 +225,9 @@
                 },
                 success: function(response) {
                     console.log(response);
-                    // You can handle success actions if needed
                 },
                 error: function(error) {
                     console.log(error);
-                    // You can handle error actions if needed
                 }
             });
         });
@@ -284,16 +277,13 @@
     });
 </script>
 
-<!-- Add this script at the end of your HTML body or in a script section -->
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // Set default date value
-        var defaultDate = new Date(); // You can set your desired default date here
+        var defaultDate = new Date();
         var formattedDate = defaultDate.getFullYear() + '-' + ('0' + (defaultDate.getMonth() + 1)).slice(-2) +
             '-' + ('0' + defaultDate.getDate()).slice(-2);
         document.getElementsByClassName("editDate")[0].value = formattedDate;
 
-        // Set default time value
         var defaultTime = defaultDate.getHours() + ':' + ('0' + defaultDate.getMinutes()).slice(-2);
         document.getElementsByClassName("editTime")[0].value = defaultTime;
     });
@@ -301,13 +291,11 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // Set default date value
-        var defaultDate = new Date(); // You can set your desired default date here
+        var defaultDate = new Date();
         var formattedDate = defaultDate.getFullYear() + '-' + ('0' + (defaultDate.getMonth() + 1)).slice(-2) +
             '-' + ('0' + defaultDate.getDate()).slice(-2);
         document.getElementById("mdate2").value = formattedDate;
 
-        // Set default time value
         var defaultTime = defaultDate.getHours() + ':' + ('0' + defaultDate.getMinutes()).slice(-2);
         document.getElementsByName("start_time2")[0].value = defaultTime;
     });
@@ -315,14 +303,19 @@
 
 <script>
     function showForm(formId) {
-        // Hide all forms
         document.getElementById('memberForm').style.display = 'none';
         document.getElementById('memberRegistrationForm').style.display = 'none';
         document.getElementById('trainerSessionForm').style.display = 'none';
 
-        // Show the selected form
         document.getElementById(formId).style.display = 'block';
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('memberRegistrationForm').style.display = 'none';
+        document.getElementById('trainerSessionForm').style.display = 'none';
+
+        document.getElementById('memberForm').style.display = 'block';
+    });
 </script>
 
 <script>
@@ -333,29 +326,23 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // Add an event listener to the "Delete Selected" button
         document.getElementById("deleteSelected").addEventListener("click", function() {
-            // Get all selected checkboxes
             var selectedCheckboxes = document.querySelectorAll(
                 'input[name="selectedMembers[]"]:checked');
 
             if (selectedCheckboxes.length > 0) {
-                // Confirm deletion
                 if (confirm("Delete selected data ?")) {
-                    // Create a form element
                     var deleteForm = document.createElement("form");
                     deleteForm.action = "{{ route('delete-selected-members') }}";
                     deleteForm.method = "post";
-                    deleteForm.style.display = "none"; // Hide the form
+                    deleteForm.style.display = "none";
 
-                    // Append CSRF token to the form
                     var csrfTokenInput = document.createElement("input");
                     csrfTokenInput.type = "hidden";
                     csrfTokenInput.name = "_token";
                     csrfTokenInput.value = "{{ csrf_token() }}";
                     deleteForm.appendChild(csrfTokenInput);
 
-                    // Append selected checkboxes to the form
                     selectedCheckboxes.forEach(function(checkbox) {
                         var input = document.createElement("input");
                         input.type = "hidden";
@@ -364,10 +351,9 @@
                         deleteForm.appendChild(input);
                     });
 
-                    // Append the form to the document body
                     document.body.appendChild(deleteForm);
 
-                    // Submit the form
+
                     deleteForm.submit();
                 }
             } else {
@@ -379,29 +365,23 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // Add an event listener to the "Delete Selected" button
         document.getElementById("deleteSelectedMembersOver").addEventListener("click", function() {
-            // Get all selected checkboxes
             var selectedCheckboxes = document.querySelectorAll(
                 'input[name="selectedMembersOver[]"]:checked');
 
             if (selectedCheckboxes.length > 0) {
-                // Confirm deletion
                 if (confirm("Delete selected data ?")) {
-                    // Create a form element
                     var deleteForm = document.createElement("form");
                     deleteForm.action = "{{ route('delete-selected-members-over') }}";
                     deleteForm.method = "post";
-                    deleteForm.style.display = "none"; // Hide the form
+                    deleteForm.style.display = "none";
 
-                    // Append CSRF token to the form
                     var csrfTokenInput = document.createElement("input");
                     csrfTokenInput.type = "hidden";
                     csrfTokenInput.name = "_token";
                     csrfTokenInput.value = "{{ csrf_token() }}";
                     deleteForm.appendChild(csrfTokenInput);
 
-                    // Append selected checkboxes to the form
                     selectedCheckboxes.forEach(function(checkbox) {
                         var input = document.createElement("input");
                         input.type = "hidden";
@@ -410,10 +390,8 @@
                         deleteForm.appendChild(input);
                     });
 
-                    // Append the form to the document body
                     document.body.appendChild(deleteForm);
 
-                    // Submit the form
                     deleteForm.submit();
                 }
             } else {
@@ -425,29 +403,28 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // Add an event listener to the "Delete Selected" button
         document.getElementById("deleteSelectedTrainerSessions").addEventListener("click", function() {
-            // Get all selected checkboxes
+
             var selectedCheckboxes = document.querySelectorAll(
                 'input[name="selectedTrainerSessions[]"]:checked');
 
             if (selectedCheckboxes.length > 0) {
-                // Confirm deletion
+
                 if (confirm("Delete selected data ?")) {
-                    // Create a form element
+
                     var deleteForm = document.createElement("form");
                     deleteForm.action = "{{ route('delete-selected-trainer-sessions') }}";
                     deleteForm.method = "post";
-                    deleteForm.style.display = "none"; // Hide the form
+                    deleteForm.style.display = "none";
 
-                    // Append CSRF token to the form
+
                     var csrfTokenInput = document.createElement("input");
                     csrfTokenInput.type = "hidden";
                     csrfTokenInput.name = "_token";
                     csrfTokenInput.value = "{{ csrf_token() }}";
                     deleteForm.appendChild(csrfTokenInput);
 
-                    // Append selected checkboxes to the form
+
                     selectedCheckboxes.forEach(function(checkbox) {
                         var input = document.createElement("input");
                         input.type = "hidden";
@@ -456,10 +433,8 @@
                         deleteForm.appendChild(input);
                     });
 
-                    // Append the form to the document body
                     document.body.appendChild(deleteForm);
 
-                    // Submit the form
                     deleteForm.submit();
                 }
             } else {
@@ -471,29 +446,23 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // Add an event listener to the "Delete Selected" button
         document.getElementById("deleteSelectedTrainerSessionsOver").addEventListener("click", function() {
-            // Get all selected checkboxes
             var selectedCheckboxes = document.querySelectorAll(
                 'input[name="selectedTrainerSessionsOver[]"]:checked');
 
             if (selectedCheckboxes.length > 0) {
-                // Confirm deletion
                 if (confirm("Delete selected data ?")) {
-                    // Create a form element
                     var deleteForm = document.createElement("form");
                     deleteForm.action = "{{ route('delete-selected-trainer-sessions-over') }}";
                     deleteForm.method = "post";
-                    deleteForm.style.display = "none"; // Hide the form
+                    deleteForm.style.display = "none";
 
-                    // Append CSRF token to the form
                     var csrfTokenInput = document.createElement("input");
                     csrfTokenInput.type = "hidden";
                     csrfTokenInput.name = "_token";
                     csrfTokenInput.value = "{{ csrf_token() }}";
                     deleteForm.appendChild(csrfTokenInput);
 
-                    // Append selected checkboxes to the form
                     selectedCheckboxes.forEach(function(checkbox) {
                         var input = document.createElement("input");
                         input.type = "hidden";
@@ -502,10 +471,8 @@
                         deleteForm.appendChild(input);
                     });
 
-                    // Append the form to the document body
                     document.body.appendChild(deleteForm);
 
-                    // Submit the form
                     deleteForm.submit();
                 }
             } else {
@@ -514,6 +481,89 @@
         });
     });
 </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var sellRadio = document.getElementById('sell');
+        var missedGuestRadio = document.getElementById('missed');
+
+        var elementsToShow = ['born', 'member_code', 'gender', 'status', 'address', 'description', 'formFile',
+            'output', 'nickname', 'email', 'ig', 'emergency_contact'
+        ];
+        var elementsToHide = ['born', 'member_code', 'gender', 'status', 'address', 'description', 'formFile',
+            'output', 'nickname', 'email', 'ig', 'emergency_contact'
+        ];
+
+        function toggleElements(elements, displayStyle) {
+            elements.forEach(function(elementId) {
+                var element = document.querySelector('[id="' + elementId + '"]');
+                if (element) {
+                    element.style.display = displayStyle;
+                }
+            });
+        }
+
+        function handleRadioChange() {
+            if (sellRadio.checked) {
+                toggleElements(elementsToShow, 'block');
+                toggleElements(elementsToHide, 'none');
+            } else if (missedGuestRadio.checked) {
+                toggleElements(elementsToShow, 'none');
+                toggleElements(elementsToHide, 'block');
+            }
+        }
+
+        sellRadio.addEventListener('change', handleRadioChange);
+        missedGuestRadio.addEventListener('change', handleRadioChange);
+
+        toggleElements(elementsToShow, 'none');
+        toggleElements(elementsToHide, 'none');
+    });
+</script>
+
+{{-- <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var sellRadios = document.querySelectorAll('.form-check-input[value="sell"]');
+        var missedGuestRadios = document.querySelectorAll('.form-check-input[value="missed_guest"]');
+
+        var elementsToShow = ['born', 'member_code', 'gender', 'status', 'address', 'description', 'formFile',
+            'output', 'nickname', 'email', 'ig', 'emergency_contact'
+        ];
+        var elementsToHide = ['born', 'member_code', 'gender', 'status', 'address', 'description', 'formFile',
+            'output', 'nickname', 'email', 'ig', 'emergency_contact'
+        ];
+
+        function toggleElements(elements, displayStyle) {
+            elements.forEach(function(elementClass) {
+                var elements = document.querySelectorAll('.' + elementClass);
+                elements.forEach(function(element) {
+                    element.style.display = displayStyle;
+                });
+            });
+        }
+
+        function handleRadioChange() {
+            if (this.value === 'sell') {
+                toggleElements(elementsToShow, 'block');
+                toggleElements(elementsToHide, 'none');
+            } else if (this.value === 'missed_guest') {
+                toggleElements(elementsToShow, 'none');
+                toggleElements(elementsToHide, 'block');
+            }
+        }
+
+        sellRadios.forEach(function(radio) {
+            radio.addEventListener('change', handleRadioChange);
+        });
+
+        missedGuestRadios.forEach(function(radio) {
+            radio.addEventListener('change', handleRadioChange);
+        });
+
+        toggleElements(elementsToShow, 'none');
+        toggleElements(elementsToHide, 'none');
+    });
+</script> --}}
 
 
 </body>

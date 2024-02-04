@@ -13,14 +13,20 @@ class Member extends Model
 
     protected $fillable = [
         'full_name',
+        'nickname',
         'member_code',
         'gender',
+        'born',
         'phone_number',
+        'email',
+        'ig',
+        'emergency_contact',
         'address',
+        'status',
         'description',
         'photos',
-        'member_code',
         'user_id',
+        'status'
     ];
 
     public function users()

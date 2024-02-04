@@ -36,15 +36,20 @@
             <li>
                 <a href="{{ route('add-data') }}" href="javascript:void(0);" aria-expanded="false">
                     <i class="material-symbols-outlined">person</i>
-                    <span class="nav-text">Add Data</span>
+                    <span class="nav-text">Lead</span>
                 </a>
             </li>
-
             <li>
-                <a href="{{ route('members.index') }}" href="javascript:void(0);" aria-expanded="false">
+                <a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
                     <i class="material-symbols-outlined">person</i>
                     <span class="nav-text">Members</span>
                 </a>
+                <ul aria-expanded="false">
+                    <li><a href="{{ route('members.index') }}">Sell</a></li>
+                    <li><a href="{{ route('missed-guest.index') }}">Missed Guest</a></li>
+                    {{-- <li><a href="{{ route('member-payment.index') }}">Member Payment</a></li> --}}
+
+                </ul>
             </li>
 
             <li>
@@ -53,8 +58,9 @@
                     <span class="nav-text">Member Regist</span>
                 </a>
                 <ul aria-expanded="false">
-                    <li><a href="{{ route('member-registration.index') }}">Member Registration</a></li>
-                    <li><a href="{{ route('member-registration-over.index') }}">Member Registration Over</a></li>
+                    <li><a href="{{ route('member-registration.index') }}">Member Package Transactions</a></li>
+                    <li><a href="{{ route('member-registration-over.index') }}">Member Package Transactions Over</a>
+                    </li>
                     {{-- <li><a href="{{ route('member-payment.index') }}">Member Payment</a></li> --}}
 
                 </ul>

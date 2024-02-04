@@ -9,15 +9,38 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class MemberController extends Controller
 {
     public function index()
     {
+        $sell = DB::table('members as a')
+            ->select(
+                'a.id',
+                'a.full_name',
+                'a.nickname',
+                'a.member_code',
+                'a.gender',
+                'a.born',
+                'a.phone_number',
+                'a.email',
+                'a.ig',
+                'a.emergency_contact',
+                'a.address',
+                'a.status',
+                'a.description',
+                'a.photos',
+                'b.full_name as user_full_name'
+            )
+            ->join('users as b', 'a.user_id', '=', 'b.id')
+            ->where('a.status', '=', 'sell')
+            ->get();
+
         $data = [
             'title'             => 'Member List',
-            'members'           => Member::get(),
-            'users'             => User::get(),
+            'members'           => $sell,
+            // 'users'             => User::get(),
             'memberLastCode'    => Member::latest('id')->first(),
             'content'           => 'admin/members/index'
         ];
@@ -33,25 +56,32 @@ class MemberController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'full_name'     => 'required',
-            'gender'        => 'required',
-            'phone_number'  => '',
-            'address'       => '',
-            'description'   => '',
-            'photos'        => 'mimes:png,jpg,jpeg|max:2048'
+            'full_name'         => 'required',
+            'phone_number'      => 'required',
+            'nickname'          => 'nullable',
+            'member_code'       => 'nullable',
+            'gender'            => 'nullable',
+            'born'              => 'nullable',
+            'email'             => 'nullable',
+            'ig'                => 'nullable',
+            'emergency_contact' => 'nullable',
+            'address'           => 'nullable',
+            'description'       => 'nullable',
+            'photos'            => 'mimes:png,jpg,jpeg|max:2048',
+            'status'            => 'required'
         ]);
 
 
         $data['user_id'] = Auth::user()->id;
-        $member = $request->member_code;
-        // $memberCode = 'GG-' . $member . '-M';
-        $memberCode = $member;
-        // dd($memberCode);
+        $data['gender'] = $request->input('gender', 'Not Selected');
 
-        $existingRecord = Member::where('member_code', $memberCode)->first();
+        if ($request->filled('member_code')) {
+            $memberCode = $request->member_code;
+            $existingRecord = Member::where('member_code', $memberCode)->first();
 
-        if ($existingRecord) {
-            return redirect()->back()->with('error', 'Code already exists');
+            if ($existingRecord) {
+                return redirect()->back()->with('error', 'Code already exists');
+            }
         }
 
         if ($request->hasFile('photos')) {
@@ -70,55 +100,9 @@ class MemberController extends Controller
         } else {
             $data['photos'] = $request->photos;
         }
-
-        // $data['member_code'] = 'GG-' . $member . '-M';
-        $data['member_code'] = $member;
         Member::create($data);
         return redirect()->back()->with('message', 'Member Added Successfully');
     }
-
-    // public function store(Request $request)
-    // {
-    //     $data = $request->validate([
-    //         'full_name'     => 'required',
-    //         'gender'        => 'required',
-    //         'phone_number'  => '',
-    //         'address'       => '',
-    //         'description'   => '',
-    //         'photos'        => 'mimes:png,jpg,jpeg|max:2048'
-    //     ]);
-
-    //     $data['user_id'] = Auth::user()->id;
-    //     $member = $request->member_code;
-    //     $memberCode = 'GG-' . $member . '-M';
-
-    //     $existingRecord = Member::where('member_code', $memberCode)->first();
-
-    //     if ($existingRecord) {
-    //         return redirect()->back()->with('error', 'Code already exists');
-    //     }
-
-    //     if ($request->hasFile('photos')) {
-
-    //         if ($request->photos != null) {
-    //             $realLocation = "storage/" . $request->photos;
-    //             if (file_exists($realLocation) && !is_dir($realLocation)) {
-    //                 unlink($realLocation);
-    //             }
-    //         }
-
-    //         $photos = $request->file('photos');
-    //         $file_name = time() . '-' . $photos->getClientOriginalName();
-
-    //         $data['photos'] = $request->file('photos')->store('assets/member', 'public');
-    //     } else {
-    //         $data['photos'] = $request->photos;
-    //     }
-
-    //     $data['member_code'] = 'GG-' . $member . '-M';
-    //     Member::create($data);
-    //     return redirect()->route('member.index')->with('message', 'Member Added Successfully');
-    // }
 
     public function edit(string $id)
     {
@@ -129,40 +113,29 @@ class MemberController extends Controller
     {
         $item = Member::find($id);
         $data = $request->validate([
-            'full_name'     => 'nullable',
-            'gender'        => 'nullable',
-            'phone_number'  => 'nullable',
-            'address'       => 'nullable',
-            'description'   => 'nullable',
-            'member_code'   => 'nullable',
-            'photos'        => 'mimes:png,jpg,jpeg|max:2048'
+            'full_name'         => 'nullable',
+            'phone_number'      => 'nullable',
+            'nickname'          => 'nullable',
+            'member_code'       => 'nullable',
+            'gender'            => 'nullable',
+            'born'              => 'nullable',
+            'email'             => 'nullable',
+            'ig'                => 'nullable',
+            'emergency_contact' => 'nullable',
+            'address'           => 'nullable',
+            'status'            => 'nullable',
+            'description'       => 'nullable',
+            'photos'            => 'mimes:png,jpg,jpeg|max:2048'
         ]);
 
         $data['user_id'] = Auth::user()->id;
 
-        // if ($data['member_code'] !== null) {
-        //     $member = $request->member_code;
-        //     $memberCode = 'GG-' . $member . '-M';
-
-        //     // Check if a record with the same member code already exists
-        //     $existingRecord = Member::where('member_code', $memberCode)->first();
-        //     if ($existingRecord && $existingRecord->id != $id) {
-        //         return redirect()->back()->with('error', 'Code already exists');
-        //     }
-        //     $data['member_code'] = $memberCode;
-        // } else {
-        //     $data['member_code'] = null;
-        // }
-
         if (!isset($data['member_code'])) {
             $data['member_code'] = $item->member_code;
         } elseif ($data['member_code'] !== $item->member_code) {
-            // If member_code is provided and different from the existing one, validate and update it
             $member = $data['member_code'];
-            // $memberCode = 'GG-' . $member . '-M';
             $memberCode = $member;
 
-            // Check if a record with the same member code already exists
             $existingRecord = Member::where('member_code', $memberCode)->first();
             if ($existingRecord && $existingRecord->id != $id) {
                 return redirect()->back()->with('error', 'Code already exists');
