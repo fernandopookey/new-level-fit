@@ -31,10 +31,73 @@
                             </div>
                             <div class="col-xl-6">
                                 <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Phone Number</label>
+                                    <input type="text" name="phone_number"
+                                        value="{{ old('phone_number', $item->phone_number) }}" class="form-control"
+                                        id="exampleFormControlInput1" autocomplete="off" required>
+                                </div>
+                            </div>
+                            <div class="col-xl-6">
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="status" id="sell"
+                                            value="missed_guest" checked>
+                                        <label class="form-check-label" for="sell">
+                                            Missed Guest
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="status" id="missed"
+                                            value="sell">
+                                        <label class="form-check-label" for="missed">
+                                            Sell
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-6">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Nick Name</label>
+                                    <input type="text" name="nickname" value="{{ old('nickname', $item->nickname) }}"
+                                        class="form-control" id="exampleFormControlInput1" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="col-xl-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Born</label>
+                                    <input type="text" name="born" value="{{ old('born', $item->born) }}"
+                                        class="form-control" placeholder="Choose born date" id="mdate" required>
+                                </div>
+                            </div>
+                            <div class="col-xl-6">
+                                <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Member Code</label>
                                     <input type="text" name="member_code"
                                         value="{{ old('member_code', $item->member_code) }}" class="form-control"
                                         id="exampleFormControlInput1" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="col-xl-6">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Email</label>
+                                    <input type="email" name="email" value="{{ old('email', $item->email) }}"
+                                        class="form-control" id="exampleFormControlInput1" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="col-xl-6">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Instagram</label>
+                                    <input type="text" name="ig" value="{{ old('ig', $item->ig) }}"
+                                        class="form-control" id="exampleFormControlInput1" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="col-xl-6">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Emergency
+                                        Contact</label>
+                                    <input type="text" name="emergency_contact"
+                                        value="{{ old('emergency_contact', $item->emergency_contact) }}"
+                                        class="form-control" id="exampleFormControlInput1" autocomplete="off">
                                 </div>
                             </div>
                             <div class="col-xl-6">
@@ -47,14 +110,6 @@
                                         <option value="Male">Male</option>
                                         <option value="Female">Female</option>
                                     </select>
-                                </div>
-                            </div>
-                            <div class="col-xl-6">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Phone Number</label>
-                                    <input type="text" name="phone_number"
-                                        value="{{ old('phone_number', $item->phone_number) }}" class="form-control"
-                                        id="exampleFormControlInput1" autocomplete="off" required>
                                 </div>
                             </div>
                             <div class="col-xl-6">
@@ -78,8 +133,8 @@
                             <div class="col-xl-6">
                                 <div class="mb-3">
                                     <label for="formFile" class="form-label">Photo</label>
-                                    <input class="form-control" type="file" name="photos" onchange="loadFile(event)"
-                                        id="formFile">
+                                    <input class="form-control" type="file" name="photos"
+                                        onchange="loadFile(event)" id="formFile">
                                 </div>
                                 <img id="output" class="img-fluid mt-2 mb-4" width="200" />
                             </div>

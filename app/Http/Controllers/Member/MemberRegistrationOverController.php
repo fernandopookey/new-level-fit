@@ -25,10 +25,10 @@ class MemberRegistrationOverController extends Controller
                 'b.photos',
                 'b.gender',
                 'c.package_name',
-                'c.days',
+                'c.months',
                 'e.name as method_payment_name',
                 'f.full_name as staff_name',
-                DB::raw('DATE_ADD(a.start_date, INTERVAL c.days DAY) as expired_date'),
+                DB::raw('DATE_ADD(a.start_date, INTERVAL c.months DAY) as expired_date'),
                 DB::raw('"Over" as status'),
                 DB::raw('SUM(a.package_price) as total_price'),
                 DB::raw('SUM(a.admin_price) as admin_price')
@@ -37,7 +37,7 @@ class MemberRegistrationOverController extends Controller
             ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
             ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
             ->join('users as f', 'a.user_id', '=', 'f.id')
-            ->whereRaw('NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY)')
+            ->whereRaw('NOW() > DATE_ADD(a.start_date, INTERVAL c.months DAY)')
             ->groupBy(
                 'a.id',
                 'a.start_date',
@@ -50,7 +50,7 @@ class MemberRegistrationOverController extends Controller
                 'b.photos',
                 'b.gender',
                 'c.package_name',
-                'c.days',
+                'c.months',
                 'e.name',
                 'f.full_name',
                 'expired_date',
@@ -134,10 +134,10 @@ class MemberRegistrationOverController extends Controller
                 'b.photos',
                 'b.gender',
                 'c.package_name',
-                'c.days',
+                'c.months',
                 'e.name as method_payment_name',
                 'f.full_name as staff_name',
-                DB::raw('DATE_ADD(a.start_date, INTERVAL c.days DAY) as expired_date'),
+                DB::raw('DATE_ADD(a.start_date, INTERVAL c.months DAY) as expired_date'),
                 DB::raw('"Over" as status'),
                 DB::raw('SUM(a.package_price) as total_price'),
                 DB::raw('SUM(a.admin_price) as admin_price')
@@ -146,7 +146,7 @@ class MemberRegistrationOverController extends Controller
             ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
             ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
             ->join('users as f', 'a.user_id', '=', 'f.id')
-            ->whereRaw('NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY)')
+            ->whereRaw('NOW() > DATE_ADD(a.start_date, INTERVAL c.months DAY)')
             ->groupBy(
                 'a.id',
                 'a.start_date',
@@ -159,7 +159,7 @@ class MemberRegistrationOverController extends Controller
                 'b.photos',
                 'b.gender',
                 'c.package_name',
-                'c.days',
+                'c.months',
                 'e.name',
                 'f.full_name',
                 'expired_date',

@@ -467,7 +467,7 @@
                                     <div class="d-flex align-items-center sidebar-info">
 
                                     </div>
-                                    <img src="images/user.jpg" alt="">
+                                    {{-- <img src="images/user.jpg" alt=""> --}}
                                 </div>
                             </a>
                             {{-- <div class="dropdown-menu dropdown-menu-end pb-0" style="">

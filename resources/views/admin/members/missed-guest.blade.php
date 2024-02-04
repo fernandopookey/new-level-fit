@@ -25,9 +25,10 @@
                                     <th>No</th>
                                     <th>Image</th>
                                     <th>Member Name</th>
+                                    <th>Phone Number</th>
                                     <th>Member Code</th>
                                     <th>gender</th>
-                                    <th>Phone Number</th>
+                                    <th>Other</th>
                                     <th>Address</th>
                                     <th>Description</th>
                                     <th>Staff</th>
@@ -39,18 +40,17 @@
                                     <tr>
                                         @if (Auth::user()->role == 'ADMIN')
                                             <td><input type="checkbox" name="selected_members[]"
-                                                    value="{{ $item->id }}" />
-                                            </td>
+                                                    value="{{ $item->member_code }}" /></td>
                                         @endif
                                         <td>{{ $loop->iteration }}</td>
                                         <td>
                                             <div class="trans-list">
                                                 @if ($item->photos)
-                                                    <img src="{{ Storage::url($item->photos ?? '') }}" class="lazyload"
+                                                    <img src="{{ Storage::url($item->photos) }}" class="lazyload"
                                                         width="100" alt="image">
                                                 @else
-                                                    <img src="{{ asset('default.png') }}" width="100"
-                                                        class="img-fluid" alt="">
+                                                    <img src="{{ asset('default.png') }}" class="img-fluid"
+                                                        width="100" alt="">
                                                 @endif
                                             </div>
                                         </td>
@@ -58,22 +58,40 @@
                                             <h6>{{ $item->full_name }}</h6>
                                         </td>
                                         <td>
-                                            <h6>{{ $item->member_code }}</h6>
-                                        </td>
-                                        <td>
-                                            <h6>{{ $item->gender }}</h6>
-                                        </td>
-                                        <td>
                                             <h6>{{ $item->phone_number }}</h6>
                                         </td>
                                         <td>
-                                            <h6>{{ $item->address }}</h6>
+                                            <h6>{{ isset($item->member_code) ? $item->member_code : 'Missed guest' }}
+                                            </h6>
                                         </td>
                                         <td>
-                                            <h6>{{ $item->description }}</h6>
+                                            <h6>{{ isset($item->gender) ? $item->gender : 'Missed guest' }}
+                                            </h6>
                                         </td>
                                         <td>
-                                            <h6>{{ $item->user_full_name }}</h6>
+                                            <h6>Email :
+                                                <strong>{{ isset($item->email) ? $item->email : 'Missed guest' }}
+                                                </strong>
+                                                </h5>
+                                                <h6>Instagram :
+                                                    <strong>{{ isset($item->ig) ? $item->ig : 'Missed guest' }}</strong>
+                                                    </h5>
+                                                    <h6>Emergency Contact :
+                                                        <strong>{{ isset($item->emergency_contact) ? $item->emergency_contact : 'Missed guest' }}
+                                                        </strong>
+                                                        </h5>
+                                        </td>
+                                        <td>
+                                            <h6>{{ isset($item->address) ? $item->address : 'Missed guest' }}
+                                            </h6>
+                                        </td>
+                                        <td>
+                                            <h6>{{ isset($item->description) ? $item->description : 'Missed guest' }}
+                                            </h6>
+                                        </td>
+                                        <td>
+                                            <h6>{{ isset($item->user_full_name) ? $item->user_full_name : 'Missed guest' }}
+                                            </h6>
                                         </td>
                                         <td>
                                             <div>
@@ -95,6 +113,7 @@
                                         </td>
                                     </tr>
                                 @endforeach
+
                             </tbody>
                         </table>
                         @if (Auth::user()->role == 'ADMIN')

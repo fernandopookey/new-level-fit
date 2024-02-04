@@ -129,6 +129,8 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     Route::post('/delete-selected-members', [MemberRegistrationController::class, 'deleteSelectedMembers'])->name('delete-selected-members');
     Route::post('/delete-selected-members-over', [MemberRegistrationOverController::class, 'deleteSelectedMembersOver'])->name('delete-selected-members-over');
 
+    Route::resource('missed-guest', '\App\Http\Controllers\Member\MissedGuestController');
+
     Route::resource('member-expired-list', '\App\Http\Controllers\Report\MemberListController');
     Route::get('all-member-expired', [MemberListController::class, 'allData'])->name('all-member-expired');
     Route::get('member-expired-filter', [MemberExpiredListController::class, 'filter'])->name('member-expired-filter');

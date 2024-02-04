@@ -86,7 +86,7 @@
 <script src="{{ asset('admingym/vendor/chart.js/Chart.bundle.min.js') }}"></script>
 <script src="{{ asset('admingym/vendor/bootstrap-select/dist/js/bootstrap-select.min.js') }}"></script>
 <!-- Apex Chart -->
-<script src="{{ asset('admingym/vendor/apexchart/apexchart.js') }}"></script>
+{{-- <script src="{{ asset('admingym/vendor/apexchart/apexchart.js') }}"></script> --}}
 <!-- Chart piety plugin files -->
 <script src="{{ asset('admingym/vendor/peity/jquery.peity.min.js') }}"></script>
 <script src="{{ asset('admingym/vendor/jquery-nice-select/js/jquery.nice-select.min.js') }}"></script>
@@ -145,7 +145,8 @@
 <!-- Material color picker init -->
 <script src="{{ asset('admingym/js/plugins-init/material-date-picker-init.js') }}"></script>
 <!-- Material color picker -->
-<script src="{{ asset('vendor/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js') }}"></script>
+<script src="{{ asset('admingym/vendor/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js') }}">
+</script>
 <!-- Pickdate -->
 <script src="{{ asset('admingym/js/plugins-init/pickadate-init.js') }}"></script>
 <script src="{{ asset('admingym/vendor/bootstrap-select/dist/js/bootstrap-select.min.js') }}"></script>

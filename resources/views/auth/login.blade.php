@@ -21,7 +21,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Page Title Here -->
-    <title>Gelora GYM: Login Page</title>
+    <title>Level-Fit: Login Page</title>
 
     <!-- FAVICONS ICON -->
     <link rel="shortcut icon" type="image/png" href="/admingym/images/gym/fav-icon.png">
@@ -39,7 +39,7 @@
                 {{-- <div class="text-center mb-lg-4 mb-2 pt-5 logo"> --}}
                 <div class="text-center pt-5 logo">
                     {{-- <img src="/admingym/images/logo-white.png" alt=""> --}}
-                    <h1 class="text-white">GELORA GYM</h1>
+                    <h1 class="text-white">Level-Fit</h1>
                 </div>
                 <h3 class="mb-2 text-white">Welcome back!</h3>
                 {{-- <p class="mb-4">User Experience & Interface Design <br>Strategy SaaS Solutions</p> --}}
