@@ -2,6 +2,7 @@
 
 namespace App\Models\Staff;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,12 +12,16 @@ class FitnessConsultant extends Model
 
     protected $fillable = [
         'full_name',
+        'phone_number',
+        'role',
         'gender',
-        'club'
+        'address',
+        'description',
+        'user_id'
     ];
 
-    public function referralNameMember()
+    public function users()
     {
-        return $this->hasMany(Member::class);
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

@@ -3,13 +3,44 @@
 
     // MAterial Date picker
     $("#mdate").bootstrapMaterialDatePicker({
+        format: "DD-MMMM-YYYY",
         weekStart: 0,
         time: false,
     });
     $("#mdate2").bootstrapMaterialDatePicker({
+        format: "dd-MMMM-YYYY",
         weekStart: 0,
         time: false,
     });
+    $("#mdate3").bootstrapMaterialDatePicker({
+        format: "DD-MMMM-YYYY",
+        weekStart: 0,
+        time: false,
+    });
+    $("#mdate4").bootstrapMaterialDatePicker({
+        format: "DD-MMMM-YYYY",
+        weekStart: 0,
+        time: false,
+    });
+    $("#mdate5").bootstrapMaterialDatePicker({
+        format: "DD-MMMM-YYYY",
+        weekStart: 0,
+        time: false,
+        minDate: new Date(),
+    });
+    $(".mdate-custom").bootstrapMaterialDatePicker({
+        format: "DD-MMMM-YYYY",
+        weekStart: 0,
+        time: false,
+        // defaultDate: new Date(),
+    });
+    $(".mdate-custom2").bootstrapMaterialDatePicker({
+        // format: "DD-MMMM-YYYY",
+        weekStart: 0,
+        time: false,
+        // defaultDate: new Date(),
+    });
+
     $("#timepicker").bootstrapMaterialDatePicker({
         format: "HH:mm",
         time: true,

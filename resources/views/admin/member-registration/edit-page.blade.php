@@ -1,7 +1,7 @@
 <div class="row">
     <div class="card">
         <div class="card-body">
-            <form action="{{ route('member-registration.update', $memberRegistration->id) }}" method="POST"
+            <form action="{{ route('member-active.update', $memberRegistration->id) }}" method="POST"
                 enctype="multipart/form-data">
                 @method('PUT')
                 @csrf
@@ -58,27 +58,6 @@
                                 </div>
                             </div>
                         </div>
-                        {{-- <div class="col-xl-3">
-                            <div class="mb-3">
-                                <label class="form-label">Start Date</label>
-                                <input type="text" name="start_date"
-                                    value="{{ old('start_date', $memberRegistration->start_date) }}"
-                                    class="form-control" placeholder="Choose start date" id="mdate" required
-                                    autocomplete="off">
-                            </div>
-                        </div>
-                        <div class="col-xl-3">
-                            <div class="mb-3">
-                                <label class="form-label">Start Time</label>
-                                <div class="input-group clockpicker" data-placement="left" data-align="top"
-                                    data-autobtn-close="true">
-                                    <input type="text" class="form-control" name="start_time"
-                                        value="{{ old('start_time', $memberRegistration->start_time) }}"
-                                        autocomplete="off">
-                                    <span class="input-group-text"><i class="far fa-clock"></i></span>
-                                </div>
-                            </div>
-                        </div> --}}
                         <div class="col-xl-6">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Method Payment</label>
@@ -94,40 +73,6 @@
                         </div>
                         <div class="col-xl-6">
                             <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label">Refferal Name</label>
-                                <select name="refferal_id" class="form-control" id="single-select3" disabled>
-                                    <option value="{{ $memberRegistration->refferal_id }}" selected>
-                                        @if (isset($memberRegistration->referralName->full_name))
-                                            {{ old('refferal_id', $memberRegistration->referralName->full_name) }}
-                                        @else
-                                            <- Choose ->
-                                        @endif
-                                    </option>
-                                    @foreach ($referralName as $item)
-                                        <option value="{{ $item->id }}">{{ $item->full_name }} | Fitness
-                                            Consultant</option>
-                                    @endforeach
-                                    @foreach ($members as $item)
-                                        <option value="{{ $item->id }}">{{ $item->full_name }} | Member</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        {{-- <div class="col-xl-6">
-                            <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label">Status</label>
-                                <select name="status" class="form-control" value="{{ old('status') }}"
-                                    aria-label="Default select example" required>
-                                    <option value="{{ $member->status }}" selected>
-                                        {{ old('status', $member->status) }}
-                                    </option>
-                                    <option value="Running">Running</option>
-                                    <option value="Over">Over</option>
-                                </select>
-                            </div>
-                        </div> --}}
-                        <div class="col-xl-6">
-                            <div class="mb-3">
                                 <label for="exampleFormControlTextarea1" class="form-label text-primary">
                                     Description
                                 </label>
@@ -139,7 +84,7 @@
                 </div>
                 <div class="d-flex justify-content-between">
                     <button type="submit" class="btn btn-primary">Update</button>
-                    <a href="{{ route('member-registration.index') }}" class="btn btn-info text-right">Back</a>
+                    <a href="{{ route('member-active.index') }}" class="btn btn-info text-right">Back</a>
                 </div>
             </form>
         </div>

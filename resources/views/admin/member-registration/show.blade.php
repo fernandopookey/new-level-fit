@@ -10,6 +10,14 @@
                             <th>{{ $memberRegistration->member_name }}</th>
                         </tr>
                         <tr>
+                            <th><b>Phone Number</b></th>
+                            <th>{{ $memberRegistration->phone_number }}</th>
+                        </tr>
+                        <tr>
+                            <th><b>Nick Name</b></th>
+                            <th>{{ $memberRegistration->nickname }}</th>
+                        </tr>
+                        <tr>
                             <th><b>Member Code</th>
                             <th>{{ $memberRegistration->member_code }}</th>
                         </tr>
@@ -18,8 +26,20 @@
                             <th>{{ $memberRegistration->gender }}</th>
                         </tr>
                         <tr>
-                            <th><b>Phone Number</b></th>
-                            <th>{{ $memberRegistration->phone_number }}</th>
+                            <th><b>Date of Birth</b></th>
+                            <th>{{ $memberRegistration->born }}</th>
+                        </tr>
+                        <tr>
+                            <th><b>Email</b></th>
+                            <th>{{ $memberRegistration->email }}</th>
+                        </tr>
+                        <tr>
+                            <th><b>Instagram</b></th>
+                            <th>{{ $memberRegistration->ig }}</th>
+                        </tr>
+                        <tr>
+                            <th><b>Emergency Contact</b></th>
+                            <th>{{ $memberRegistration->emergency_contact }}</th>
                         </tr>
                         <tr>
                             <th><b>Address</b></th>
@@ -44,7 +64,7 @@
 
         <div class="card-body">
             <div class="">
-                <h3 class="heading">Package's Data:</h3>
+                <h3 class="heading">Package Info:</h3>
                 <table class="table">
                     <thead>
                         <tr>
@@ -53,7 +73,7 @@
                         </tr>
                         <tr>
                             <th><b>Number Of Days</th>
-                            <th>{{ $memberRegistration->days }}</th>
+                            <th>{{ $memberRegistration->days }} Days</th>
                         </tr>
                         <tr>
                             <th><b>Package Price</b></th>
@@ -130,7 +150,7 @@
     <div class="col-xl-12">
         <div class="card">
             <div class="card-body">
-                <a href="{{ route('member-registration.index') }}" class="btn btn-primary">Back</a>
+                <a href="{{ route('member-active.index') }}" class="btn btn-primary">Back</a>
             </div>
         </div>
     </div>
@@ -138,7 +158,7 @@
     <div class="col-xl-12">
         <div class="card">
             <div class="card-body">
-                <a href="{{ route('member-registration-over.index') }}" class="btn btn-primary">Back</a>
+                <a href="{{ route('member-expired.index') }}" class="btn btn-primary">Back</a>
             </div>
         </div>
     </div>

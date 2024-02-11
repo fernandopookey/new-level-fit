@@ -19,10 +19,11 @@ class MemberRegistration extends Model
         'package_price',
         'admin_price',
         'start_date',
-        'months',
+        'days',
+        'old_days',
         'method_payment_id',
-        'refferal_id',
         'description',
+        'fc_id',
         'user_id',
     ];
 
@@ -48,39 +49,9 @@ class MemberRegistration extends Model
         return $this->belongsTo(FitnessConsultant::class, 'fc_id', 'id');
     }
 
-    public function referralNameFitnessConsultant()
-    {
-        return $this->belongsTo(FitnessConsultant::class, 'refferal_id', 'id');
-    }
-
-    public function referralNameMember()
-    {
-        return $this->belongsTo(Member::class, 'refferal_id', 'id');
-    }
-
     public function users()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
-    }
-
-    public function referralName()
-    {
-        if ($this->referralNameFitnessConsultant) {
-            return $this->referralNameFitnessConsultant;
-        } else {
-            return $this->referralNameMember;
-        }
-    }
-
-    public function getReferralNameAttribute()
-    {
-        if ($this->referralNameFitnessConsultant) {
-            return $this->referralNameFitnessConsultant;
-        } elseif ($this->referralNameMember) {
-            return $this->referralNameMember;
-        } else {
-            return null; // or any other default value
-        }
     }
 
     public function memberRegistrationCheckIn()

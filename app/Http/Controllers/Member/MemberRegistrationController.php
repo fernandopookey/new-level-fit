@@ -22,63 +22,36 @@ class MemberRegistrationController extends Controller
 {
     public function index()
     {
-        // $memberRegistrations = DB::table('member_registrations as a')
-        //     ->select(
-        //         'a.id',
-        //         'a.start_date',
-        //         'a.description',
-        //         'a.package_price as mr_package_price',
-        //         'a.admin_price as mr_admin_price',
-        //         'a.days as member_registration_days',
-        //         'b.full_name as member_name', // alias for members table name column
-        //         'c.package_name',
-        //         'c.days',
-        //         'b.member_code',
-        //         'b.phone_number',
-        //         'b.photos',
-        //         'b.gender',
-        //         'c.package_name',
-        //         'c.package_price',
-        //         'c.days',
-        //         'e.name as method_payment_name', // alias for method_payments table name column
-        //         'f.full_name as staff_name', // alias for users table name column
-        //     )
-        //     ->addSelect(
-        //         DB::raw('DATE_ADD(a.start_date, INTERVAL a.days DAY) as expired_date'),
-        //         DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.days DAY) THEN "Over" ELSE "Running" END as status')
-        //     )
-        //     ->join('members as b', 'a.member_id', '=', 'b.id')
-        //     ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
-        //     ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
-        //     ->join('users as f', 'a.user_id', '=', 'f.id')
-        //     ->whereRaw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.days DAY) THEN "Over" ELSE "Running" END = ?', ['Running'])
-        //     ->orderBy('status', 'desc')
-        //     ->get();
 
         $memberRegistrations = DB::table('member_registrations as a')
             ->select(
                 'a.id',
                 'a.start_date',
                 'a.description',
+                'a.days as member_registration_days',
+                'a.old_days',
                 'a.package_price as mr_package_price',
                 'a.admin_price as mr_admin_price',
-                'a.months as member_registration_months',
-                'b.full_name as member_name', // alias for members table name column
+                'b.full_name as member_name',
                 'c.package_name',
-                'c.months',
+                'c.days',
                 'b.member_code',
                 'b.phone_number',
+                'b.born',
                 'b.photos',
                 'b.gender',
                 'c.package_name',
                 'c.package_price',
-                'c.months',
-                'e.name as method_payment_name', // alias for method_payments table name column
-                'f.full_name as staff_name', // alias for users table name column
+                'c.days',
+                'e.name as method_payment_name',
+                'f.full_name as staff_name',
+                'g.full_name as fc_name',
+                'g.phone_number as fc_phone_number'
             )
             ->addSelect(
-                DB::raw('DATE_ADD(a.start_date, INTERVAL c.months MONTH) as expired_date'),
-                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.months MONTH) THEN "Over" ELSE "Running" END as status')
+                DB::raw('DATE_ADD(a.start_date, INTERVAL a.days DAY) as expired_date'),
+                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END as status'),
+                DB::raw('CONCAT(YEAR(CURDATE()), "-", MONTH(b.born), "-", DAY(b.born)) as member_birthday')
             )
             ->join('members as b', 'a.member_id', '=', 'b.id')
             ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
@@ -89,12 +62,13 @@ class MemberRegistrationController extends Controller
                 '=',
                 'f.id'
             )
-            ->whereRaw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.months MONTH) THEN "Over" ELSE "Running" END = ?', ['Running'])
+            ->join('fitness_consultants as g', 'a.fc_id', '=', 'g.id')
+            ->whereRaw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END = ?', ['Running'])
             ->orderBy('status', 'desc')
             ->get();
 
         $data = [
-            'title'                 => 'Member Registration List',
+            'title'                 => 'Member Active List',
             'memberRegistrations'   => $memberRegistrations,
             'content'               => 'admin/member-registration/index'
         ];
@@ -166,7 +140,7 @@ class MemberRegistrationController extends Controller
         $data['member_code'] = 'GG-' . $member . '-M';
 
         Member::create($data);
-        return redirect()->route('member-registration.index')->with('message', 'Member Added Successfully');
+        return redirect()->route('member-expired.index')->with('message', 'Member Added Successfully');
     }
 
     public function memberSecondStore(Request $request)
@@ -181,6 +155,7 @@ class MemberRegistrationController extends Controller
                 'refferal_id'           => 'nullable',
                 'description'           => 'nullable',
                 'user_id'               => 'nullable',
+                'fc_id'                      => 'required|exists:fitness_consultants,id',
                 'member_code'           => [
                     '',
                     Rule::exists('members', 'member_code')->where(function ($query) use ($request) {
@@ -203,7 +178,7 @@ class MemberRegistrationController extends Controller
         unset($data['start_time']);
 
         $data['admin_price'] = $package->admin_price;
-        $data['months'] = $package->months;
+        $data['days'] = $package->days;
 
         MemberRegistration::create($data);
         return redirect()->back()->with('message', 'Member Registration Added Successfully');
@@ -222,17 +197,22 @@ class MemberRegistrationController extends Controller
                 'b.phone_number',
                 'b.photos',
                 'b.gender',
+                'b.nickname',
+                'b.ig',
+                'b.emergency_contact',
+                'b.email',
+                'b.born',
                 'c.package_name',
-                'c.months',
+                'c.days',
                 'c.package_name',
                 'c.package_price',
-                'c.months',
+                'c.days',
                 'e.name as method_payment_name',
                 'f.full_name as staff_name'
             )
             ->addSelect(
-                DB::raw('DATE_ADD(a.start_date, INTERVAL a.months DAY) as expired_date'),
-                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.months DAY) THEN "Over" ELSE "Running" END as status')
+                DB::raw('DATE_ADD(a.start_date, INTERVAL a.days DAY) as expired_date'),
+                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.days DAY) THEN "Over" ELSE "Running" END as status')
             )
             ->join('members as b', 'a.member_id', '=', 'b.id')
             ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
@@ -240,7 +220,6 @@ class MemberRegistrationController extends Controller
             ->join('users as f', 'a.user_id', '=', 'f.id')
             ->where('a.id', $id)
             ->get();
-        // dd($id);
 
         $checkInMemberRegistration = MemberRegistration::find($id);
 
@@ -251,7 +230,6 @@ class MemberRegistrationController extends Controller
             'members'                   => Member::get(),
             'users'                     => User::get(),
             'memberLastCode'            => Member::latest('id')->first(),
-            'sourceCode'                => SourceCode::get(),
             'memberPackage'             => MemberPackage::get(),
             'methodPayment'             => MethodPayment::get(),
             'fitnessConsultant'         => FitnessConsultant::get(),
@@ -264,13 +242,11 @@ class MemberRegistrationController extends Controller
 
     public function edit(string $id)
     {
-        // dd(MemberRegistration::find($id));
         $data = [
             'title'                 => 'Edit Member Registration',
             'memberRegistration'    => MemberRegistration::find($id),
             'members'               => Member::get(),
             'memberLastCode'        => Member::latest('id')->first(),
-            'sourceCode'            => SourceCode::get(),
             'memberPackage'         => MemberPackage::get(),
             'methodPayment'         => MethodPayment::get(),
             'fitnessConsultant'     => FitnessConsultant::get(),
@@ -310,148 +286,141 @@ class MemberRegistrationController extends Controller
                 'a.admin_price as mr_admin_price',
                 'b.full_name as member_name', // alias for members table name column
                 'c.package_name',
-                'c.months',
+                'c.days',
                 'b.member_code',
                 'b.phone_number',
                 'b.photos',
                 'b.gender',
                 'c.package_name',
                 'c.package_price',
-                'c.months',
+                'c.days',
                 'e.name as method_payment_name', // alias for method_payments table name column
                 'f.full_name as staff_name', // alias for users table name column
             )
             ->addSelect(
-                DB::raw('DATE_ADD(a.start_date, INTERVAL c.months DAY) as expired_date'),
-                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.months DAY) THEN "Over" ELSE "Running" END as status')
+                DB::raw('DATE_ADD(a.start_date, INTERVAL c.days DAY) as expired_date'),
+                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END as status'),
+                // DB::raw('')
             )
             ->join('members as b', 'a.member_id', '=', 'b.id')
             ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
             ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
             ->join('users as f', 'a.user_id', '=', 'f.id')
-            ->whereRaw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.months DAY) THEN "Over" ELSE "Running" END = ?', ['Running'])
+            ->whereRaw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END = ?', ['Running'])
             ->orderBy('status', 'desc')
             ->first();
 
-        // dd($status);
-
-        // if ($status['status'] = 'Over') {
-        //     // Assuming you have a relationship between MemberRegistration and Member
-        //     $member = $item->members;
-
-        //     // Update the member_code to null
-        //     $member->update(['member_code' => null]);
-        // }
-
-        // if (
-        //     $status && $status->status === 'Over'
-        // ) {
-        //     // Assuming you have a relationship between MemberRegistration and Member
-        //     $member = $item->members;
-
-        //     // Update the member_code to null
-        //     $member->update(['member_code' => null]);
-        // }
-
-        return redirect()->route('member-registration.index')->with('message', 'Member Updated Successfully');
+        return redirect()->route('member-expired.index')->with('message', 'Member Updated Successfully');
     }
 
     public function freeze(Request $request, string $id)
     {
         $item = MemberRegistration::find($id);
         $data = $request->validate([
-            'start_date'            => 'nullable',
-            'description'           => 'nullable',
+            'expired_date'            => 'required',
+            'start_date'           => 'required',
         ]);
         $data['user_id'] = Auth::user()->id;
+        $data['days'] =  DateDiff($data['start_date'], $data['expired_date']);
 
-        $package = MemberPackage::findOrFail($item->member_package_id);
-
-        $data['package_price'] = $package->package_price;
-        $data['admin_price'] = $package->admin_price;
+        $data['old_days'] = $item->memberPackage->days;
 
         $item->update($data);
 
-        $inputDays = $request->input('days_off');
-        $sumDays = $item->days + $inputDays;
+        unset($data['expired_date']);
+        unset($data['old_expired_date']);
+        $item->update($data);
 
-        $item->update(['days' => $sumDays]);
+        // $memberRegistration = DB::table('member_registrations as a')
+        //     ->select(
+        //         'a.id',
+        //         'a.start_date',
+        //         'a.description',
+        //         'a.package_price as mr_package_price',
+        //         'a.admin_price as mr_admin_price',
+        //         'a.days as member_registration_days',
+        //         'a.old_days',
+        //         'a.updated_at',
+        //         'a.created_at',
+        //         'b.full_name as member_name', // alias for members table name column
+        //         'c.package_name',
+        //         'c.days',
+        //         'b.member_code',
+        //         'b.nickname',
+        //         'b.phone_number',
+        //         'b.born',
+        //         'b.photos',
+        //         'b.gender',
+        //         'b.emergency_contact',
+        //         'b.email',
+        //         'b.ig',
+        //         'b.address',
+        //         'c.package_name',
+        //         'c.package_price',
+        //         'c.days',
+        //         'e.name as method_payment_name',
+        //         'f.full_name as staff_name',
+        //         'g.full_name as fc_name',
+        //         'g.phone_number as fc_phone_number'
+        //     )
+        //     ->addSelect(
+        //         DB::raw('DATE_ADD(a.start_date, INTERVAL a.days DAY) as expired_date'),
+        //         DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.days DAY) THEN "Over" ELSE "Running" END as status'),
+        //         DB::raw('CONCAT(YEAR(CURDATE()), "-", MONTH(b.born), "-", DAY(b.born)) as member_birthday')
+        //     )
+        //     ->join('members as b', 'a.member_id', '=', 'b.id')
+        //     ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
+        //     ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
+        //     ->join('users as f', 'a.user_id', '=', 'f.id')
+        //     ->join('fitness_consultants as g', 'a.fc_id', '=', 'g.id')
+        //     ->where('a.id', $id)
+        //     ->first();
 
-        $status = DB::table('member_registrations as a')
-            ->select(
-                'a.id',
-                'a.start_date',
-                'a.description',
-                'a.package_price as mr_package_price',
-                'a.admin_price as mr_admin_price',
-                'b.full_name as member_name', // alias for members table name column
-                'c.package_name',
-                'c.months',
-                'b.member_code',
-                'b.phone_number',
-                'b.photos',
-                'b.gender',
-                'c.package_name',
-                'c.package_price',
-                'e.name as method_payment_name', // alias for method_payments table name column
-                'f.full_name as staff_name', // alias for users table name column
-            )
-            ->addSelect(
-                DB::raw('DATE_ADD(a.start_date, INTERVAL c.months DAY) as expired_date'),
-                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.months DAY) THEN "Over" ELSE "Running" END as status')
-            )
-            ->join('members as b', 'a.member_id', '=', 'b.id')
-            ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
-            ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
-            ->join('users as f', 'a.user_id', '=', 'f.id')
-            ->whereRaw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.months DAY) THEN "Over" ELSE "Running" END = ?', ['Running'])
-            ->orderBy('status', 'desc')
-            ->get();
+        // $fileName1 = $memberRegistration->member_name;
+        // $fileName2 = $memberRegistration->start_date;
 
-        if ($status['status'] = 'Over') {
-            // Assuming you have a relationship between MemberRegistration and Member
-            $member = $item->members;
+        // $pdf = PDF::loadView('admin/member-registration/cuti', [
+        //     'memberRegistration' => $memberRegistration,
+        // ]);
 
-            // Update the member_code to null
-            $member->update(['member_code' => null]);
-        }
-        return redirect()->route('member-registration.index')->with('message', 'Member Updated Successfully');
+        // $pdf->download('Cuti_Membership_' . $id . '.pdf');
+
+        // return $pdf->download('Cuti_Membership_' . $id . '.pdf');
+        return redirect()->route('member-active.index')->with('message', 'Cuti Membership Successfully Added');
     }
 
     public function destroy(MemberRegistration $memberRegistration)
     {
+        // dd($memberRegistration);
         try {
-            if ($memberRegistration->photos != null) {
-                $realLocation = "storage/" . $memberRegistration->photos;
-                if (file_exists($realLocation) && !is_dir($realLocation)) {
-                    unlink($realLocation);
-                }
-            }
-
-            Storage::delete($memberRegistration->photos);
-
             $memberRegistration->delete();
             return redirect()->back()->with('message', 'Member Registration Deleted Successfully');
         } catch (\Throwable $e) {
-            // Alert::error('Error', $e->getMessage());
             return redirect()->back()->with('error', 'Deleted Failed, Delete Member Check In First');
         }
     }
 
-    public function deleteSelectedMembers(Request $request)
+    public function bulkDelete(Request $request)
     {
-        $selectedMembers = $request->input('selectedMembers', []);
+        $selectedItems = $request->input('selectedMemberActive');
+        try {
+            foreach ($selectedItems as $itemId) {
+                $memberActive = MemberRegistration::find($itemId);
 
-        // Add your logic to delete the selected members from the database
-        MemberRegistration::whereIn('id', $selectedMembers)->delete();
+                if (!empty($memberActive)) {
+                    $memberActive->delete();
+                }
+            }
 
-        // Redirect back or return a response as needed
-        return redirect()->back()->with('message', 'Selected member registration deleted successfully');
+            return redirect()->back()->with('message', 'Members Active Deleted Successfully');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Deleted Failed, Please check other pages that are using this member');
+        }
     }
 
-    public function cetak_pdf()
+    public function agreement($id)
     {
-        $memberRegistrations = DB::table('member_registrations as a')
+        $memberRegistration = DB::table('member_registrations as a')
             ->select(
                 'a.id',
                 'a.start_date',
@@ -463,30 +432,98 @@ class MemberRegistrationController extends Controller
                 'c.package_name',
                 'c.days',
                 'b.member_code',
+                'b.nickname',
                 'b.phone_number',
+                'b.born',
                 'b.photos',
                 'b.gender',
+                'b.emergency_contact',
+                'b.email',
+                'b.ig',
+                'b.address',
                 'c.package_name',
                 'c.package_price',
                 'c.days',
-                'e.name as method_payment_name', // alias for method_payments table name column
-                'f.full_name as staff_name', // alias for users table name column
+                'e.name as method_payment_name',
+                'f.full_name as staff_name',
+                'g.full_name as fc_name',
+                'g.phone_number as fc_phone_number'
             )
             ->addSelect(
-                DB::raw('DATE_ADD(a.start_date, INTERVAL a.days DAY) as expired_date'),
-                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.days DAY) THEN "Over" ELSE "Running" END as status')
+                DB::raw('DATE_ADD(a.start_date, INTERVAL c.days DAY) as expired_date'),
+                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END as status'),
+                DB::raw('CONCAT(YEAR(CURDATE()), "-", MONTH(b.born), "-", DAY(b.born)) as member_birthday')
             )
             ->join('members as b', 'a.member_id', '=', 'b.id')
             ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
             ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
             ->join('users as f', 'a.user_id', '=', 'f.id')
-            ->whereRaw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.days DAY) THEN "Over" ELSE "Running" END = ?', ['Running'])
-            ->orderBy('status', 'desc')
-            ->get();
+            ->join('fitness_consultants as g', 'a.fc_id', '=', 'g.id')
+            ->where('a.id', $id)
+            ->first();
 
-        $pdf = Pdf::loadView('admin/member-registration/member-registration-pdf', [
-            'memberRegistrations'   => $memberRegistrations,
-        ])->setPaper('a4', 'landscape');
-        return $pdf->stream('member-registration-report.pdf');
+        $fileName1 = $memberRegistration->member_name;
+        $fileName2 = $memberRegistration->start_date;
+
+        $pdf = Pdf::loadView('admin/member-registration/agreement', [
+            'memberRegistration'        => $memberRegistration,
+        ]);
+        return $pdf->stream('Membership Agreement-' . $fileName1 . '-' . $fileName2 . '.pdf');
+    }
+
+    public function cuti($id)
+    {
+        $memberRegistration = DB::table('member_registrations as a')
+            ->select(
+                'a.id',
+                'a.start_date',
+                'a.description',
+                'a.package_price as mr_package_price',
+                'a.admin_price as mr_admin_price',
+                'a.days as member_registration_days',
+                'a.old_days',
+                'a.updated_at',
+                'a.created_at',
+                'b.full_name as member_name', // alias for members table name column
+                'c.package_name',
+                'c.days',
+                'b.member_code',
+                'b.nickname',
+                'b.phone_number',
+                'b.born',
+                'b.photos',
+                'b.gender',
+                'b.emergency_contact',
+                'b.email',
+                'b.ig',
+                'b.address',
+                'c.package_name',
+                'c.package_price',
+                'c.days',
+                'e.name as method_payment_name',
+                'f.full_name as staff_name',
+                'g.full_name as fc_name',
+                'g.phone_number as fc_phone_number'
+            )
+            ->addSelect(
+                DB::raw('DATE_ADD(a.start_date, INTERVAL a.days DAY) as expired_date'),
+                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.days DAY) THEN "Over" ELSE "Running" END as status'),
+                DB::raw('CONCAT(YEAR(CURDATE()), "-", MONTH(b.born), "-", DAY(b.born)) as member_birthday')
+            )
+            ->join('members as b', 'a.member_id', '=', 'b.id')
+            ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
+            ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
+            ->join('users as f', 'a.user_id', '=', 'f.id')
+            ->join('fitness_consultants as g', 'a.fc_id', '=', 'g.id')
+            ->where('a.id', $id)
+            ->first();
+
+        $fileName1 = $memberRegistration->member_name;
+        $fileName2 = $memberRegistration->start_date;
+
+        $pdf = Pdf::loadView('admin/member-registration/cuti', [
+            'memberRegistration'        => $memberRegistration,
+        ]);
+        return $pdf->stream('Cuti Membership-' . $fileName1 . '-' . $fileName2 . '.pdf');
     }
 }

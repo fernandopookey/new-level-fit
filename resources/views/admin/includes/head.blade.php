@@ -20,7 +20,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Page Title Here -->
-    <title>Gelora-GYM: Admin Page</title>
+    <title>LEVELFIT: Admin Page</title>
 
     <!-- FAVICONS ICON -->
     <link rel="shortcut icon" type="{{ asset('admingym/image/png') }}"
@@ -69,6 +69,28 @@
     {{-- Table --}}
     <link rel="stylesheet" href="//cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 
+    <style>
+        @keyframes highlight {
+            0% {
+                background-color: #fff;
+            }
+
+            50% {
+                background-color: #ffff99;
+            }
+
+            100% {
+                background-color: #fff;
+            }
+        }
+
+        /* Apply the animation to the table row */
+        .birthday {
+            animation: highlight 2s infinite;
+            /* Change '2s' to adjust the animation duration */
+        }
+    </style>
+
 </head>
 
 <body>
@@ -115,7 +137,7 @@
                             fill="white" />
                     </svg>
                 </div> --}}
-                <img src="{{ asset('logokecil.png') }}" class="img-fluid" alt="">
+                <img src="{{ asset('LEVELFIT.png') }}" class="img-fluid" alt="">
             </a>
 
 

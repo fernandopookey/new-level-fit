@@ -74,8 +74,8 @@
                         <div class="col-xl-6" id="born">
                             <div class="mb-3">
                                 <label class="form-label">Born</label>
-                                <input type="text" name="born" value="{{ old('born') }}" class="form-control"
-                                    placeholder="Choose born date" id="mdate">
+                                <input type="text" name="born" value="{{ old('born') }}"
+                                    class="form-control mdate-custom" placeholder="Choose born date">
                             </div>
                         </div>
                         <div class="col-xl-6" id="member_code">
@@ -164,7 +164,7 @@
         <div class="card-body">
             <form action="{{ route('member-second-store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <h3>Create Member Registration</h3>
+                <h3>Create Member Active</h3>
                 @if ($errors->any())
                     <div class="alert alert-danger">
                         <ul>
@@ -178,7 +178,7 @@
                     <div class="col-xl-6">
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Member's Name</label>
-                            <select id="single-select4" name="member_id" class="form-control" required>
+                            <select id="single-select" name="member_id" class="form-control" required>
                                 <option>
                                     <- Choose ->
                                 </option>
@@ -193,13 +193,13 @@
                     <div class="col-xl-6">
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Member Package</label>
-                            <select id="single-select" name="member_package_id" class="form-control" required>
+                            <select id="single-select2" name="member_package_id" class="form-control" required>
                                 <option>
                                     <- Choose ->
                                 </option>
                                 @foreach ($memberPackage as $item)
                                     <option value="{{ $item->id }}">{{ $item->package_name }} |
-                                        {{ $item->months }} Month |
+                                        {{ $item->days }} Days |
                                         {{ formatRupiah($item->package_price) }} |
                                         {{ formatRupiah($item->admin_price) }}</option>
                                 @endforeach
@@ -210,8 +210,7 @@
                         <div class="mb-3">
                             <label class="form-label">Start Date</label>
                             <input type="text" name="start_date" value="{{ old('start_date') }}"
-                                class="form-control editDate" placeholder="Choose start date" id="mdate"
-                                required>
+                                class="form-control mdate-custom" placeholder="Choose start date" required>
                         </div>
                     </div>
                     <div class="col-xl-3">
@@ -228,12 +227,26 @@
                     <div class="col-xl-6">
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Method Payment</label>
-                            <select id="single-select2" name="method_payment_id" class="form-control" required>
+                            <select id="single-select3" name="method_payment_id" class="form-control" required>
                                 <option>
                                     <- Choose ->
                                 </option>
                                 @foreach ($methodPayment as $item)
                                     <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Fitness Consultant</label>
+                            <select id="single-select4" name="fc_id" class="form-control" required>
+                                <option>
+                                    <- Choose ->
+                                </option>
+                                @foreach ($fitnessConsultant as $item)
+                                    <option value="{{ $item->id }}">{{ $item->full_name }} |
+                                        {{ $item->phone_number }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -250,7 +263,7 @@
                 </div>
                 <div class="d-flex justify-content-between">
                     <button type="submit" class="btn btn-primary">Save</button>
-                    <a href="{{ route('member-registration.index') }}" class="btn btn-info text-right">Member
+                    <a href="{{ route('member-active.index') }}" class="btn btn-info text-right">Member
                         Registration
                         List</a>
                 </div>
@@ -285,7 +298,7 @@
                                 </option>
                                 @foreach ($members as $item)
                                     <option value="{{ $item->id }}">
-                                        {{ $item->full_name }} | {{ $item->member_code ?? 'No member code' }} |
+                                        {{ $item->full_name }} | {{ $item->member_code ?? 'Missed Guest' }} |
                                         {{ $item->phone_number }}
                                     </option>
                                 @endforeach
@@ -310,7 +323,7 @@
                     <div class="col-xl-6">
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Trainer Package</label>
-                            <select id="single-select3" name="trainer_package_id" class="form-control">
+                            <select id="single-select7" name="trainer_package_id" class="form-control">
                                 <option disabled selected value>
                                     <- Choose ->
                                 </option>
@@ -330,8 +343,7 @@
                         <div class="mb-3">
                             <label class="form-label">Start Date</label>
                             <input type="text" name="start_date" value="{{ old('start_date') }}"
-                                class="form-control editDate" placeholder="Choose start date" id="mdate2"
-                                required>
+                                class="form-control mdate-custom" placeholder="Choose start date" required>
                         </div>
                     </div>
                     <div class="col-xl-3">
@@ -339,10 +351,37 @@
                             <label class="form-label">Start Time</label>
                             <div class="input-group clockpicker2" data-placement="left" data-align="top"
                                 data-autobtn-close="true">
-                                <input type="text" class="form-control editTime" name="start_time2"
+                                <input type="text" class="form-control editTime2" name="start_time"
                                     autocomplete="off" required>
                                 <span class="input-group-text"><i class="far fa-clock"></i></span>
                             </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Method Payment</label>
+                            <select id="single-select10" name="method_payment_id" class="form-control" required>
+                                <option>
+                                    <- Choose ->
+                                </option>
+                                @foreach ($methodPayment as $item)
+                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Fitness Consultant</label>
+                            <select id="single-select8" name="fc_id" class="form-control" required>
+                                <option>
+                                    <- Choose ->
+                                </option>
+                                @foreach ($fitnessConsultant as $item)
+                                    <option value="{{ $item->id }}">{{ $item->full_name }} |
+                                        {{ $item->phone_number }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                     <div class="col-xl-6">

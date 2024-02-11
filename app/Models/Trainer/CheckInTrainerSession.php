@@ -12,7 +12,9 @@ class CheckInTrainerSession extends Model
 
     protected $fillable = [
         'trainer_session_id',
-        'check_in_date',
+        'check_in_time',
+        'check_out_time',
+        'duration',
         'user_id'
     ];
 

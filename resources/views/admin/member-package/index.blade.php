@@ -35,7 +35,7 @@
                                         <h6>{{ $item->package_name }}</h6>
                                     </td>
                                     <td>
-                                        <h6>{{ $item->months }}</h6>
+                                        <h6>{{ $item->days }}</h6>
                                     </td>
                                     {{-- <td>
                                         <h6>{{ !empty($item->memberPackageType->package_type_name) ? $item->memberPackageType->package_type_name : 'Package type name has  been deleted' }}

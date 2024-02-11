@@ -55,11 +55,11 @@
             <li>
                 <a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
                     <i class="material-symbols-outlined">person</i>
-                    <span class="nav-text">Member Regist</span>
+                    <span class="nav-text">Member CheckIn</span>
                 </a>
                 <ul aria-expanded="false">
-                    <li><a href="{{ route('member-registration.index') }}">Member Package Transactions</a></li>
-                    <li><a href="{{ route('member-registration-over.index') }}">Member Package Transactions Over</a>
+                    <li><a href="{{ route('member-active.index') }}">Member Active</a></li>
+                    <li><a href="{{ route('member-expired.index') }}">Member Expired</a>
                     </li>
                     {{-- <li><a href="{{ route('member-payment.index') }}">Member Payment</a></li> --}}
 
@@ -85,8 +85,8 @@
                 <ul aria-expanded="false">
                     {{-- <li><a href="{{ route('trainer.create') }}">Trainer Registration</a></li> --}}
                     {{-- <li><a href="{{ route('trainer.index') }}">Trainer List</a></li> --}}
-                    <li><a href="{{ route('trainer-session.index') }}">Trainer Session</a></li>
-                    <li><a href="{{ route('trainer-session-over.index') }}">Trainer Session Over</a></li>
+                    <li><a href="{{ route('trainer-session.index') }}">Trainer Session Active</a></li>
+                    <li><a href="{{ route('trainer-session-over.index') }}">Trainer Session Expired</a></li>
                     {{-- <li><a href="{{ route('trainer-session-FO.index') }}">Trainer Session GO</a></li> --}}
                     {{-- <li><a href="#">Trainer Session PGT</a></li> --}}
                 </ul>

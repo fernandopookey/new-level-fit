@@ -1,6 +1,7 @@
 <!-- Modal Add -->
-<div class="modal fade" id="modalAddFitnessConsultant" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-center">
+<div class="modal fade bd-example-modal-lg" id="modalAddFitnessConsultant" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <form action="{{ route('fitness-consultant.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -19,18 +20,18 @@
                         </div>
                     @endif
                     <div class="row">
-                        <div class="col-xl-12">
+                        <div class="col-xl-6">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Full Name</label>
                                 <input type="text" name="full_name" value="{{ old('full_name') }}"
                                     class="form-control" id="exampleFormControlInput1" autocomplete="off" required>
                             </div>
                         </div>
-                        <div class="col-xl-6">
+                        <div class="col-xl-3">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Gender</label>
-                                <select name="gender" class="form-control" aria-label="Default select example"
-                                    required>
+                                <select name="gender" class="form-control" aria-label="Default select example" required
+                                    autocomplete="off">
                                     <option disabled selected value>
                                         <- Choose ->
                                     </option>
@@ -39,11 +40,29 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="col-xl-3">
+                            <div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label">Phone Number</label>
+                                <input type="text" name="phone_number" value="{{ old('phone_number') }}"
+                                    class="form-control" id="exampleFormControlInput1" autocomplete="off" required>
+                            </div>
+                        </div>
                         <div class="col-xl-6">
                             <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label">Club</label>
-                                <input type="text" name="club" value="{{ old('club') }}" class="form-control"
-                                    id="exampleFormControlInput1" autocomplete="off" required>
+                                <label for="exampleFormControlTextarea1" class="form-label text-primary">
+                                    Address
+                                </label>
+                                <textarea class="form-control" name="address" id="exampleFormControlTextarea1" rows="6"
+                                    placeholder="Enter Address">{{ old('address') }}</textarea>
+                            </div>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="mb-3">
+                                <label for="exampleFormControlTextarea1" class="form-label text-primary">
+                                    Description
+                                </label>
+                                <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="6"
+                                    placeholder="Enter Description">{{ old('description') }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -59,9 +78,9 @@
 
 <!-- Modal Edit -->
 @foreach ($fitnessConsultant as $item)
-    <div class="modal fade" id="modalEditFitnessConsultant{{ $item->id }}" tabindex="-1"
+    <div class="modal fade bd-example-modal-lg" id="modalEditFitnessConsultant{{ $item->id }}" tabindex="-1"
         aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-center">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <form action="{{ route('fitness-consultant.update', $item->id) }}" method="POST"
                     enctype="multipart/form-data">
@@ -82,15 +101,15 @@
                             </div>
                         @endif
                         <div class="row">
-                            <div class="col-xl-12">
+                            <div class="col-xl-6">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Full Name</label>
                                     <input type="text" name="full_name"
                                         value="{{ old('full_name', $item->full_name) }}" class="form-control"
-                                        id="exampleFormControlInput1" autocomplete="off" required>
+                                        id="exampleFormControlInput1" required autocomplete="off">
                                 </div>
                             </div>
-                            <div class="col-xl-6">
+                            <div class="col-xl-3">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Gender</label>
                                     <select name="gender" class="form-control" aria-label="Default select example">
@@ -102,12 +121,30 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-xl-3">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Phone Number</label>
+                                    <input type="text" name="phone_number"
+                                        value="{{ old('phone_number', $item->phone_number) }}" class="form-control"
+                                        id="exampleFormControlInput1" autocomplete="off" required>
+                                </div>
+                            </div>
                             <div class="col-xl-6">
                                 <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Club</label>
-                                    <input type="text" name="club" value="{{ old('club', $item->club) }}"
-                                        class="form-control" id="exampleFormControlInput1" autocomplete="off"
-                                        required>
+                                    <label for="exampleFormControlTextarea1" class="form-label text-primary">
+                                        Address
+                                    </label>
+                                    <textarea class="form-control" name="address" id="exampleFormControlTextarea1" rows="6"
+                                        placeholder="Enter Address">{{ old('address', $item->address) }}</textarea>
+                                </div>
+                            </div>
+                            <div class="col-xl-6">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlTextarea1" class="form-label text-primary">
+                                        Description
+                                    </label>
+                                    <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="6"
+                                        placeholder="Enter Description">{{ old('description', $item->description) }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -137,17 +174,6 @@
             <div class="row">
                 <div class="col-xl-12">
                     <div class="page-title flex-wrap">
-                        <div class="input-group search-area mb-md-0 mb-3">
-                            <input type="text" class="form-control" placeholder="Search here...">
-                            <span class="input-group-text"><a href="javascript:void(0)">
-                                    <svg width="15" height="15" viewBox="0 0 18 18" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M17.5605 15.4395L13.7527 11.6317C14.5395 10.446 15 9.02625 15 7.5C15 3.3645 11.6355 0 7.5 0C3.3645 0 0 3.3645 0 7.5C0 11.6355 3.3645 15 7.5 15C9.02625 15 10.446 14.5395 11.6317 13.7527L15.4395 17.5605C16.0245 18.1462 16.9755 18.1462 17.5605 17.5605C18.1462 16.9747 18.1462 16.0252 17.5605 15.4395V15.4395ZM2.25 7.5C2.25 4.605 4.605 2.25 7.5 2.25C10.395 2.25 12.75 4.605 12.75 7.5C12.75 10.395 10.395 12.75 7.5 12.75C4.605 12.75 2.25 10.395 2.25 7.5V7.5Z"
-                                            fill="#01A3FF" />
-                                    </svg>
-                                </a></span>
-                        </div>
                         <div>
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                 data-bs-target="#modalAddFitnessConsultant">
@@ -160,21 +186,47 @@
                 <div class="col-xl-12 wow fadeInUp" data-wow-delay="1.5s">
                     <div class="table-responsive full-data">
                         <table class="table-responsive-lg table display dataTablesCard student-tab dataTable no-footer"
-                            id="example-student">
+                            id="myTable">
                             <thead>
                                 <tr>
+                                    <th>No</th>
                                     <th>Full Name</th>
+                                    <th>Phone Number</th>
                                     <th>Gender</th>
-                                    <th>Club</th>
+                                    <th>Role</th>
+                                    <th>Address</th>
+                                    <th>Description</th>
+                                    <th>Staff</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($fitnessConsultant as $item)
                                     <tr>
-                                        <td>{{ $item->full_name }}</td>
-                                        <td>{{ $item->gender }}</td>
-                                        <td>{{ $item->club }}</td>
+                                        <td>
+                                            <h6>{{ $loop->iteration }}</h6>
+                                        </td>
+                                        <td>
+                                            <h6>{{ $item->full_name }}</h6>
+                                        </td>
+                                        <td>
+                                            <h6>{{ $item->phone_number }}</h6>
+                                        </td>
+                                        <td>
+                                            <h6>{{ $item->gender }}</h6>
+                                        </td>
+                                        <td>
+                                            <h6>{{ $item->role }}</h6>
+                                        </td>
+                                        <td>
+                                            <h6>{{ $item->address }}</h6>
+                                        </td>
+                                        <td>
+                                            <h6>{{ $item->description }}</h6>
+                                        </td>
+                                        <td>
+                                            <h6>{{ $item->users->full_name }}</h6>
+                                        </td>
                                         <td>
                                             <div>
                                                 <button type="button"

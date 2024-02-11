@@ -30,6 +30,8 @@ class TrainerSessionStoreRequest extends FormRequest
             'start_time2'           => 'required',
             'days'                  => 'nullable',
             'trainer_package_id'    => 'required|exists:trainer_packages,id',
+            'method_payment_id'     => 'required|exists:method_payments,id',
+            'fc_id'                 => 'required|exists:fitness_consultants,id',
             'user_id'               => 'nullable',
             'description'           => 'nullable'
         ];
