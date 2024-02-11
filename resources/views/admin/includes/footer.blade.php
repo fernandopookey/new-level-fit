@@ -85,8 +85,6 @@
 <script src="{{ asset('admingym/vendor/global/global.min.js') }}"></script>
 <script src="{{ asset('admingym/vendor/chart.js/Chart.bundle.min.js') }}"></script>
 <script src="{{ asset('admingym/vendor/bootstrap-select/dist/js/bootstrap-select.min.js') }}"></script>
-<!-- Apex Chart -->
-<script src="{{ asset('admingym/vendor/apexchart/apexchart.js') }}"></script>
 <!-- Chart piety plugin files -->
 <script src="{{ asset('admingym/vendor/peity/jquery.peity.min.js') }}"></script>
 <script src="{{ asset('admingym/vendor/jquery-nice-select/js/jquery.nice-select.min.js') }}"></script>
@@ -143,6 +141,7 @@
 <!-- asColorPicker init -->
 <script src="{{ asset('admingym/js/plugins-init/jquery-asColorPicker.init.js') }}"></script>
 <!-- Material color picker init -->
+{{-- Here you can change the code --}}
 <script src="{{ asset('admingym/js/plugins-init/material-date-picker-init.js') }}"></script>
 <!-- Material color picker -->
 <script src="{{ asset('admingym/vendor/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js') }}">
@@ -155,7 +154,7 @@
 <script src="{{ asset('admingym/vendor/clockpicker/js/bootstrap-clockpicker.min.js') }}"></script>
 
 {{-- Datatables --}}
-<script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+{{-- <script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script> --}}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script>
     $(document).ready(function() {
@@ -294,6 +293,30 @@
         var defaultDate = new Date();
         var formattedDate = defaultDate.getFullYear() + '-' + ('0' + (defaultDate.getMonth() + 1)).slice(-2) +
             '-' + ('0' + defaultDate.getDate()).slice(-2);
+        document.getElementsByClassName("editDate2")[0].value = formattedDate;
+
+        var defaultTime = defaultDate.getHours() + ':' + ('0' + defaultDate.getMinutes()).slice(-2);
+        document.getElementsByClassName("editTime2")[0].value = defaultTime;
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var defaultDate = new Date();
+        var formattedDate = defaultDate.getFullYear() + '-' + ('0' + (defaultDate.getMonth() + 1)).slice(-2) +
+            '-' + ('0' + defaultDate.getDate()).slice(-2);
+        document.getElementsByClassName("editDate3")[0].value = formattedDate;
+
+        var defaultTime = defaultDate.getHours() + ':' + ('0' + defaultDate.getMinutes()).slice(-2);
+        document.getElementsByClassName("editTime3")[0].value = defaultTime;
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var defaultDate = new Date();
+        var formattedDate = defaultDate.getFullYear() + '-' + ('0' + (defaultDate.getMonth() + 1)).slice(-2) +
+            '-' + ('0' + defaultDate.getDate()).slice(-2);
         document.getElementById("mdate2").value = formattedDate;
 
         var defaultTime = defaultDate.getHours() + ':' + ('0' + defaultDate.getMinutes()).slice(-2);
@@ -324,7 +347,7 @@
     });
 </script>
 
-<script>
+{{-- <script>
     document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("deleteSelected").addEventListener("click", function() {
             var selectedCheckboxes = document.querySelectorAll(
@@ -361,9 +384,9 @@
             }
         });
     });
-</script>
+</script> --}}
 
-<script>
+{{-- <script>
     document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("deleteSelectedMembersOver").addEventListener("click", function() {
             var selectedCheckboxes = document.querySelectorAll(
@@ -399,7 +422,7 @@
             }
         });
     });
-</script>
+</script> --}}
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -520,51 +543,6 @@
         toggleElements(elementsToHide, 'none');
     });
 </script>
-
-{{-- <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var sellRadios = document.querySelectorAll('.form-check-input[value="sell"]');
-        var missedGuestRadios = document.querySelectorAll('.form-check-input[value="missed_guest"]');
-
-        var elementsToShow = ['born', 'member_code', 'gender', 'status', 'address', 'description', 'formFile',
-            'output', 'nickname', 'email', 'ig', 'emergency_contact'
-        ];
-        var elementsToHide = ['born', 'member_code', 'gender', 'status', 'address', 'description', 'formFile',
-            'output', 'nickname', 'email', 'ig', 'emergency_contact'
-        ];
-
-        function toggleElements(elements, displayStyle) {
-            elements.forEach(function(elementClass) {
-                var elements = document.querySelectorAll('.' + elementClass);
-                elements.forEach(function(element) {
-                    element.style.display = displayStyle;
-                });
-            });
-        }
-
-        function handleRadioChange() {
-            if (this.value === 'sell') {
-                toggleElements(elementsToShow, 'block');
-                toggleElements(elementsToHide, 'none');
-            } else if (this.value === 'missed_guest') {
-                toggleElements(elementsToShow, 'none');
-                toggleElements(elementsToHide, 'block');
-            }
-        }
-
-        sellRadios.forEach(function(radio) {
-            radio.addEventListener('change', handleRadioChange);
-        });
-
-        missedGuestRadios.forEach(function(radio) {
-            radio.addEventListener('change', handleRadioChange);
-        });
-
-        toggleElements(elementsToShow, 'none');
-        toggleElements(elementsToHide, 'none');
-    });
-</script> --}}
-
 
 </body>
 

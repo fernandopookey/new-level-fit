@@ -25,7 +25,7 @@ class MemberPackageStoreRequest extends FormRequest
     {
         return [
             'package_name'          => 'required|string',
-            'months'                => 'required|numeric',
+            'days'                  => 'required|numeric',
             'package_type_id'       => 'exists:member_package_types,id',
             'package_category_id'   => 'exists:member_package_categories,id',
             'package_price'         => 'required|numeric',

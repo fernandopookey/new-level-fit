@@ -28,7 +28,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Check In</button>
+                    <button type="submit" class="btn btn-primary" id="checkInOutButton">Submit</button>
                     <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Close</button>
                 </div>
             </form>

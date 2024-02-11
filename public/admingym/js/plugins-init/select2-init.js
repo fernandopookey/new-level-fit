@@ -18,6 +18,10 @@
 
     $("#single-select8").select2();
 
+    $("#single-select9").select2();
+
+    $("#single-select10").select2();
+
     // multi select box
     $(".multi-select").select2();
 

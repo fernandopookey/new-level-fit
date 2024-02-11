@@ -5,8 +5,7 @@
                 <div class="page-title flex-wrap">
                     <div>
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#checkIn2"
-                            id="checkInButton">Check
-                            In</button>
+                            id="checkInButton" onclick="manipulateView()">Input Member Code</button>
                     </div>
                 </div>
             </div>
@@ -18,14 +17,14 @@
                         <thead>
                             <tr>
                                 @if (Auth::user()->role == 'ADMIN')
-                                    <th>Select</th>
+                                    <th></th>
                                 @endif
                                 <th>No</th>
                                 <th>Member Data</th>
                                 <th>Trainer Name</th>
                                 <th>Trainer Package</th>
                                 <th>Start Date</th>
-                                <th>Expired Date</th>
+                                {{-- <th>Expired Date</th> --}}
                                 <th>Session</th>
                                 <th>Status</th>
                                 <th>Description</th>
@@ -60,14 +59,14 @@
                                     <td>
                                         <h6>{{ $item->start_date }}</h6>
                                     </td>
-                                    <td>
+                                    {{-- <td>
                                         <h6>{{ $item->expired_date }} | @if ($item->expired_date_status == 'Running')
                                                 <span class="badge badge-primary">Running</span>
                                             @else
                                                 <span class="badge badge-danger">Over</span>
                                             @endif
                                         </h6>
-                                    </td>
+                                    </td> --}}
                                     <td>
                                         <h6>Session Total : {{ $item->number_of_session }}</h6>
                                         <h6>Remaining Session : {{ $item->remaining_sessions }}</h6>
@@ -88,6 +87,8 @@
                                             <a href="{{ route('trainer-session.edit', $item->id) }}"
                                                 class="btn light btn-warning btn-xs mb-1">Edit</a>
                                         @endif
+                                        <a href="{{ route('pt-agreement', $item->id) }}" target="_blank"
+                                            class="btn light btn-secondary btn-xs mb-1 btn-block">Agrement</a>
                                         <a href="{{ route('trainer-session.show', $item->id) }}"
                                             class="btn light btn-info btn-xs mb-1">Detail</a>
                                         <button type="button" class="btn light btn-dark btn-xs mb-1 btn-block"

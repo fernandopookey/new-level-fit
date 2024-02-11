@@ -25,11 +25,11 @@
                             Customer Service POS
                         </a>
                     </li> --}}
-                    {{-- <li class="nav-item">
+                    <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab" href="#fitnessConsultant">
                             Fitness Consultant
                         </a>
-                    </li> --}}
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab" href="#personalTrainer">
                             Personal Trainer

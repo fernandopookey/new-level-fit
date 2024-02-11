@@ -1,4 +1,3 @@
-{{-- @foreach ($members as $item => $value) --}}
 <div class="modal fade bd-example-modal-sm" id="checkIn2" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
@@ -35,4 +34,3 @@
         </div>
     </div>
 </div>
-{{-- @endforeach --}}

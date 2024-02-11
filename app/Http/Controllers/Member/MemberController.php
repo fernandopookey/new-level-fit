@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -74,6 +75,7 @@ class MemberController extends Controller
 
         $data['user_id'] = Auth::user()->id;
         $data['gender'] = $request->input('gender', 'Not Selected');
+        $data['born'] = Carbon::parse($data['born'])->format('Y-m-d');
 
         if ($request->filled('member_code')) {
             $memberCode = $request->member_code;

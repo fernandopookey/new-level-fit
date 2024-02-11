@@ -16,6 +16,7 @@ use App\Http\Controllers\Staff\StaffController;
 use App\Http\Controllers\Trainer\TrainerSessionCheckInController;
 use App\Http\Controllers\Trainer\TrainerSessionController;
 use App\Http\Controllers\Trainer\TrainerSessionOverController;
+use App\Models\Trainer\CheckInTrainerSession;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -95,6 +96,7 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     // Route::delete('trainer-session-bulk-delete', [TrainerSessionController::class, 'bulkDelete'])->name('trainer-session-bulk-delete');
     Route::post('/delete-selected-trainer-sessions', [TrainerSessionController::class, 'deleteSelectedTrainerSessions'])->name('delete-selected-trainer-sessions');
     Route::post('/delete-selected-trainer-sessions-over', [TrainerSessionOverController::class, 'deleteSelectedTrainerSessionsOver'])->name('delete-selected-trainer-sessions-over');
+    Route::get('pt-agreement/{id}', [TrainerSessionController::class, 'agreement'])->name('pt-agreement');
 
     Route::resource('buddy-referral', '\App\Http\Controllers\Admin\BuddyReferralController');
     Route::resource('appointment', '\App\Http\Controllers\Admin\AppointmentController');
@@ -116,18 +118,20 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     Route::get('appointment-filter', [AppointmentListController::class, 'filter'])->name('appointment-filter');
 
     Route::resource('member-list', '\App\Http\Controllers\Report\MemberListController');
-    Route::resource('member-registration', '\App\Http\Controllers\Member\MemberRegistrationController');
-    Route::resource('member-registration-over', '\App\Http\Controllers\Member\MemberRegistrationOverController');
+    Route::resource('member-active', '\App\Http\Controllers\Member\MemberRegistrationController');
+    Route::resource('member-expired', '\App\Http\Controllers\Member\MemberRegistrationOverController');
     Route::resource('members', '\App\Http\Controllers\Member\MemberController');
     Route::get('all-member', [MemberListController::class, 'allData'])->name('all-member');
     Route::get('member-filter', [MemberListController::class, 'filter'])->name('member-filter');
     Route::get('print-member-registration-over-pdf', [MemberRegistrationOverController::class, 'pdfReport'])->name('print-member-registration-over-pdf');
-    Route::get('print-member-registration-detail-pdf', [MemberRegistrationController::class, 'print_detail_pdf'])->name('print-member-registration-detail-pdf');
+    Route::get('membership-agreement/{id}', [MemberRegistrationController::class, 'agreement'])->name('membership-agreement');
     Route::put('member-registration-freeze/{id}/freeze', [MemberRegistrationController::class, 'freeze'])->name('member-registration-freeze');
     Route::get('member-report', [MemberController::class, 'cetak_pdf'])->name('member-report');
     // Route::post('/delete-selected-members', 'MemberRegistrationController@deleteSelectedMembers')->name('delete-selected-members');
-    Route::post('/delete-selected-members', [MemberRegistrationController::class, 'deleteSelectedMembers'])->name('delete-selected-members');
-    Route::post('/delete-selected-members-over', [MemberRegistrationOverController::class, 'deleteSelectedMembersOver'])->name('delete-selected-members-over');
+    // Route::post('/delete-selected-members', [MemberRegistrationController::class, 'deleteSelectedMembers'])->name('delete-selected-members');
+    // Route::post('/delete-selected-members-over', [MemberRegistrationOverController::class, 'deleteSelectedMembersOver'])->name('delete-selected-members-over');
+    Route::delete('member-active-bulk-delete', [MemberRegistrationController::class, 'bulkDelete'])->name('member-active-bulk-delete');
+    Route::get('cuti/{id}', [MemberRegistrationController::class, 'cuti'])->name('cuti');
 
     Route::resource('missed-guest', '\App\Http\Controllers\Member\MissedGuestController');
 
@@ -138,6 +142,8 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     Route::resource('personal-trainer-list', '\App\Http\Controllers\Report\MemberListController');
     Route::get('all-personal-trainer', [MemberListController::class, 'allData'])->name('all-personal-trainer');
     Route::get('personal-trainer-filter', [MemberExpiredListController::class, 'filter'])->name('personal-trainer-filter');
+
+    Route::get('personal-trainer-filter', [CheckInTrainerSession::class, 'checkMemberExistence'])->name('checkMemberExistence');
 });
 
 Auth::routes();

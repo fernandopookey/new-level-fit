@@ -25,7 +25,7 @@ class MemberPackageUpdateRequest extends FormRequest
     {
         return [
             'package_name'          => 'string',
-            'months'                => 'numeric',
+            'days'                  => 'numeric',
             'package_type_id'       => 'exists:member_package_types,id',
             'package_category_id'   => 'exists:member_package_categories,id',
             'package_price'         => 'numeric',

@@ -123,7 +123,7 @@
 
 {{-- MEMBER --}}
 <div class="row">
-    <div class="col-xl-3 col-xxl-6 col-lg-6 col-sm-6">
+    <div class="col-xl-4 col-xxl-6 col-lg-6 col-sm-6">
         <div class="widget-stat card bg-primary">
             <div class="card-body p-4">
                 <div class="media">
@@ -138,45 +138,30 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-3 col-xxl-6 col-lg-6 col-sm-6">
-        <div class="widget-stat card bg-success">
-            <div class="card-body p-4">
-                <div class="media">
-                    <span class="me-3">
-                        <i class="la la-users"></i>
-                    </span>
-                    <div class="media-body text-white text-end">
-                        <p class="mb-1 text-white">Total Member Registration</p>
-                        <h3 class="text-white">{{ $memberRegistration }}</h3>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-3 col-xxl-6 col-lg-6 col-sm-6">
-        <div class="widget-stat card bg-danger">
+    <div class="col-xl-4 col-xxl-6 col-lg-6 col-sm-6">
+        <div class="widget-stat card bg-info">
             <div class="card-body  p-4">
                 <div class="media">
                     <span class="me-3">
                         <i class="la la-users"></i>
                     </span>
                     <div class="media-body text-white text-end">
-                        <p class="mb-1 text-white">Member Registration Running</p>
+                        <p class="mb-1 text-white">Total Member Active</p>
                         <h3 class="text-white">{{ $runningRegistrationsMemberCount }}</h3>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-xl-3 col-xxl-6 col-lg-6 col-sm-6">
-        <div class="widget-stat card bg-info">
+    <div class="col-xl-4 col-xxl-6 col-lg-6 col-sm-6">
+        <div class="widget-stat card bg-danger">
             <div class="card-body p-4">
                 <div class="media">
                     <span class="me-3">
                         <i class="la la-users"></i>
                     </span>
                     <div class="media-body text-white text-end">
-                        <p class="mb-1 text-white">Member Registration Over</p>
+                        <p class="mb-1 text-white">Total Member Expired</p>
                         <h3 class="text-white">{{ $overRegistrationsMemberCount }}</h3>
                     </div>
                 </div>
@@ -187,7 +172,7 @@
 
 {{-- TRAINER --}}
 <div class="row">
-    <div class="col-xl-3 col-xxl-6 col-lg-6 col-sm-6">
+    <div class="col-xl-4 col-xxl-6 col-lg-6 col-sm-6">
         <div class="widget-stat card bg-primary">
             <div class="card-body p-4">
                 <div class="media">
@@ -202,37 +187,22 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-3 col-xxl-6 col-lg-6 col-sm-6">
-        <div class="widget-stat card bg-success">
-            <div class="card-body p-4">
-                <div class="media">
-                    <span class="me-3">
-                        <i class="la la-users"></i>
-                    </span>
-                    <div class="media-body text-white text-end">
-                        <p class="mb-1 text-white">Total Trainer Session</p>
-                        <h3 class="text-white">{{ $totalTrainerSessions }}</h3>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-3 col-xxl-6 col-lg-6 col-sm-6">
-        <div class="widget-stat card bg-danger">
+    <div class="col-xl-4 col-xxl-6 col-lg-6 col-sm-6">
+        <div class="widget-stat card bg-info">
             <div class="card-body  p-4">
                 <div class="media">
                     <span class="me-3">
                         <i class="la la-users"></i>
                     </span>
                     <div class="media-body text-white text-end">
-                        <p class="mb-1 text-white">Trainer Session Running</p>
+                        <p class="mb-1 text-white">Trainer Session Active</p>
                         <h3 class="text-white">{{ $runningTrainerSessionsCount }}</h3>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-xl-3 col-xxl-6 col-lg-6 col-sm-6">
+    <div class="col-xl-4 col-xxl-6 col-lg-6 col-sm-6">
         <div class="widget-stat card bg-danger">
             <div class="card-body  p-4">
                 <div class="media">
@@ -240,7 +210,7 @@
                         <i class="la la-users"></i>
                     </span>
                     <div class="media-body text-white text-end">
-                        <p class="mb-1 text-white">Trainer Session Over</p>
+                        <p class="mb-1 text-white">Trainer Session Expired</p>
                         <h3 class="text-white">{{ $overTrainerSessionsCount }}</h3>
                     </div>
                 </div>

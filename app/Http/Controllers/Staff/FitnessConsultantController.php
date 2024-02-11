@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Staff;
 use App\Http\Controllers\Controller;
 use App\Models\Staff\FitnessConsultant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class FitnessConsultantController extends Controller
 {
@@ -21,10 +22,13 @@ class FitnessConsultantController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'full_name' => 'required|string|max:200',
-            'gender'    => 'required',
-            'club'      => 'required'
+            'full_name'     => 'required|string|max:200',
+            'phone_number'  => 'nullable',
+            'gender'        => 'required',
+            'address'       => 'nullable',
+            'description'   => 'nullable',
         ]);
+        $data['user_id'] = Auth::user()->id;
 
         FitnessConsultant::create($data);
         return redirect()->route('staff.index')->with('message', 'Fitness Consultant Added Successfully');
@@ -39,10 +43,13 @@ class FitnessConsultantController extends Controller
     {
         $item = FitnessConsultant::find($id);
         $data = $request->validate([
-            'full_name' => 'required|string|max:200',
-            'gender'    => 'required',
-            'club'      => 'required'
+            'full_name'     => 'string|max:200',
+            'phone_number'  => 'nullable',
+            'gender'        => 'nullable',
+            'address'       => 'nullable',
+            'description'   => 'nullable',
         ]);
+        $data['user_id'] = Auth::user()->id;
 
         $item->update($data);
         return redirect()->route('staff.index')->with('message', 'Fitness Consultant Updated Successfully');

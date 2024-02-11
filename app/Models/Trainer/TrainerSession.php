@@ -3,6 +3,8 @@
 namespace App\Models\Trainer;
 
 use App\Models\Member\Member;
+use App\Models\MethodPayment;
+use App\Models\Staff\FitnessConsultant;
 use App\Models\Staff\PersonalTrainer;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -20,10 +22,13 @@ class TrainerSession extends Model
         'start_date',
         'days',
         'trainer_package_id',
-        'user_id',
         'package_price',
         'admin_price',
-        'description'
+        'number_of_session',
+        'description',
+        'method_payment_id',
+        'fc_id',
+        'user_id',
     ];
 
     protected $hidden = [];
@@ -48,8 +53,18 @@ class TrainerSession extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
+    public function fitnessConsultants()
+    {
+        return $this->belongsTo(FitnessConsultant::class, 'fc_id', 'id');
+    }
+
     public function trainerSessionCheckIn()
     {
         return $this->hasMany(CheckInTrainerSession::class);
+    }
+
+    public function methodPayment()
+    {
+        return $this->belongsTo(MethodPayment::class, 'method_payment_id', 'id');
     }
 }

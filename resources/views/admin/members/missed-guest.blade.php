@@ -24,12 +24,9 @@
                                     @endif
                                     <th>No</th>
                                     <th>Image</th>
-                                    <th>Member Name</th>
+                                    <th>Full Name</th>
                                     <th>Phone Number</th>
                                     <th>Member Code</th>
-                                    <th>gender</th>
-                                    <th>Other</th>
-                                    <th>Address</th>
                                     <th>Description</th>
                                     <th>Staff</th>
                                     <th>Action</th>
@@ -62,27 +59,6 @@
                                         </td>
                                         <td>
                                             <h6>{{ isset($item->member_code) ? $item->member_code : 'Missed guest' }}
-                                            </h6>
-                                        </td>
-                                        <td>
-                                            <h6>{{ isset($item->gender) ? $item->gender : 'Missed guest' }}
-                                            </h6>
-                                        </td>
-                                        <td>
-                                            <h6>Email :
-                                                <strong>{{ isset($item->email) ? $item->email : 'Missed guest' }}
-                                                </strong>
-                                                </h5>
-                                                <h6>Instagram :
-                                                    <strong>{{ isset($item->ig) ? $item->ig : 'Missed guest' }}</strong>
-                                                    </h5>
-                                                    <h6>Emergency Contact :
-                                                        <strong>{{ isset($item->emergency_contact) ? $item->emergency_contact : 'Missed guest' }}
-                                                        </strong>
-                                                        </h5>
-                                        </td>
-                                        <td>
-                                            <h6>{{ isset($item->address) ? $item->address : 'Missed guest' }}
                                             </h6>
                                         </td>
                                         <td>

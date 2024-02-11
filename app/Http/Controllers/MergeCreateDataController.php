@@ -6,6 +6,7 @@ use App\Models\Member\Member;
 use App\Models\Member\MemberPackage;
 use App\Models\Member\MemberRegistration;
 use App\Models\MethodPayment;
+use App\Models\Staff\FitnessConsultant;
 use App\Models\Staff\PersonalTrainer;
 use App\Models\Trainer\TrainerPackage;
 use App\Models\Trainer\TrainerSession;
@@ -27,6 +28,7 @@ class MergeCreateDataController extends Controller
             'memberRegistration'    => MemberRegistration::get(),
             'memberPackage'         => MemberPackage::get(),
             'methodPayment'         => MethodPayment::get(),
+            'fitnessConsultant'     => FitnessConsultant::get(),
 
             // Create Trainer Session
             'trainerSession'    => TrainerSession::all(),

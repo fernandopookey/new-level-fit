@@ -1,4 +1,4 @@
-{{-- <!-- Modal Add -->
+<!-- Modal Add -->
 <div class="modal fade" id="modalAddCustomerService" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-center">
         <div class="modal-content">
@@ -143,7 +143,7 @@
             </div>
         </div>
     </div>
-@endforeach --}}
+@endforeach
 
 
 

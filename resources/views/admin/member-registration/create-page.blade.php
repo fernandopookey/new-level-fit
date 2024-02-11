@@ -106,7 +106,7 @@
                 </div>
                 <div class="d-flex justify-content-between">
                     <button type="submit" class="btn btn-primary">Save</button>
-                    <a href="{{ route('member-registration.index') }}" class="btn btn-info text-right">Member
+                    <a href="{{ route('member-active.index') }}" class="btn btn-info text-right">Member
                         List</a>
                 </div>
             </form>

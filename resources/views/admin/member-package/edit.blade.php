@@ -32,8 +32,8 @@
                             </div>
                             <div class="col-xl-6">
                                 <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Number Of Months</label>
-                                    <input type="number" name="months" value="{{ old('months', $value->months) }}"
+                                    <label for="exampleFormControlInput1" class="form-label">Number Of Days</label>
+                                    <input type="number" name="days" value="{{ old('days', $value->days) }}"
                                         class="form-control" id="exampleFormControlInput1" autocomplete="off" required>
                                 </div>
                             </div>
