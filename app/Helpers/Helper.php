@@ -18,3 +18,23 @@ function DateDiff($oldDate, $newDate)
 
     return $oldDate->diffInDays($newDate);
 }
+
+function BirthdayDiff($bornDate)
+{
+    $birthday =
+        \Carbon\Carbon::parse($bornDate)->tz('Asia/Jakarta');
+    $birthday->year(date('Y'));
+    $birthday->hour = 0;
+    $birthday->minute = 0;
+    $birthday->second = 0;
+    $nowDate = \Carbon\Carbon::now()->tz('Asia/Jakarta');
+
+    $nowDate->hour = 0;
+    $nowDate->minute = 0;
+    $nowDate->second = 0;
+
+    // Hitung selisih hari antara hari ini dan ulang tahun berikutnya
+    $daysUntilNextBirthday = $nowDate->diff($birthday);
+
+    return $daysUntilNextBirthday->invert == 0 ? $daysUntilNextBirthday->days : -1;
+}

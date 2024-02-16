@@ -18,6 +18,7 @@ class MemberRegistrationOverController extends Controller
                 'a.start_date',
                 'a.admin_price',
                 'a.description',
+                'a.days as member_registration_days',
                 'a.id',
                 'b.full_name as member_name',
                 'b.member_code',
@@ -44,6 +45,7 @@ class MemberRegistrationOverController extends Controller
                 'a.admin_price',
                 'a.description',
                 'a.package_price',
+                'a.days',
                 'b.full_name',
                 'b.member_code',
                 'b.phone_number',
@@ -133,6 +135,12 @@ class MemberRegistrationOverController extends Controller
                 'b.phone_number',
                 'b.photos',
                 'b.gender',
+                'b.nickname',
+                'b.ig',
+                'b.emergency_contact',
+                'b.email',
+                'b.born',
+                'b.address',
                 'c.package_name',
                 'c.days',
                 'e.name as method_payment_name',
@@ -158,6 +166,12 @@ class MemberRegistrationOverController extends Controller
                 'b.phone_number',
                 'b.photos',
                 'b.gender',
+                'b.nickname',
+                'b.ig',
+                'b.emergency_contact',
+                'b.email',
+                'b.born',
+                'b.address',
                 'c.package_name',
                 'c.days',
                 'e.name',
@@ -170,7 +184,7 @@ class MemberRegistrationOverController extends Controller
         $pdf = Pdf::loadView('admin/member-registration-over/pdf', [
             'memberRegistrationsOver'   => $memberRegistrationsOver,
         ])->setPaper('a4', 'landscape');
-        return $pdf->stream('member-registration-over-report.pdf');
+        return $pdf->stream('member-expired-report.pdf');
     }
 
     public function deleteSelectedMembersOver(Request $request)

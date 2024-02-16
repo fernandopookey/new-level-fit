@@ -105,7 +105,7 @@
             </tr>
             <tr>
                 <td>Expired Paket</td>
-                <td>{{ $memberRegistration->expired_date }}</td>
+                <td>{{ DateFormat($memberRegistration->expired_date, 'DD MMMM YYYY') }}</td>
                 @php
                     $totalBayar = $memberRegistration->mr_package_price + $memberRegistration->mr_admin_price;
                 @endphp

@@ -57,19 +57,6 @@ class TrainerSessionCheckInController extends Controller
             return redirect()->back()->with('error', 'Trainer session not found or has ended');
         }
 
-        // $latestCheckIn = CheckInTrainerSession::where('trainer_session_id', $trainerSession->id)
-        //     ->orderBy('check_in_time', 'desc')
-        //     ->first();
-
-        // if ($latestCheckIn && $latestCheckIn->check_out_date === null) {
-        //     $latestCheckIn->update([
-        //         'check_out_time' => now()->tz('Asia/Jakarta'),
-        //         // 'duration' => now()->diffInMinutes($latestCheckIn->check_in_date),
-        //     ]);
-
-        //     return redirect()->route('trainer-session.index')->with('message', 'Trainer Session Checked Out Successfully');
-        // }
-
         $message = "";
         if ($trainerSession->current_check_in_trainer_sessions_id && !$trainerSession->check_out_time) {
             $checkInTrainerSession = CheckInTrainerSession::find($trainerSession->current_check_in_trainer_sessions_id);

@@ -11,6 +11,7 @@ use App\Models\SourceCode;
 use App\Models\Staff\FitnessConsultant;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -22,7 +23,6 @@ class MemberRegistrationController extends Controller
 {
     public function index()
     {
-
         $memberRegistrations = DB::table('member_registrations as a')
             ->select(
                 'a.id',
@@ -46,12 +46,17 @@ class MemberRegistrationController extends Controller
                 'e.name as method_payment_name',
                 'f.full_name as staff_name',
                 'g.full_name as fc_name',
-                'g.phone_number as fc_phone_number'
+                'g.phone_number as fc_phone_number',
+                'h.check_in_time',
+                'h.check_out_time'
             )
             ->addSelect(
+                DB::raw("'bg-dark' as birthdayCelebrating"), //0 tidak ultah, 3 hari lagi ultah, 2 hari lagi, 1 hari lagi
                 DB::raw('DATE_ADD(a.start_date, INTERVAL a.days DAY) as expired_date'),
                 DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END as status'),
-                DB::raw('CONCAT(YEAR(CURDATE()), "-", MONTH(b.born), "-", DAY(b.born)) as member_birthday')
+                // DB::raw('CONCAT(YEAR(CURDATE()), "-", MONTH(b.born), "-", DAY(b.born)) as member_birthday')
+                DB::raw('CONCAT(YEAR(CURDATE()), "-", MONTH(b.born), "-", DAY(b.born)) as member_birthday'),
+                DB::raw('DATEDIFF(CONCAT(YEAR(CURDATE()), "-", MONTH(b.born), "-", DAY(b.born)), CURDATE()) as days_until_birthday') // tambahkan ini untuk mendapatkan jumlah hari sampai ulang tahun
             )
             ->join('members as b', 'a.member_id', '=', 'b.id')
             ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
@@ -63,14 +68,39 @@ class MemberRegistrationController extends Controller
                 'f.id'
             )
             ->join('fitness_consultants as g', 'a.fc_id', '=', 'g.id')
+            // ->leftJoin('check_in_members as h', 'a.id', '=', 'h.member_registration_id')
+            ->leftJoin(DB::raw('(SELECT member_registration_id, MAX(check_in_time) as check_in_time, MAX(check_out_time) as check_out_time FROM check_in_members GROUP BY member_registration_id) as h'), 'a.id', '=', 'h.member_registration_id')
             ->whereRaw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END = ?', ['Running'])
             ->orderBy('status', 'desc')
             ->get();
 
+
+        $birthdayMessage3 = "";
+        $birthdayMessage2 = "";
+        $birthdayMessage1 = "";
+        $birthdayMessage0 = "";
+
+        foreach ($memberRegistrations as $memberRegistration) {
+            if (BirthdayDiff($memberRegistration->born) == 0) {
+                $memberRegistration->birthdayCelebrating = "bg-warning";
+                $birthdayMessage0 = $birthdayMessage0 . $memberRegistration->member_name . '';
+            } else if (BirthdayDiff($memberRegistration->born) == 1) {
+                $memberRegistration->birthdayCelebrating = "bg-primary";
+                $birthdayMessage1 = $birthdayMessage1 . $memberRegistration->member_name . '';
+            } else if (BirthdayDiff($memberRegistration->born) == 2) {
+                $memberRegistration->birthdayCelebrating = "bg-warning";
+                $birthdayMessage2 = $birthdayMessage2 . $memberRegistration->member_name . '';
+            }
+        }
+
         $data = [
             'title'                 => 'Member Active List',
             'memberRegistrations'   => $memberRegistrations,
-            'content'               => 'admin/member-registration/index'
+            'content'               => 'admin/member-registration/index',
+            'birthdayMessage3'       => $birthdayMessage3,
+            'birthdayMessage2'       => $birthdayMessage2,
+            'birthdayMessage1'       => $birthdayMessage1,
+            'birthdayMessage0'       => $birthdayMessage0,
         ];
 
         return view('admin.layouts.wrapper', $data);
@@ -86,8 +116,6 @@ class MemberRegistrationController extends Controller
             'memberPackage'         => MemberPackage::get(),
             'methodPayment'         => MethodPayment::get(),
             'fitnessConsultant'     => FitnessConsultant::get(),
-            'referralName'          => FitnessConsultant::get(),
-            // 'refferalName'          => FitnessConsultant::get(),
             'content'               => 'admin/member-registration/create-page',
         ];
 
@@ -191,6 +219,10 @@ class MemberRegistrationController extends Controller
                 'a.id',
                 'a.start_date',
                 'a.description',
+                'a.days as member_registration_days',
+                'a.old_days',
+                'a.package_price as mr_package_price',
+                'a.admin_price as mr_admin_price',
                 'b.full_name as member_name',
                 'b.address',
                 'b.member_code',
@@ -204,11 +236,11 @@ class MemberRegistrationController extends Controller
                 'b.born',
                 'c.package_name',
                 'c.days',
-                'c.package_name',
                 'c.package_price',
-                'c.days',
                 'e.name as method_payment_name',
-                'f.full_name as staff_name'
+                'f.full_name as staff_name',
+                'g.full_name as fc_name',
+                'g.phone_number as fc_phone_number'
             )
             ->addSelect(
                 DB::raw('DATE_ADD(a.start_date, INTERVAL a.days DAY) as expired_date'),
@@ -218,6 +250,7 @@ class MemberRegistrationController extends Controller
             ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
             ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
             ->join('users as f', 'a.user_id', '=', 'f.id')
+            ->join('fitness_consultants as g', 'a.fc_id', '=', 'g.id')
             ->where('a.id', $id)
             ->get();
 
@@ -227,13 +260,7 @@ class MemberRegistrationController extends Controller
             'title'                     => 'Detail Member Registration',
             'memberRegistration'        => $query->first(),
             'memberRegistrationCheckIn' => $checkInMemberRegistration->memberRegistrationCheckIn,
-            'members'                   => Member::get(),
-            'users'                     => User::get(),
             'memberLastCode'            => Member::latest('id')->first(),
-            'memberPackage'             => MemberPackage::get(),
-            'methodPayment'             => MethodPayment::get(),
-            'fitnessConsultant'         => FitnessConsultant::get(),
-            'referralName'              => FitnessConsultant::get(),
             'content'                   => 'admin/member-registration/show',
         ];
 
@@ -273,42 +300,11 @@ class MemberRegistrationController extends Controller
         $data['admin_price'] = $package->admin_price;
 
         $data['start_date'] =  $data['start_date'] . ' ' .  $data['start_time'];
+        $dateTime = new \DateTime($data['start_date']);
+        $data['start_date'] = $dateTime->format('Y-m-d H:i:s');
         unset($data['start_time']);
 
         $item->update($data);
-
-        $status = DB::table('member_registrations as a')
-            ->select(
-                'a.id',
-                'a.start_date',
-                'a.description',
-                'a.package_price as mr_package_price',
-                'a.admin_price as mr_admin_price',
-                'b.full_name as member_name', // alias for members table name column
-                'c.package_name',
-                'c.days',
-                'b.member_code',
-                'b.phone_number',
-                'b.photos',
-                'b.gender',
-                'c.package_name',
-                'c.package_price',
-                'c.days',
-                'e.name as method_payment_name', // alias for method_payments table name column
-                'f.full_name as staff_name', // alias for users table name column
-            )
-            ->addSelect(
-                DB::raw('DATE_ADD(a.start_date, INTERVAL c.days DAY) as expired_date'),
-                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END as status'),
-                // DB::raw('')
-            )
-            ->join('members as b', 'a.member_id', '=', 'b.id')
-            ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
-            ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
-            ->join('users as f', 'a.user_id', '=', 'f.id')
-            ->whereRaw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END = ?', ['Running'])
-            ->orderBy('status', 'desc')
-            ->first();
 
         return redirect()->route('member-expired.index')->with('message', 'Member Updated Successfully');
     }
@@ -322,7 +318,6 @@ class MemberRegistrationController extends Controller
         ]);
         $data['user_id'] = Auth::user()->id;
         $data['days'] =  DateDiff($data['start_date'], $data['expired_date']);
-
         $data['old_days'] = $item->memberPackage->days;
 
         $item->update($data);
@@ -330,62 +325,6 @@ class MemberRegistrationController extends Controller
         unset($data['expired_date']);
         unset($data['old_expired_date']);
         $item->update($data);
-
-        // $memberRegistration = DB::table('member_registrations as a')
-        //     ->select(
-        //         'a.id',
-        //         'a.start_date',
-        //         'a.description',
-        //         'a.package_price as mr_package_price',
-        //         'a.admin_price as mr_admin_price',
-        //         'a.days as member_registration_days',
-        //         'a.old_days',
-        //         'a.updated_at',
-        //         'a.created_at',
-        //         'b.full_name as member_name', // alias for members table name column
-        //         'c.package_name',
-        //         'c.days',
-        //         'b.member_code',
-        //         'b.nickname',
-        //         'b.phone_number',
-        //         'b.born',
-        //         'b.photos',
-        //         'b.gender',
-        //         'b.emergency_contact',
-        //         'b.email',
-        //         'b.ig',
-        //         'b.address',
-        //         'c.package_name',
-        //         'c.package_price',
-        //         'c.days',
-        //         'e.name as method_payment_name',
-        //         'f.full_name as staff_name',
-        //         'g.full_name as fc_name',
-        //         'g.phone_number as fc_phone_number'
-        //     )
-        //     ->addSelect(
-        //         DB::raw('DATE_ADD(a.start_date, INTERVAL a.days DAY) as expired_date'),
-        //         DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.days DAY) THEN "Over" ELSE "Running" END as status'),
-        //         DB::raw('CONCAT(YEAR(CURDATE()), "-", MONTH(b.born), "-", DAY(b.born)) as member_birthday')
-        //     )
-        //     ->join('members as b', 'a.member_id', '=', 'b.id')
-        //     ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
-        //     ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
-        //     ->join('users as f', 'a.user_id', '=', 'f.id')
-        //     ->join('fitness_consultants as g', 'a.fc_id', '=', 'g.id')
-        //     ->where('a.id', $id)
-        //     ->first();
-
-        // $fileName1 = $memberRegistration->member_name;
-        // $fileName2 = $memberRegistration->start_date;
-
-        // $pdf = PDF::loadView('admin/member-registration/cuti', [
-        //     'memberRegistration' => $memberRegistration,
-        // ]);
-
-        // $pdf->download('Cuti_Membership_' . $id . '.pdf');
-
-        // return $pdf->download('Cuti_Membership_' . $id . '.pdf');
         return redirect()->route('member-active.index')->with('message', 'Cuti Membership Successfully Added');
     }
 

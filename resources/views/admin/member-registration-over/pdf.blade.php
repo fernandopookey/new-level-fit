@@ -71,8 +71,7 @@
                 <th>No</th>
                 <th>Member's Data</th>
                 <th>Package's Data</th>
-                <th>Start Date</th>
-                <th>Expired Date</th>
+                <th>Date</th>
                 <th>Description</th>
                 <th>Status</th>
                 <th>Staff</th>
@@ -83,17 +82,22 @@
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>
-                        {{ $item->member_name }}, <br />
-                        {{ $item->member_code }},<br />
-                        {{ $item->phone_number }}
+                        Full Name: <b>{{ $item->member_name }}</b>, <br />
+                        Member Code: <b>{{ $item->member_code }}</b>,<br />
+                        Phone Number: <b>{{ $item->phone_number }}</b>, <br />
+                        Date of Birth: <b>{{ $item->born }}</b>, <br />
+                        Email: <b>{{ $item->email }}</b>, <br />
+                        Instagram: <b>{{ $item->ig }}</b>, <br />
+                        Emergency Contact: <b>{{ $item->emergency_contact }}</b>, <br />
+                        Address: <b>{{ $item->address }}</b>, <br />
                     </td>
                     <td>
                         {{ $item->package_name }}, <br />
                         {{ formatRupiah($item->package_price) }}, <br />
                         {{ $item->days }} Days
                     </td>
-                    <td>{{ $item->start_date }}</td>
-                    <td>{{ $item->expired_date }}</td>
+                    <td>{{ DateFormat($item->start_date, 'DD MMMM YYYY') }}-{{ DateFormat($item->expired_date, 'DD MMMM YYYY') }}
+                    </td>
                     <td>{{ $item->description }}</td>
                     <td>
                         @if ($item->status == 'Running')

@@ -27,9 +27,9 @@
 </head>
 
 <body>
-    <div class="img text-end">
-        <img src="https://gym.gelorasports.com/logokecil.png" class="img-fluid" width="200" alt="">
-    </div>
+    {{-- <div class="img text-end">
+        <img src="https://levelfit.warastra-adhiguna.online/LEVELFIT.png" class="img-fluid" width="100" alt="">
+    </div> --}}
 
     <h4>LEVELFIT</h4>
     <h5>PRIVATE TRAINING AGREEMENT</h5>
@@ -83,15 +83,15 @@
             </tr>
             <tr>
                 <td>Jumlah Paket Session</td>
-                <td>{{ $trainerSession->number_of_session }} Days</td>
+                <td>{{ $trainerSession->number_of_session }} Session</td>
                 <td>Tanggal mulai program ini</td>
-                <td>{{ $trainerSession->start_date }}</td>
+                <td>{{ DateFormat($trainerSession->start_date, 'DD MMMM YYYY') }}</td>
             </tr>
             <tr>
                 <td>Harga</td>
-                <td>{{ $trainerSession->pt_package_price }}</td>
+                <td>{{ formatRupiah($trainerSession->pt_package_price) }}</td>
                 <td>Tanggal berakhir program ini</td>
-                <td>{{ $trainerSession->start_date }}</td>
+                <td>{{ DateFormat($trainerSession->expired_date, 'DD MMMM YYYY') }}</td>
             </tr>
         </tbody>
     </table>

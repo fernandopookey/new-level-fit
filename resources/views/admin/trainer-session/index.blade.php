@@ -9,6 +9,45 @@
                     </div>
                 </div>
             </div>
+            @if ($birthdayMessage2)
+                <div class="alert alert-success solid alert-dismissible fade show">
+                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
+                        fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                    <span>2 days to <strong>{{ $birthdayMessage2 }}'s </strong> birthday</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">X
+                    </button>
+                </div>
+            @endif
+            @if ($birthdayMessage1)
+                <div class="alert alert-primary solid alert-dismissible fade show">
+                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
+                        fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                    <span>1 days to <strong>{{ $birthdayMessage1 }}'s </strong> birthday</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">X
+                    </button>
+                </div>
+            @endif
+            @if ($birthdayMessage0)
+                <div class="alert alert-warning solid alert-dismissible fade show fireworks">
+                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
+                        fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                    <span>Today is <strong>{{ $birthdayMessage0 }}'s </strong> birthday</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">X
+                    </button>
+                </div>
+            @endif
             <!--column-->
             <div class="col-xl-12 wow fadeInUp" data-wow-delay="1.5s">
                 <div class="table-responsive full-data">
@@ -20,15 +59,12 @@
                                     <th></th>
                                 @endif
                                 <th>No</th>
+                                <th>Image</th>
                                 <th>Member Data</th>
-                                <th>Trainer Name</th>
-                                <th>Trainer Package</th>
-                                <th>Start Date</th>
-                                {{-- <th>Expired Date</th> --}}
-                                <th>Session</th>
-                                <th>Status</th>
-                                <th>Description</th>
-                                <th>Staff Name</th>
+                                <th>Package Data</th>
+                                <th>Date</th>
+                                <th>Session & Status</th>
+                                <th>Trainer & Staff</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -43,44 +79,47 @@
                                     @endif
                                     <td>{{ $loop->iteration }}</td>
                                     <td>
+                                        <div class="trans-list">
+                                            @if ($item->photos)
+                                                <img src="{{ Storage::url($item->photos) }}" class="lazyload"
+                                                    width="100" alt="image">
+                                            @else
+                                                <img src="{{ asset('default.png') }}" class="lazyload" width="100"
+                                                    alt="default image">
+                                            @endif
+                                        </div>
+                                    </td>
+                                    <td>
                                         <h6>{{ $item->member_name }},</h6>
                                         <h6>{{ $item->member_code }},</h6>
                                         <h6>{{ $item->member_phone }}</h6>
                                     </td>
                                     <td>
-                                        <h6>{{ $item->trainer_name }},</h6>
-                                        <h6>{{ $item->trainer_phone }}</h6>
-                                    </td>
-                                    <td>
                                         <h6>{{ $item->package_name }}, <br /></h6>
                                         <h6>{{ formatRupiah($item->package_price) }},</h6>
-                                        <h6>{{ $item->days }}</h6>
+                                        <h6>{{ $item->member_registration_days }} Days</h6>
                                     </td>
                                     <td>
-                                        <h6>{{ $item->start_date }}</h6>
-                                    </td>
-                                    {{-- <td>
-                                        <h6>{{ $item->expired_date }} | @if ($item->expired_date_status == 'Running')
-                                                <span class="badge badge-primary">Running</span>
-                                            @else
-                                                <span class="badge badge-danger">Over</span>
-                                            @endif
+                                        <h6>{{ DateFormat($item->start_date, 'DD MMMM YYYY') }}- <br />
+                                            {{ DateFormat($item->expired_date, 'DD MMMM YYYY') }}
                                         </h6>
-                                    </td> --}}
+                                    </td>
                                     <td>
                                         <h6>Session Total : {{ $item->number_of_session }}</h6>
                                         <h6>Remaining Session : {{ $item->remaining_sessions }}</h6>
+                                        <h6>Status:
+                                            @if (!$item->check_in_time && !$item->check_out_time)
+                                                <span class="badge badge-primary">Not yet started</span>
+                                            @elseif ($item->check_in_time && $item->check_out_time == null)
+                                                <span class="badge badge-secondary">Checkout</span>
+                                            @else
+                                                <span class="badge badge-info">Running</span>
+                                            @endif
+                                        </h6>
                                     </td>
                                     <td>
-                                        @if ($item->session_status == 'Running')
-                                            <span class="badge badge-primary">Running</span>
-                                        @else
-                                            <span class="badge badge-danger">Over</span>
-                                        @endif
-                                    </td>
-                                    <td>{{ $item->description }}</td>
-                                    <td>
-                                        {{ $item->staff_name }}
+                                        <h6>Trainer : {{ $item->trainer_name }},</h6>
+                                        <h6>Staff Name: {{ $item->staff_name }}</h6>
                                     </td>
                                     <td class="btn-group-vertical">
                                         @if (Auth::user()->role == 'ADMIN')
@@ -89,6 +128,10 @@
                                         @endif
                                         <a href="{{ route('pt-agreement', $item->id) }}" target="_blank"
                                             class="btn light btn-secondary btn-xs mb-1 btn-block">Agrement</a>
+                                        @if ($item->old_days != 0)
+                                            <a href="{{ route('cutiTrainerSession', $item->id) }}" target="_blank"
+                                                class="btn light btn-secondary btn-xs mb-1 btn-block">Cuti</a>
+                                        @endif
                                         <a href="{{ route('trainer-session.show', $item->id) }}"
                                             class="btn light btn-info btn-xs mb-1">Detail</a>
                                         <button type="button" class="btn light btn-dark btn-xs mb-1 btn-block"

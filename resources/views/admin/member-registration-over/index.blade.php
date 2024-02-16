@@ -67,10 +67,10 @@
                             <tr>
                                 <th></th>
                                 <th>No</th>
+                                <th>Image</th>
                                 <th>Member's Data</th>
                                 <th>Package Data</th>
                                 <th>Date</th>
-                                <th>Description</th>
                                 <th>Status</th>
                                 <th>Staff</th>
                                 <th>Action</th>
@@ -84,23 +84,31 @@
                                     </td>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>
-                                        <span class="badge bg-danger text-success">
-                                            <h6>{{ $item->member_name }}</h6>
-                                            <h6>{{ $item->member_code }}</h6>
-                                            <h6>{{ $item->phone_number }}</h6>
-                                        </span>
+                                        <div class="trans-list">
+                                            @if ($item->photos)
+                                                <img src="{{ Storage::url($item->photos) }}" class="lazyload"
+                                                    width="100" alt="image">
+                                            @else
+                                                <img src="{{ asset('default.png') }}" class="lazyload" width="100"
+                                                    alt="default image">
+                                            @endif
+                                        </div>
                                     </td>
                                     <td>
-                                        <h6>{{ $item->package_name }}</h6>
-                                        <h6>{{ formatRupiah($item->package_price) }}</h6>
-                                        {{-- <h6>{{ $item->days }} Days</h6> --}}
+                                        <h6>{{ $item->member_name }},</h6>
+                                        <h6>{{ $item->member_code }},</h6>
+                                        <h6>{{ $item->phone_number }}</h6>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-danger badge-lg">
+                                            {{ $item->package_name }}, <br />
+                                            {{ formatRupiah($item->package_price) }}, <br />
+                                            {{ $item->member_registration_days }} Days <br />
+                                        </span>
                                     </td>
                                     <td>
                                         <h6>{{ DateFormat($item->start_date, 'DD MMMM YYYY') }}-{{ DateFormat($item->expired_date, 'DD MMMM YYYY') }}
                                         </h6>
-                                    </td>
-                                    <td>
-                                        <h6>{{ $item->description }}</h6>
                                     </td>
                                     <td>
                                         @if ($item->status == 'Running')
@@ -114,12 +122,14 @@
                                     </td>
                                     <td>
                                         <div>
-                                            <a href="{{ route('member-expired.show', $item->id) }}"
-                                                class="btn light btn-info btn-xs mb-1 btn-block">Detail</a>
                                             @if (Auth::user()->role == 'ADMIN')
-                                                <a href="{{ route('member-expired.edit', $item->id) }}"
+                                                <a href="{{ route('member-active.edit', $item->id) }}"
                                                     class="btn light btn-warning btn-xs mb-1 btn-block">Edit</a>
                                             @endif
+                                            <a href="{{ route('membership-agreement', $item->id) }}" target="_blank"
+                                                class="btn light btn-secondary btn-xs mb-1 btn-block">Agrement</a>
+                                            <a href="{{ route('member-expired.show', $item->id) }}"
+                                                class="btn light btn-info btn-xs mb-1 btn-block">Detail</a>
                                             @if (Auth::user()->role == 'ADMIN')
                                                 <form action="{{ route('member-active.destroy', $item->id) }}"
                                                     onclick="return confirm('Delete Data ?')" method="POST">
