@@ -3,7 +3,8 @@
   ***********************************-->
 <div class="footer out-footer style-2">
     <div class="copyright">
-        <p>Copyright © Developed by <a href="https://dexignlab.com/" target="_blank">Warastra Adhiguna</a> 2023
+        <p>Copyright © Developed by <a href="https://www.warastra-adhiguna.com/" target="_blank">Warastra Adhiguna</a>
+            2023
         </p>
     </div>
 </div>
@@ -155,7 +156,7 @@
 
 {{-- Datatables --}}
 {{-- <script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script> --}}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+{{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> --}}
 <script>
     $(document).ready(function() {
         let table = new DataTable('#myTable', {

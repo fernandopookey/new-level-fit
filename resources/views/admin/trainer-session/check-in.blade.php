@@ -7,7 +7,7 @@
                     @method('PUT')
                     @csrf
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Check In Member</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Freeze Trainer Session</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -49,14 +49,24 @@
                                 <div class="mb-3">
                                     <h5>Days Of Trainer Package</h5>
                                     <input type="text" name="member_code" id="memberCode"
-                                        value="{{ old('member_id', $item->days) }}" class="form-control" disabled>
+                                        value="{{ old('member_id', $item->member_registration_days) }}"
+                                        class="form-control" disabled>
                                 </div>
                             </div>
+                            {{-- <div class="col-xl-3">
+                                <div class="mb-3">
+                                    <label class="form-label">Start Date</label> --}}
+                            <input type="hidden" name="start_date"
+                                value="{{ DateFormat($item->start_date, 'YYYY-MM-DD') }}"
+                                class="form-control mdate-custom" required autocomplete="off" readonly>
+                            {{-- </div>
+                            </div> --}}
                             <div class="col-xl-12">
                                 <div class="mb-3">
-                                    <h5>Days Off</h5>
-                                    <input type="number" name="days_off" id="memberCode" class="form-control"
-                                        autocomplete="off">
+                                    <label class="form-label">Expired Date</label>
+                                    <input type="date" name="expired_date"
+                                        value="{{ old('expired_date', $item->expired_date) }}"
+                                        class="form-control mdate-custom2" required autocomplete="off">
                                 </div>
                             </div>
                         </div>

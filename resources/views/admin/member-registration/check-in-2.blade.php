@@ -18,6 +18,7 @@
                         </div>
                     @endif
                     <div class="row">
+                        <input type="hidden" name="member_code">
                         <div class="col-xl-12">
                             <div class="mb-3">
                                 <p>Member Code</p>

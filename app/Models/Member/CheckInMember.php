@@ -11,7 +11,8 @@ class CheckInMember extends Model
     use HasFactory;
     protected $fillable = [
         'member_registration_id',
-        'check_in_date',
+        'check_in_time',
+        'check_out_time',
         'user_id'
     ];
 

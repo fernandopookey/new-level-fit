@@ -27,7 +27,7 @@
                         </tr>
                         <tr>
                             <th><b>Date of Birth</b></th>
-                            <th>{{ $memberRegistration->born }}</th>
+                            <th>{{ DateFormat($memberRegistration->born, 'DD MMMM YYYY') }}</th>
                         </tr>
                         <tr>
                             <th><b>Email</b></th>
@@ -73,17 +73,16 @@
                         </tr>
                         <tr>
                             <th><b>Number Of Days</th>
-                            <th>{{ $memberRegistration->days }} Days</th>
+                            <th>{{ $memberRegistration->member_registration_days }} Days</th>
                         </tr>
                         <tr>
                             <th><b>Package Price</b></th>
-                            <th>{{ formatRupiah($memberRegistration->package_price) }}</th>
+                            <th>{{ formatRupiah($memberRegistration->mr_package_price) }}</th>
                         </tr>
                         <tr>
                             <th><b>Method Payment</b></th>
                             <th>{{ $memberRegistration->method_payment_name }}</th>
                         </tr>
-
                     </thead>
                 </table>
             </div>
@@ -96,52 +95,43 @@
     <div class="card">
         <div class="card-body">
             <h3 class="heading">Check In:</h3>
-            <form action="{{ route('bulk-delete-member-registration') }}" method="POST">
-                @csrf
-                @method('delete')
-                <table class="table">
-                    <thead>
+            <table class="table">
+                <thead>
+                    <tr>
+                        @if (Auth::user()->role == 'ADMIN')
+                            <td>Checklist</td>
+                        @endif
+                        <th>No</th>
+                        <th>Check In Date</th>
+                        <th>Staff</th>
+                        @if (Auth::user()->role == 'ADMIN')
+                            <th>Action</th>
+                        @endif
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($memberRegistrationCheckIn as $item)
                         <tr>
                             @if (Auth::user()->role == 'ADMIN')
-                                <td>Checklist</td>
+                                <td><input type="checkbox" name="selectedItems[]" value="{{ $item->id }}"></td>
                             @endif
-                            <th>No</th>
-                            <th>Check In Date</th>
-                            <th>Staff</th>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $item->check_in_date }}</td>
+                            <td>{{ $item->users->full_name }}</td>
                             @if (Auth::user()->role == 'ADMIN')
-                                <th>Action</th>
+                                <td>
+                                    <form action="{{ route('member-check-in.destroy', $item->id) }}"
+                                        onclick="return confirm('Delete Data ?')" method="POST">
+                                        @method('delete')
+                                        @csrf
+                                        <button type="submit" class="btn light btn-danger btn-xs mb-1">Delete</button>
+                                    </form>
+                                </td>
                             @endif
                         </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($memberRegistrationCheckIn as $item)
-                            <tr>
-                                @if (Auth::user()->role == 'ADMIN')
-                                    <td><input type="checkbox" name="selectedItems[]" value="{{ $item->id }}"></td>
-                                @endif
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $item->check_in_date }}</td>
-                                <td>{{ $item->users->full_name }}</td>
-                                @if (Auth::user()->role == 'ADMIN')
-                                    <td>
-                                        <form action="{{ route('member-check-in.destroy', $item->id) }}"
-                                            onclick="return confirm('Delete Data ?')" method="POST">
-                                            @method('delete')
-                                            @csrf
-                                            <button type="submit"
-                                                class="btn light btn-danger btn-xs mb-1">Delete</button>
-                                        </form>
-                                    </td>
-                                @endif
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-                @if (Auth::user()->srole == 'ADMIN')
-                    <button type="submit" class="btn btn-danger btn-sm"
-                        onclick="return confirm('Delete Data Checklist ?')">Delete Check</button>
-                @endif
-            </form>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

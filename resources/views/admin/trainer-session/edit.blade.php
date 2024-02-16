@@ -64,8 +64,11 @@
                         <div class="mb-3">
                             <label class="form-label">Start Date</label>
                             <input type="text" name="start_date"
+                                value="{{ old('start_date', DateFormat($trainerSession->start_date, 'DD MMMM YYYY')) }}"
+                                class="form-control mdate-custom">
+                            {{-- <input type="text" name="start_date"
                                 value="{{ old('start_date', date('Y-m-d', strtotime($trainerSession->start_date))) }}"
-                                class="form-control" id="mdate">
+                                class="form-control mdate-custom" id="mdate"> --}}
                         </div>
                     </div>
                     <div class="col-xl-3">
@@ -78,6 +81,33 @@
                                     autocomplete="off">
                                 <span class="input-group-text"><i class="far fa-clock"></i></span>
                             </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Method Payment</label>
+                            <select id="single-select10" name="method_payment_id" class="form-control">
+                                <option value="{{ $trainerSession->method_payment_id }}" selected>
+                                    {{ old('method_payment_id', $trainerSession->methodPayment->name) }}
+                                </option>
+                                @foreach ($methodPayment as $item)
+                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Fitness Consultant</label>
+                            <select id="single-select8" name="fc_id" class="form-control" required>
+                                <option value="{{ $trainerSession->fc_id }}" selected>
+                                    {{ old('fc_id', $trainerSession->fitnessConsultants->full_name) }}
+                                </option>
+                                @foreach ($fitnessConsultants as $item)
+                                    <option value="{{ $item->id }}">{{ $item->full_name }} |
+                                        {{ $item->phone_number }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                     <div class="col-xl-6">

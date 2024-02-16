@@ -89,6 +89,7 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     Route::resource('trainer-session-check-in', '\App\Http\Controllers\Trainer\TrainerSessionCheckInController');
     Route::put('trainer-session-freeze/{id}/freeze', [TrainerSessionController::class, 'freeze'])->name('trainer-session-freeze');
     Route::resource('running-session', '\App\Http\Controllers\Trainer\RunningSessionController');
+    Route::get('cutiTrainerSession/{id}', [TrainerSessionController::class, 'cuti'])->name('cutiTrainerSession');
 
     Route::resource('trainer-session-FO', '\App\Http\Controllers\Trainer\TrainerSessionFOController');
     Route::get('cetak-trainer-session-pdf', [TrainerSessionController::class, 'cetak_pdf'])->name('cetak-trainer-session-pdf');

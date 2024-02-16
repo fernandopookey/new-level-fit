@@ -21,6 +21,7 @@ class TrainerSession extends Model
         'trainer_id',
         'start_date',
         'days',
+        'old_days',
         'trainer_package_id',
         'package_price',
         'admin_price',

@@ -8,23 +8,103 @@
     <div class="card">
         <div class="card-body">
             <div class="teacher-deatails">
-                <h3 class="heading">Member:</h3>
+                <h3 class="heading">Personal Data :</h3>
 
                 <table class="table">
-                    <thead>
+                    <tbody>
                         <tr>
-                            <th scope="col"><b>Full Name</b></th>
-                            <th scope="col">{{ $trainerSession->members->full_name }}</th>
+                            <td scope="col">
+                                <h6>Full Name</h6>
+                            </td>
+                            <td scope="col">
+                                <span>{{ $trainerSession->members->full_name }}</span>
+                            </td>
+                            <td scope="col">
+                                <h6>Nick Name</h6>
+                            </td>
+                            <td scope="col">
+                                <span>{{ $trainerSession->members->nickname }}</span>
+                            </td>
                         </tr>
                         <tr>
-                            <th scope="col"><b>Member Code</b></th>
-                            <th scope="col">{{ $trainerSession->members->member_code }}</th>
+                            <td scope="col">
+                                <h6>Member Code</h6>
+                            </td>
+                            <td scope="col">
+                                <span>{{ $trainerSession->members->member_code }}</span>
+                            </td>
+                            <td scope="col">
+                                <h6>Gender</h6>
+                            </td>
+                            <td scope="col">
+                                <span>{{ $trainerSession->members->gender }}</span>
+                            </td>
                         </tr>
                         <tr>
-                            <th scope="col"><b>Phone Number</b></th>
-                            <th scope="col">{{ $trainerSession->members->phone_number }}</th>
+                            <td scope="col">
+                                <h6>Date of birth</h6>
+                            </td>
+                            <td scope="col">
+                                <span>{{ DateFormat($trainerSession->members->born, 'DD MMMM YYYY') }}</span>
+                            </td>
+                            <td scope="col">
+                                <h6>Phone Number</h6>
+                            </td>
+                            <td scope="col">
+                                <span>{{ $trainerSession->members->phone_number }}</span>
+                            </td>
                         </tr>
-                    </thead>
+                        <tr>
+                            <td scope="col">
+                                <h6>Email</h6>
+                            </td>
+                            <td scope="col">
+                                <span>{{ $trainerSession->members->email }}</span>
+                            </td>
+                            <td scope="col">
+                                <h6>Instagram</h6>
+                            </td>
+                            <td scope="col">
+                                <span>{{ $trainerSession->members->ig }}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td scope="col">
+                                <h6>Emergency Contact</h6>
+                            </td>
+                            <td scope="col">
+                                <span>{{ $trainerSession->members->emergency_contact }}</span>
+                            </td>
+                            <td scope="col">
+                                <h6>Address</h6>
+                            </td>
+                            <td scope="col">
+                                <span>{{ $trainerSession->members->address }}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td scope="col">
+                                <h6>Description</h6>
+                            </td>
+                            <td scope="col">
+                                <span>{{ $trainerSession->members->emergency_contact }}</span>
+                            </td>
+                            <td scope="col">
+                                <h6>Photos</h6>
+                            </td>
+                            <td scope="col">
+                                <div class="trans-list">
+                                    @if ($trainerSession->members->photos)
+                                        <img src="{{ Storage::url($item->photos) }}" class="lazyload" width="100"
+                                            alt="image">
+                                    @else
+                                        <img src="{{ asset('default.png') }}" class="lazyload" width="100"
+                                            alt="default image">
+                                    @endif
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -35,82 +115,104 @@
     <div class="card">
         <div class="card-body">
             <div class="teacher-deatails">
-                <h3 class="heading">Trainer Session Detail:</h3>
+                <h3 class="heading">Package Data & Other :</h3>
                 <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col"><b>Trainer Name</b></th>
-                            <th scope="col">{{ $trainerSession->personalTrainers->full_name }}</th>
-                        </tr>
-                        <tr>
-                            <th scope="col"><b>Session Total</b></th>
-                            <th scope="col">{{ $trainerSession->trainerPackages->number_of_session }}</th>
-                        </tr>
-                        <tr>
-                            <th scope="col"><b>Remaining Session</b></th>
-                            <th scope="col">{{ $remainingSessions }}</th>
-                        </tr>
-                        {{-- <tr>
-                            <th scope="col"><b>Status</b></th>
-                            <th scope="col">{{ $trainerSession->status }}</th>
-                        </tr> --}}
-                    </thead>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="col-xl-12">
-    <div class="card">
-        <div class="card-body">
-            <h3 class="heading">Check In:</h3>
-            <form action="{{ route('bulk-delete-trainer-session') }}" method="POST">
-                @csrf
-                @method('delete')
-                <table class="table">
-                    <thead>
-                        <tr>
-                            @if (Auth::user()->role == 'ADMIN')
-                                <td>Checklist</td>
-                            @endif
-                            <th>No</th>
-                            <th>Check In Date</th>
-                            <th>Staff</th>
-                            @if (Auth::user()->role == 'ADMIN')
-                                <th>Action</th>
-                            @endif
-                        </tr>
-                    </thead>
                     <tbody>
-                        @foreach ($checkInTrainerSession as $item)
-                            <tr>
-                                @if (Auth::user()->role == 'ADMIN')
-                                    <td><input type="checkbox" name="selectedItems[]" value="{{ $item->id }}"></td>
-                                @endif
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $item->check_in_date }}</td>
-                                <td>{{ $item->users->full_name }}</td>
-                                @if (Auth::user()->role == 'ADMIN')
-                                    <td>
-                                        <form action="{{ route('trainer-session-check-in.destroy', $item->id) }}"
-                                            onclick="return confirm('Delete Data ?')" method="POST">
-                                            @method('delete')
-                                            @csrf
-                                            <button type="submit"
-                                                class="btn light btn-danger btn-xs mb-1">Delete</button>
-                                        </form>
-                                @endif
-                                </td>
-                            </tr>
-                        @endforeach
+                        <tr>
+                            <td scope="col">
+                                <h6>PT by</h6>
+                            </td>
+                            <td scope="col">
+                                <span>{{ $trainerSession->personalTrainers->full_name }}</span>
+                            </td>
+                            <td scope="col">
+                                <h6>Trainer Phone Number</h6>
+                            </td>
+                            <td scope="col">
+                                <span>{{ $trainerSession->personalTrainers->phone_number }}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td scope="col">
+                                <h6>Session Total</h6>
+                            </td>
+                            <td scope="col">
+                                <span>{{ $trainerSession->number_of_session }}</span>
+                            </td>
+                            <td scope="col">
+                                <h6>Remaining Session</h6>
+                            </td>
+                            <td scope="col">
+                                <span>{{ $trainerSessionss->remaining_sessions }}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td scope="col">
+                                <h6>Number of Days</h6>
+                            </td>
+                            <td scope="col">
+                                <span>{{ $trainerSession->days }}</span>
+                            </td>
+                            <td scope="col">
+                                <h6>Package Price</h6>
+                            </td>
+                            <td scope="col">
+                                <span>{{ formatRupiah($trainerSession->package_price) }}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td scope="col">
+                                <h6>Start Date</h6>
+                            </td>
+                            <td scope="col">
+                                <span>{{ DateFormat($trainerSession->start_date, 'DD MMMM YYYY') }}</span>
+                            </td>
+                            <td scope="col">
+                                <h6>Expired Date</h6>
+                            </td>
+                            <td scope="col">
+                                <span>{{ DateFormat($trainerSessionss->expired_date, 'DD MMMM YYYY') }}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td scope="col">
+                                <h6>Method Payment</h6>
+                            </td>
+                            <td scope="col">
+                                <span>{{ $trainerSessionss->method_payment_name }}</span>
+                            </td>
+                            <td scope="col">
+                                <h6>Trainer Package Description</h6>
+                            </td>
+                            <td scope="col">
+                                <span>{{ $trainerSession->trainerPackages->description }}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td scope="col">
+                                <h6>Trainer Session Description</h6>
+                            </td>
+                            <td scope="col">
+                                <span>{{ $trainerSession->description }}</span>
+                            </td>
+                            <td scope="col">
+                                <h6>Fitness Consultant</h6>
+                            </td>
+                            <td scope="col">
+                                <span>{{ $trainerSession->fitnessConsultants->full_name }}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td scope="col">
+                                <h6>Staff</h6>
+                            </td>
+                            <td scope="col">
+                                <span>{{ $trainerSession->users->full_name }}</span>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
-                @if (Auth::user()->role == 'ADMIN')
-                    <button type="submit" class="btn btn-danger btn-sm"
-                        onclick="return confirm('Delete Data Checklist ?')">Delete Check</button>
-                @endif
-            </form>
+            </div>
         </div>
     </div>
 </div>
