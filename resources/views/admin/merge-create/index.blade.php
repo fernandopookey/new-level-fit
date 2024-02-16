@@ -18,7 +18,7 @@
 <div class="row" id="memberForm">
     <div class="card">
         <div class="card-body">
-            <form action="{{ route('members.store') }}" method="POST" enctype="multipart/form-data" id="memberForm">
+            <form action="{{ route('members.store') }}" method="POST" enctype="multipart/form-data" id="addMemberForm">
                 @csrf
                 <h3>Create Member</h3>
                 @if ($errors->any())
@@ -149,8 +149,7 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-between">
-                    {{-- <button type="submit" class="btn btn-primary">Save</button> --}}
-                    <button type="button" id="submitButton" class="btn btn-primary">Save</button>
+                    <button type="button" id="submitButton" class="btn btn-primary">Save Mem</button>
                     <a href="{{ route('members.index') }}" class="btn btn-info text-right">Member
                         List</a>
                 </div>
@@ -405,14 +404,10 @@
     </div>
 </div>
 
-
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var memberForm = document.getElementById('memberForm');
-        var submitButton = document.getElementById('submitButton');
-        submitButton.addEventListener('click', function(event) {
-            event.preventDefault();
-            memberForm.submit();
-        });
+    // Event listener untuk tombol Save
+    document.getElementById('submitButton').addEventListener('click', function() {
+        // Menyimpan data formulir dengan mengarahkan ke URL yang ditentukan dalam properti action
+        document.getElementById('addMemberForm').submit();
     });
 </script>
