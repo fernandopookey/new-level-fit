@@ -18,8 +18,7 @@
 <div class="row" id="memberForm">
     <div class="card">
         <div class="card-body">
-            <form action="{{ route('members.store') }}" method="POST" onkeypress="return event.keyCode != 13"
-                enctype="multipart/form-data">
+            <form action="{{ route('members.store') }}" method="POST" enctype="multipart/form-data" id="memberForm">
                 @csrf
                 <h3>Create Member</h3>
                 @if ($errors->any())
@@ -151,7 +150,7 @@
                 </div>
                 <div class="d-flex justify-content-between">
                     {{-- <button type="submit" class="btn btn-primary">Save</button> --}}
-                    <button type="button" class="btn btn-primary">Save</button>
+                    <button type="button" id="submitButton" class="btn btn-primary">Save</button>
                     <a href="{{ route('members.index') }}" class="btn btn-info text-right">Member
                         List</a>
                 </div>
@@ -407,7 +406,7 @@
 </div>
 
 
-{{-- <script>
+<script>
     document.addEventListener('DOMContentLoaded', function() {
         var memberForm = document.getElementById('memberForm');
         var submitButton = document.getElementById('submitButton');
@@ -416,4 +415,4 @@
             memberForm.submit();
         });
     });
-</script> --}}
+</script>
