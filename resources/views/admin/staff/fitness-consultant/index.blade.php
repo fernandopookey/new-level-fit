@@ -197,7 +197,9 @@
                                     <th>Address</th>
                                     <th>Description</th>
                                     <th>Staff</th>
-                                    <th>Action</th>
+                                    @if (Auth::user()->role == 'ADMIN')
+                                        <th>Action</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -227,23 +229,26 @@
                                         <td>
                                             <h6>{{ $item->users->full_name }}</h6>
                                         </td>
-                                        <td>
-                                            <div>
-                                                <button type="button"
-                                                    class="btn light btn-warning btn-xs mb-1 btn-block"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#modalEditFitnessConsultant{{ $item->id }}">
-                                                    Edit
-                                                </button>
-                                                <form action="{{ route('fitness-consultant.destroy', $item->id) }}"
-                                                    onclick="return confirm('Delete Data ? ')" method="POST">
-                                                    @method('delete')
-                                                    @csrf
-                                                    <button type="submit"
-                                                        class="btn light btn-danger btn-xs btn-block">Delete</button>
-                                                </form>
-                                            </div>
-                                        </td>
+                                        @if (Auth::user()->role == 'ADMIN')
+                                            <td>
+                                                <div>
+                                                    <button type="button"
+                                                        class="btn light btn-warning btn-xs mb-1 btn-block"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#modalEditFitnessConsultant{{ $item->id }}">
+                                                        Edit
+                                                    </button>
+                                                    <form
+                                                        action="{{ route('fitness-consultant.destroy', $item->id) }}"
+                                                        onclick="return confirm('Delete Data ? ')" method="POST">
+                                                        @method('delete')
+                                                        @csrf
+                                                        <button type="submit"
+                                                            class="btn light btn-danger btn-xs btn-block">Delete</button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>

@@ -18,14 +18,15 @@
                         <thead>
                             <tr>
                                 <th>Package Name</th>
-                                {{-- <th>Package Type</th> --}}
                                 <th>Number Of Session</th>
                                 <th>Number Of Days</th>
                                 <th>Package Price</th>
                                 <th>Admin Price</th>
                                 <th>Description</th>
                                 <th>Staff</th>
-                                <th>Action</th>
+                                @if (Auth::user()->role == 'ADMIN')
+                                    <th>Action</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -34,10 +35,6 @@
                                     <td>
                                         <h6>{{ $item->package_name }}</h6>
                                     </td>
-                                    {{-- <td>
-                                        <h6>{{ !empty($item->trainerPackageType->package_type_name) ? $item->trainerPackageType->package_type_name : 'Package type name has  been deleted' }}
-                                        </h6>
-                                    </td> --}}
                                     <td>
                                         <h6>{{ $item->number_of_session }}</h6>
                                     </td>
@@ -56,22 +53,26 @@
                                     <td>
                                         <h6>{{ $item->users->full_name }}</h6>
                                     </td>
-                                    <td>
-                                        <div>
-                                            <button type="button" class="btn light btn-warning btn-xs mb-1 btn-block"
-                                                data-bs-toggle="modal" data-bs-target="#modalEdit{{ $item->id }}">
-                                                Edit
-                                            </button>
-                                            <form action="{{ route('trainer-package.destroy', $item->id) }}"
-                                                onclick="return confirm('Delete Member Package Data ? ')"
-                                                method="POST">
-                                                @method('delete')
-                                                @csrf
-                                                <button type="submit"
-                                                    class="btn light btn-danger btn-xs btn-block">Delete</button>
-                                            </form>
-                                        </div>
-                                    </td>
+                                    @if (Auth::user()->role == 'ADMIN')
+                                        <td>
+                                            <div>
+                                                <button type="button"
+                                                    class="btn light btn-warning btn-xs mb-1 btn-block"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalEdit{{ $item->id }}">
+                                                    Edit
+                                                </button>
+                                                <form action="{{ route('trainer-package.destroy', $item->id) }}"
+                                                    onclick="return confirm('Delete Member Package Data ? ')"
+                                                    method="POST">
+                                                    @method('delete')
+                                                    @csrf
+                                                    <button type="submit"
+                                                        class="btn light btn-danger btn-xs btn-block">Delete</button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>

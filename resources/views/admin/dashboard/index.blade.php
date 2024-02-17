@@ -24,7 +24,7 @@
 
 <div class="row">
 
-    <div class="col-xl-3 col-sm-6">
+    <div class="col-xl-6 col-sm-6">
         <div class="card">
             <div class="card-body">
                 <ul class="d-flex align-items-center">
@@ -47,7 +47,7 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-3 col-sm-6">
+    {{-- <div class="col-xl-3 col-sm-6">
         <div class="card">
             <div class="card-body">
                 <ul class="d-flex align-items-center">
@@ -69,8 +69,8 @@
                 </ul>
             </div>
         </div>
-    </div>
-    <div class="col-xl-3 col-sm-6">
+    </div> --}}
+    <div class="col-xl-6 col-sm-6">
         <div class="card">
             <div class="card-body">
                 <ul class="d-flex align-items-center">
@@ -93,7 +93,7 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-3 col-sm-6">
+    {{-- <div class="col-xl-3 col-sm-6">
         <div class="card">
             <div class="card-body">
                 <ul class="d-flex align-items-center">
@@ -115,7 +115,7 @@
                 </ul>
             </div>
         </div>
-    </div>
+    </div> --}}
 </div>
 
 <hr />
@@ -123,7 +123,7 @@
 
 {{-- MEMBER --}}
 <div class="row">
-    <div class="col-xl-4 col-xxl-6 col-lg-6 col-sm-6">
+    <div class="col-xl-4 col-xxl-4 col-lg-4 col-sm-4">
         <div class="widget-stat card bg-primary">
             <div class="card-body p-4">
                 <div class="media">
@@ -138,7 +138,7 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-4 col-xxl-6 col-lg-6 col-sm-6">
+    <div class="col-xl-4 col-xxl-4 col-lg-4 col-sm-4">
         <div class="widget-stat card bg-info">
             <div class="card-body  p-4">
                 <div class="media">
@@ -153,7 +153,7 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-4 col-xxl-6 col-lg-6 col-sm-6">
+    <div class="col-xl-4 col-xxl-4 col-lg-4 col-sm-4">
         <div class="widget-stat card bg-danger">
             <div class="card-body p-4">
                 <div class="media">
@@ -172,7 +172,7 @@
 
 {{-- TRAINER --}}
 <div class="row">
-    <div class="col-xl-4 col-xxl-6 col-lg-6 col-sm-6">
+    <div class="col-xl-4 col-xxl-4 col-lg-6 col-sm-6">
         <div class="widget-stat card bg-primary">
             <div class="card-body p-4">
                 <div class="media">
@@ -187,7 +187,7 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-4 col-xxl-6 col-lg-6 col-sm-6">
+    <div class="col-xl-4 col-xxl-4 col-lg-6 col-sm-6">
         <div class="widget-stat card bg-info">
             <div class="card-body  p-4">
                 <div class="media">
@@ -202,7 +202,7 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-4 col-xxl-6 col-lg-6 col-sm-6">
+    <div class="col-xl-4 col-xxl-4 col-lg-6 col-sm-6">
         <div class="widget-stat card bg-danger">
             <div class="card-body  p-4">
                 <div class="media">

@@ -38,10 +38,10 @@
             <div class="d-flex flex-column-auto flex-column pt-lg-40 pt-15">
                 {{-- <div class="text-center mb-lg-4 mb-2 pt-5 logo"> --}}
                 <div class="text-center pt-5 logo">
+                    <h3 class="mb-2 text-white">Selamat Datang di</h3>
                     {{-- <img src="/admingym/images/logo-white.png" alt=""> --}}
-                    <h1 class="text-white">Level-Fit</h1>
+                    <h1 class="text-white">Level-Fit Management System</h1>
                 </div>
-                <h3 class="mb-2 text-white">Welcome back!</h3>
                 {{-- <p class="mb-4">User Experience & Interface Design <br>Strategy SaaS Solutions</p> --}}
             </div>
             <div class="aside-image position-relative"

@@ -178,7 +178,9 @@
                                     <th>Full Name</th>
                                     <th>Email</th>
                                     <th>Gender</th>
-                                    <th>Action</th>
+                                    @if (Auth::user()->role == 'ADMIN')
+                                        <th>Action</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -193,23 +195,25 @@
                                         <td>
                                             <h6>{{ $item->gender }}</h6>
                                         </td>
-                                        <td>
-                                            <div>
-                                                <button type="button"
-                                                    class="btn light btn-warning btn-xs mb-1 btn-block"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#modalEditCustomerService{{ $item->id }}">
-                                                    Edit
-                                                </button>
-                                                <form action="{{ route('customer-service.destroy', $item->id) }}"
-                                                    onclick="return confirm('Delete Data ? ')" method="POST">
-                                                    @method('delete')
-                                                    @csrf
-                                                    <button type="submit"
-                                                        class="btn light btn-danger btn-xs btn-block">Delete</button>
-                                                </form>
-                                            </div>
-                                        </td>
+                                        @if (Auth::user()->role == 'ADMIN')
+                                            <td>
+                                                <div>
+                                                    <button type="button"
+                                                        class="btn light btn-warning btn-xs mb-1 btn-block"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#modalEditCustomerService{{ $item->id }}">
+                                                        Edit
+                                                    </button>
+                                                    <form action="{{ route('customer-service.destroy', $item->id) }}"
+                                                        onclick="return confirm('Delete Data ? ')" method="POST">
+                                                        @method('delete')
+                                                        @csrf
+                                                        <button type="submit"
+                                                            class="btn light btn-danger btn-xs btn-block">Delete</button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>

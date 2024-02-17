@@ -138,12 +138,14 @@
                     <li><a href="{{ route('report-gym.index') }}">GYM Club</a></li>
                 </ul>
             </li> --}}
-            <li>
-                <a href="{{ route('staff.index') }}" href="javascript:void(0);" aria-expanded="false">
-                    <i class="material-symbols-outlined">person</i>
-                    <span class="nav-text">Staff List</span>
-                </a>
-            </li>
+            @if (Auth::user()->role == 'ADMIN')
+                <li>
+                    <a href="{{ route('staff.index') }}" href="javascript:void(0);" aria-expanded="false">
+                        <i class="material-symbols-outlined">person</i>
+                        <span class="nav-text">Staff List</span>
+                    </a>
+                </li>
+            @endif
             <li>
                 <a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
                     <i class="material-icons"> insert_drive_file </i>
