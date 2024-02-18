@@ -149,7 +149,7 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <button type="button" id="submitButton" class="btn btn-primary">Save Mem</button>
+                    <button type="button" id="submitButton" class="btn btn-primary">Save</button>
                     <a href="{{ route('members.index') }}" class="btn btn-info text-right">Member
                         List</a>
                 </div>
