@@ -121,15 +121,6 @@
                             </div>
                             <div class="col-xl-6">
                                 <div class="mb-3">
-                                    <label for="exampleFormControlTextarea1" class="form-label text-primary">
-                                        Description
-                                    </label>
-                                    <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="6"
-                                        placeholder="Enter Description" disabled>{{ old('description', $item->description) }}</textarea>
-                                </div>
-                            </div>
-                            <div class="col-xl-6">
-                                <div class="mb-3">
                                     <label for="formFile" class="form-label">Photo</label>
                                     <input class="form-control" type="file" name="photos"
                                         onchange="loadFile(event)" id="formFile">

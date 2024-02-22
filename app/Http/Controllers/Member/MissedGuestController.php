@@ -26,11 +26,8 @@ class MissedGuestController extends Controller
                 'a.emergency_contact',
                 'a.address',
                 'a.status',
-                'a.description',
                 'a.photos',
-                'b.full_name as user_full_name'
             )
-            ->join('users as b', 'a.user_id', '=', 'b.id')
             ->where('a.status', '=', 'missed_guest')
             ->get();
 

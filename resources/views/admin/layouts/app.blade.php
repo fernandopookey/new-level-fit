@@ -24,17 +24,8 @@
     {{-- Floating --}}
     @include('admin.includes.sidebar')
 
-    {{-- Notify --}}
-    {{-- @include('sweetalert::alert')
-    @include('notify::messages')
-    <x:notify-messages />
-    @notifyJs --}}
-
     {{-- Page Content --}}
     @yield('content')
-
-    {{-- Last Footer --}}
-    {{-- @include('user.includes.last-footer') --}}
 
     {{-- Script --}}
     @stack('prepend-script')

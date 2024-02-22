@@ -8,6 +8,7 @@ use App\Models\Staff\FitnessConsultant;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class MemberRegistration extends Model
 {
@@ -57,5 +58,12 @@ class MemberRegistration extends Model
     public function memberRegistrationCheckIn()
     {
         return $this->hasMany(CheckInMember::class);
+    }
+
+    public static function getList()
+    {
+        $sql = "";
+
+        return DB::select($sql);
     }
 }

@@ -186,13 +186,13 @@
                                             </h6>
                                         </td>
                                         <td>
-                                            {{-- @if ($item->check_in_time == null && $item->check_out_time == null)
-                                                <span class="badge badge-primary">Null</span>
+                                            @if ((!$item->check_in_time && !$item->check_out_time) || ($item->check_in_time && $item->check_out_time))
+                                                <span class="badge badge-info">Not Start</span>
                                             @elseif ($item->check_in_time != null && $item->check_out_time == null)
-                                                <span class="badge badge-danger">Running</span>
-                                            @else
+                                                <span class="badge badge-primary">Running</span>
+                                            @elseif($item->check_in_time != null && $item->check_out_time != null)
                                                 <span class="badge badge-danger">Over</span>
-                                            @endif --}}
+                                            @endif
                                         <td>
                                             <h6>{{ $item->staff_name }}</h6>
                                         </td>
@@ -216,9 +216,11 @@
                                                     data-bs-toggle="modal"
                                                     data-bs-target=".freeze{{ $item->id }}"
                                                     id="checkInButton">Freeze</button>
+                                                <a href="{{ route('renewal', $item->id) }}"
+                                                    class="btn light btn-dark btn-xs mb-1 btn-block">Renewal</a>
                                                 @if (Auth::user()->role == 'ADMIN')
                                                     <form action="{{ route('member-active.destroy', $item->id) }}"
-                                                        onclick="return confirm('Delete Data ?')" method="POST">
+                                                        method="POST">
                                                         @method('delete')
                                                         @csrf
                                                         <button type="submit"
