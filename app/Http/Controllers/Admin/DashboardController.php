@@ -223,7 +223,7 @@ class DashboardController extends Controller
             ->count();
 
         $data = [
-            'title'                             => 'Dashboard Admin Gelora GYM',
+            'title'                             => 'Dashboard Admin Level FIT',
             'totalMember'                       => Member::count(),
             'memberRegistration'                => MemberRegistration::count(),
             'runningRegistrationsMemberCount'   => $runningRegistrationsMemberCount,

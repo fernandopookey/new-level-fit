@@ -12,12 +12,13 @@ use App\Models\Staff\FitnessConsultant;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
-
+use RealRashid\SweetAlert\Facades\Alert;
 
 class MemberRegistrationController extends Controller
 {
@@ -69,9 +70,12 @@ class MemberRegistrationController extends Controller
             )
             ->join('fitness_consultants as g', 'a.fc_id', '=', 'g.id')
             // ->leftJoin('check_in_members as h', 'a.id', '=', 'h.member_registration_id')
-            ->leftJoin(DB::raw('(SELECT member_registration_id, MAX(check_in_time) as check_in_time, MAX(check_out_time) as check_out_time FROM check_in_members GROUP BY member_registration_id) as h'), 'a.id', '=', 'h.member_registration_id')
+            //->leftJoin(DB::raw('(SELECT member_registration_id, MAX(check_in_time) as check_in_time, MAX(check_out_time) as check_out_time FROM check_in_members GROUP BY member_registration_id) as h'), 'a.id', '=', 'h.member_registration_id')
+            ->leftJoin(DB::raw('(select * from (select a.* from (select * from check_in_members) as a inner join (SELECT max(id) as id FROM check_in_members group by member_registration_id) as b on a.id=b.id) as tableH) as h'), 'a.id', '=', 'h.member_registration_id')
+
             ->whereRaw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END = ?', ['Running'])
-            ->orderBy('status', 'desc')
+            ->orderBy('check_out_time', 'desc')
+            ->orderBy('check_in_time', 'desc')
             ->get();
 
 
@@ -92,7 +96,6 @@ class MemberRegistrationController extends Controller
                 $birthdayMessage2 = $birthdayMessage2 . $memberRegistration->member_name . '';
             }
         }
-
         $data = [
             'title'                 => 'Member Active List',
             'memberRegistrations'   => $memberRegistrations,
@@ -122,95 +125,139 @@ class MemberRegistrationController extends Controller
         return view('admin.layouts.wrapper', $data);
     }
 
-    public function store(Request $request)
-    {
-        $data = $request->validate([
-            'full_name'             => 'required',
-            'gender'                => 'required',
-            'phone_number'          => 'required',
-            'member_package_id'     => 'required|exists:member_packages,id',
-            'start_date'            => '',
-            'expired_date'          => '',
-            'method_payment_id'     => 'required|exists:method_payments,id',
-            'fc_id'                 => 'required|exists:fitness_consultants,id',
-            'refferal_id'           => 'required|exists:fitness_consultants,id',
-            'status'                => 'required',
-            'description'           => '',
-            'photos'                => 'mimes:png,jpg,jpeg|max:2048'
-        ]);
-
-        $member = $request->member_code;
-        $memberCode = 'GG-' . $member . '-M';
-
-        $existingRecord = Member::where('member_code', $memberCode)->first();
-
-        if ($existingRecord) {
-            return redirect()->back()->with('error', 'Code already exists');
-        }
-
-        if ($request->hasFile('photos')) {
-
-            if ($request->photos != null) {
-                $realLocation = "storage/" . $request->photos;
-                if (file_exists($realLocation) && !is_dir($realLocation)) {
-                    unlink($realLocation);
-                }
-            }
-
-            $photos = $request->file('photos');
-            $file_name = time() . '-' . $photos->getClientOriginalName();
-
-            $data['photos'] = $request->file('photos')->store('assets/member', 'public');
-        } else {
-            $data['photos'] = $request->photos;
-        }
-
-        $data['member_code'] = 'GG-' . $member . '-M';
-
-        Member::create($data);
-        return redirect()->route('member-expired.index')->with('message', 'Member Added Successfully');
-    }
-
     public function memberSecondStore(Request $request)
     {
-        $data = $request->validate(
-            [
-                'member_id'             => 'required|exists:members,id',
+        DB::beginTransaction();
+        try {
+            $data = $request->validate([
+                'full_name'             => 'required',
+                'phone_number'          => 'required',
+                'status'                => 'required',
+                'nickname'              => 'nullable',
+                'born'                  => 'nullable',
+                'email'                 => 'nullable',
+                'ig'                    => 'nullable',
+                'emergency_contact'     => 'nullable',
+                'gender'                => 'nullable',
+                'address'               => 'nullable',
+                'photos'                => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 'member_package_id'     => 'required|exists:member_packages,id',
                 'start_date'            => 'required',
                 'start_time'            => 'required',
                 'method_payment_id'     => 'required|exists:method_payments,id',
-                'refferal_id'           => 'nullable',
+                'fc_id'                 => 'required|exists:fitness_consultants,id',
                 'description'           => 'nullable',
-                'user_id'               => 'nullable',
-                'fc_id'                      => 'required|exists:fitness_consultants,id',
-                'member_code'           => [
-                    '',
-                    Rule::exists('members', 'member_code')->where(function ($query) use ($request) {
-                        $query->where('member_code', $request->member_code);
-                    }),
+                'member_code' => [
+                    'nullable',
+                    function ($attribute, $value, $fail) {
+                        if ($value) {
+                            $exists = Member::where('member_code', $value)->exists();
+                            if ($exists) {
+                                $fail('The member code has already been taken.');
+                            }
+                        }
+                    }
                 ],
-            ],
-            [
-                'member_code.exists' => 'Member code doesn\'t exist. Please input a valid member code.',
-            ]
-        );
+            ]);
 
-        $package = MemberPackage::findOrFail($data['member_package_id']);
-        $data['user_id'] = Auth::user()->id;
-        $data['package_price'] = $package->package_price;
+            if ($request->hasFile('photos')) {
+                if ($request->photos != null) {
+                    $realLocation = "storage/" . $request->photos;
+                    if (file_exists($realLocation) && !is_dir($realLocation)) {
+                        unlink($realLocation);
+                    }
+                }
+                $photos = $request->file('photos');
+                $file_name = time() . '-' . $photos->getClientOriginalName();
 
-        $data['start_date'] =  $data['start_date'] . ' ' .  $data['start_time'];
-        $dateTime = new \DateTime($data['start_date']);
-        $data['start_date'] = $dateTime->format('Y-m-d H:i:s');
-        unset($data['start_time']);
+                $data['photos'] = $request->file('photos')->store('assets/member', 'public');
+            } else {
+                $data['photos'] = $request->photos;
+            }
 
-        $data['admin_price'] = $package->admin_price;
-        $data['days'] = $package->days;
+            // if ($request->hasFile('photos')) {
+            //     $image = $request->file('photos');
+            //     $imageName = time() . '.' . $image->getClientOriginalExtension();
+            //     $image->move(public_path('images'), $imageName);
+            //     $data['photos'] = $imageName;
+            // }
 
-        MemberRegistration::create($data);
-        return redirect()->back()->with('message', 'Member Registration Added Successfully');
+            $data['born'] = Carbon::parse($data['born'])->format('Y-m-d');
+
+            $package = MemberPackage::findOrFail($data['member_package_id']);
+            $data['package_price'] = $package->package_price;
+
+            $data['user_id'] = Auth::user()->id;
+
+            $data['start_date'] =  $data['start_date'] . ' ' .  $data['start_time'];
+            $dateTime = new \DateTime($data['start_date']);
+            $data['start_date'] = $dateTime->format('Y-m-d H:i:s');
+            unset($data['start_time']);
+
+            $data['admin_price'] = $package->admin_price;
+            $data['days'] = $package->days;
+
+            $newMember = Member::create(array_intersect_key($data, array_flip([
+                'full_name', 'phone_number', 'status', 'nickname',
+                'born', 'member_code', 'email', 'ig', 'emergency_contact', 'gender', 'address', 'photos'
+            ])));
+
+            $data['member_id'] = $newMember->id;
+
+            MemberRegistration::create(array_intersect_key($data, array_flip([
+                'member_id', 'member_package_id', 'start_date',
+                'method_payment_id', 'fc_id', 'user_id', 'description', 'package_price', 'admin_price', 'days'
+            ])));
+
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Member Registration Added Successfully');
+        } catch (Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
     }
+
+    // public function memberSecondStore(Request $request)
+    // {
+    //     $data = $request->validate(
+    //         [
+    //             'member_id'             => 'required|exists:members,id',
+    //             'member_package_id'     => 'required|exists:member_packages,id',
+    //             'start_date'            => 'required',
+    //             'start_time'            => 'required',
+    //             'method_payment_id'     => 'required|exists:method_payments,id',
+    //             'refferal_id'           => 'nullable',
+    //             'description'           => 'nullable',
+    //             'user_id'               => 'nullable',
+    //             'fc_id'                      => 'required|exists:fitness_consultants,id',
+    //             'member_code'           => [
+    //                 '',
+    //                 Rule::exists('members', 'member_code')->where(function ($query) use ($request) {
+    //                     $query->where('member_code', $request->member_code);
+    //                 }),
+    //             ],
+    //         ],
+    //         [
+    //             'member_code.exists' => 'Member code doesn\'t exist. Please input a valid member code.',
+    //         ]
+    //     );
+
+    //     $package = MemberPackage::findOrFail($data['member_package_id']);
+    //     $data['user_id'] = Auth::user()->id;
+    //     $data['package_price'] = $package->package_price;
+
+    //     $data['start_date'] =  $data['start_date'] . ' ' .  $data['start_time'];
+    //     $dateTime = new \DateTime($data['start_date']);
+    //     $data['start_date'] = $dateTime->format('Y-m-d H:i:s');
+    //     unset($data['start_time']);
+
+    //     $data['admin_price'] = $package->admin_price;
+    //     $data['days'] = $package->days;
+
+    //     MemberRegistration::create($data);
+    //     return redirect()->back()->with('message', 'Member Registration Added Successfully');
+    // }
 
     public function show($id)
     {
@@ -284,6 +331,65 @@ class MemberRegistrationController extends Controller
         return view('admin.layouts.wrapper', $data);
     }
 
+    public function renewal(string $id)
+    {
+        $data = [
+            'title'                 => 'Renewal Member Active',
+            'memberRegistration'    => MemberRegistration::find($id),
+            'members'               => Member::get(),
+            'memberLastCode'        => Member::latest('id')->first(),
+            'memberPackage'         => MemberPackage::get(),
+            'methodPayment'         => MethodPayment::get(),
+            'fitnessConsultant'     => FitnessConsultant::get(),
+            'content'               => 'admin/member-registration/renewal',
+        ];
+
+        return view('admin.layouts.wrapper', $data);
+    }
+
+    public function renewMemberRegistration(Request $request, $id)
+    {
+        DB::beginTransaction();
+        try {
+            $memberRegistration = MemberRegistration::findOrFail($id);
+
+            $data = $request->validate([
+                'member_package_id' => 'required|exists:member_packages,id',
+                'start_date'        => 'required',
+                'method_payment_id' => 'required|exists:method_payments,id',
+                'fc_id'             => 'required|exists:fitness_consultants,id',
+                'start_time'        => 'required',
+                'description'       => 'nullable',
+            ]);
+
+            $package = MemberPackage::findOrFail($data['member_package_id']);
+            $data['package_price'] = $package->package_price;
+
+            $data['user_id'] = Auth::user()->id;
+
+            $data['start_date'] =  $data['start_date'] . ' ' .  $data['start_time'];
+            $dateTime = new \DateTime($data['start_date']);
+            $data['start_date'] = $dateTime->format('Y-m-d H:i:s');
+            unset($data['start_time']);
+
+            $data['admin_price'] = $package->admin_price;
+            $data['days'] = $package->days;
+
+
+            $data['member_id'] = $memberRegistration->member_id;
+
+            MemberRegistration::create($data);
+
+            DB::commit();
+
+            return redirect()->route('member-active.index')->with('success', 'Renewal Successfully');
+        } catch (Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
+
     public function update(Request $request, string $id)
     {
         $item = MemberRegistration::find($id);
@@ -330,10 +436,10 @@ class MemberRegistrationController extends Controller
 
     public function destroy(MemberRegistration $memberRegistration)
     {
-        // dd($memberRegistration);
         try {
             $memberRegistration->delete();
-            return redirect()->back()->with('message', 'Member Registration Deleted Successfully');
+            return redirect()->back()->with('success', 'Member Registration Deleted Successfully');
+            // return redirect(route('member-active.index'))->with('success', 'Data Member Berhasil Di hapus');
         } catch (\Throwable $e) {
             return redirect()->back()->with('error', 'Deleted Failed, Delete Member Check In First');
         }

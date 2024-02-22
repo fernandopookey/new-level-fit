@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class Member extends Model
 {
     use HasFactory;
+    public $timestamps = false;
 
     protected $fillable = [
         'full_name',
@@ -25,7 +26,6 @@ class Member extends Model
         'status',
         'description',
         'photos',
-        'user_id',
         'status'
     ];
 

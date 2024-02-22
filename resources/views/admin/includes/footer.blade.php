@@ -154,6 +154,23 @@
 <!-- clockpicker -->
 <script src="{{ asset('admingym/vendor/clockpicker/js/bootstrap-clockpicker.min.js') }}"></script>
 
+<script src="{{ asset('admingym/sweetalert.min.js') }}"></script>
+{{-- <script>
+    confirmDelete = function(button) {
+        var url = $(button).data('url');
+        swal({
+            'title': 'Konfirmasi Hapus',
+            'text': 'Apakah Kamu Yakin Ingin Menghapus Data Ini?',
+            'dangermode': true,
+            'buttons': true
+        }).then(function(value) {
+            if (value) {
+                window.location = url;
+            }
+        })
+    }
+</script> --}}
+
 {{-- Datatables --}}
 {{-- <script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script> --}}
 {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> --}}
@@ -168,11 +185,22 @@
 </script>
 
 
-<script>
+{{-- <script>
     @if (Session::has('success'))
         toastr.success("{{ Session::get('success') }}")
     @endif
-</script>
+</script> --}}
+
+@if (Session::has('success'))
+    <script>
+        swal({
+            title: "Success!",
+            text: "{{ Session::get('success') }}",
+            icon: "success",
+            button: "OK",
+        });
+    </script>
+@endif
 
 <script>
     $(document).ready(function() {
@@ -289,31 +317,7 @@
     });
 </script>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var defaultDate = new Date();
-        var formattedDate = defaultDate.getFullYear() + '-' + ('0' + (defaultDate.getMonth() + 1)).slice(-2) +
-            '-' + ('0' + defaultDate.getDate()).slice(-2);
-        document.getElementsByClassName("editDate2")[0].value = formattedDate;
-
-        var defaultTime = defaultDate.getHours() + ':' + ('0' + defaultDate.getMinutes()).slice(-2);
-        document.getElementsByClassName("editTime2")[0].value = defaultTime;
-    });
-</script>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var defaultDate = new Date();
-        var formattedDate = defaultDate.getFullYear() + '-' + ('0' + (defaultDate.getMonth() + 1)).slice(-2) +
-            '-' + ('0' + defaultDate.getDate()).slice(-2);
-        document.getElementsByClassName("editDate3")[0].value = formattedDate;
-
-        var defaultTime = defaultDate.getHours() + ':' + ('0' + defaultDate.getMinutes()).slice(-2);
-        document.getElementsByClassName("editTime3")[0].value = defaultTime;
-    });
-</script>
-
-<script>
+{{-- <script>
     document.addEventListener("DOMContentLoaded", function() {
         var defaultDate = new Date();
         var formattedDate = defaultDate.getFullYear() + '-' + ('0' + (defaultDate.getMonth() + 1)).slice(-2) +
@@ -323,7 +327,7 @@
         var defaultTime = defaultDate.getHours() + ':' + ('0' + defaultDate.getMinutes()).slice(-2);
         document.getElementsByName("start_time2")[0].value = defaultTime;
     });
-</script>
+</script> --}}
 
 <script>
     function showForm(formId) {
@@ -347,83 +351,6 @@
         $(this).find('[autofocus]').focus();
     });
 </script>
-
-{{-- <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        document.getElementById("deleteSelected").addEventListener("click", function() {
-            var selectedCheckboxes = document.querySelectorAll(
-                'input[name="selectedMembers[]"]:checked');
-
-            if (selectedCheckboxes.length > 0) {
-                if (confirm("Delete selected data ?")) {
-                    var deleteForm = document.createElement("form");
-                    deleteForm.action = "{{ route('delete-selected-members') }}";
-                    deleteForm.method = "post";
-                    deleteForm.style.display = "none";
-
-                    var csrfTokenInput = document.createElement("input");
-                    csrfTokenInput.type = "hidden";
-                    csrfTokenInput.name = "_token";
-                    csrfTokenInput.value = "{{ csrf_token() }}";
-                    deleteForm.appendChild(csrfTokenInput);
-
-                    selectedCheckboxes.forEach(function(checkbox) {
-                        var input = document.createElement("input");
-                        input.type = "hidden";
-                        input.name = "selectedMembers[]";
-                        input.value = checkbox.value;
-                        deleteForm.appendChild(input);
-                    });
-
-                    document.body.appendChild(deleteForm);
-
-
-                    deleteForm.submit();
-                }
-            } else {
-                alert("Please select at least one item to delete.");
-            }
-        });
-    });
-</script> --}}
-
-{{-- <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        document.getElementById("deleteSelectedMembersOver").addEventListener("click", function() {
-            var selectedCheckboxes = document.querySelectorAll(
-                'input[name="selectedMembersOver[]"]:checked');
-
-            if (selectedCheckboxes.length > 0) {
-                if (confirm("Delete selected data ?")) {
-                    var deleteForm = document.createElement("form");
-                    deleteForm.action = "{{ route('delete-selected-members-over') }}";
-                    deleteForm.method = "post";
-                    deleteForm.style.display = "none";
-
-                    var csrfTokenInput = document.createElement("input");
-                    csrfTokenInput.type = "hidden";
-                    csrfTokenInput.name = "_token";
-                    csrfTokenInput.value = "{{ csrf_token() }}";
-                    deleteForm.appendChild(csrfTokenInput);
-
-                    selectedCheckboxes.forEach(function(checkbox) {
-                        var input = document.createElement("input");
-                        input.type = "hidden";
-                        input.name = "selectedMembersOver[]";
-                        input.value = checkbox.value;
-                        deleteForm.appendChild(input);
-                    });
-
-                    document.body.appendChild(deleteForm);
-
-                    deleteForm.submit();
-                }
-            } else {
-                alert("Please select at least one item to delete.");
-            }
-        });
-    });
-</script> --}}
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -512,10 +439,12 @@
         var missedGuestRadio = document.getElementById('missed');
 
         var elementsToShow = ['born', 'member_code', 'gender', 'status', 'address', 'description', 'formFile',
-            'output', 'nickname', 'email', 'ig', 'emergency_contact'
+            'output', 'nickname', 'email', 'ig', 'emergency_contact', 'member_package', 'start_date',
+            'method_payment', 'fitness_consultant',
         ];
         var elementsToHide = ['born', 'member_code', 'gender', 'status', 'address', 'description', 'formFile',
-            'output', 'nickname', 'email', 'ig', 'emergency_contact'
+            'output', 'nickname', 'email', 'ig', 'emergency_contact', 'member_package', 'start_date',
+            'method_payment', 'fitness_consultant',
         ];
 
         function toggleElements(elements, displayStyle) {

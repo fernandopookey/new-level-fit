@@ -133,6 +133,14 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     // Route::post('/delete-selected-members-over', [MemberRegistrationOverController::class, 'deleteSelectedMembersOver'])->name('delete-selected-members-over');
     Route::delete('member-active-bulk-delete', [MemberRegistrationController::class, 'bulkDelete'])->name('member-active-bulk-delete');
     Route::get('cuti/{id}', [MemberRegistrationController::class, 'cuti'])->name('cuti');
+    Route::get('renewal/{id}', [MemberRegistrationController::class, 'renewal'])->name('renewal');
+    // Route::put('renewal/{id}', [MemberRegistrationController::class, 'renewMember'])->name('memberRenewal');
+    // Route::post('renewal/store', [MemberRegistrationController::class, 'renewMemberRegistration'])->name('renewMemberRegistration');
+    Route::post('renewal/store/{id}', [MemberRegistrationController::class, 'renewMemberRegistration'])->name('renewMemberRegistration');
+
+
+
+    // Route::resource('renewal', '\App\Http\Controllers\Member\MemberRenewalController');
 
     Route::resource('missed-guest', '\App\Http\Controllers\Member\MissedGuestController');
 

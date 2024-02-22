@@ -27,7 +27,6 @@
                                     <th>Phone Number</th>
                                     <th>Member Code</th>
                                     <th>Date of Birth</th>
-                                    <th>Staff</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -62,9 +61,6 @@
                                         </td>
                                         <td>
                                             <h6>{{ DateFormat($item->born, 'DD MMMM YYYY') ?? 'No Data' }}</h6>
-                                        </td>
-                                        <td>
-                                            <h6>{{ $item->user_full_name ?? 'No Data' }}</h6>
                                         </td>
                                         <td>
                                             <div>

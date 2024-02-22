@@ -41,6 +41,13 @@
         // defaultDate: new Date(),
     });
 
+    $(".mdate-custom3").bootstrapMaterialDatePicker({
+        format: "DD-MMMM-YYYY",
+        weekStart: 0,
+        time: false,
+        defaultDate: new Date(),
+    });
+
     $("#timepicker").bootstrapMaterialDatePicker({
         format: "HH:mm",
         time: true,

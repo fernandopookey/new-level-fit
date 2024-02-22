@@ -18,7 +18,7 @@ class MergeCreateDataController extends Controller
     public function index()
     {
         $data = [
-            'title'             => 'Create All Data',
+            'title'             => 'Lead',
             // Create Member
             'members'           => Member::get(),
             'users'             => User::get(),
