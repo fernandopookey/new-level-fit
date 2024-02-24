@@ -25,9 +25,14 @@ class MemberCheckInController extends Controller
                 'a.description',
                 'a.days',
                 'b.full_name as member_name',
+                'b.nickname',
                 'b.member_code',
                 'b.phone_number',
                 'b.born',
+                'b.email',
+                'b.ig',
+                'b.emergency_contact',
+                'b.address',
                 'b.photos',
                 'b.gender',
                 'c.package_name',
@@ -61,6 +66,18 @@ class MemberCheckInController extends Controller
             ->leftJoin(DB::raw('(SELECT * FROM check_in_members  order by check_in_time desc limit 1) as h'), 'h.member_registration_id', '=', 'a.id')
             ->where('b.member_code', $request->input('member_code'))
             ->first();
+
+        $memberPhoto    = $memberRegistration->photos;
+        $memberName     = $memberRegistration->member_name;
+        $nickName       = $memberRegistration->nickname;
+        $phoneNumber    = $memberRegistration->phone_number;
+        $memberCode     = $memberRegistration->member_code;
+        $gender         = $memberRegistration->gender;
+        $born           = $memberRegistration->born;
+        $email          = $memberRegistration->email;
+        $ig             = $memberRegistration->ig;
+        $eContact       = $memberRegistration->emergency_contact;
+        $address        = $memberRegistration->address;
 
         if (!$memberRegistration) {
             return redirect()->back()->with('error', 'Member active not found or has ended');
@@ -96,7 +113,128 @@ class MemberCheckInController extends Controller
             $message = 'Member Checked In Successfully';
         }
 
-        return redirect()->route('member-active.index')->with('message', $message);
+        // return redirect()->route('member-active.index')->with('message', $message);
+        return view('admin.member-registration.member_details')->with([
+            'message' => $message,
+            'memberPhoto'   => $memberPhoto,
+            'memberName'    => $memberName,
+            'nickName'      => $nickName,
+            'memberCode'    => $memberCode,
+            'phoneNumber'   => $phoneNumber,
+            'born'          => $born,
+            'gender'        => $gender,
+            'email'         => $email,
+            'ig'            => $ig,
+            'eContact'      => $eContact,
+            'address'       => $address,
+        ]);
+    }
+
+    public function secondStore($id)
+    {
+        $memberRegistration = DB::table('member_registrations as a')
+            ->select(
+                'a.id',
+                'a.start_date',
+                'a.description',
+                'a.days',
+                'b.full_name as member_name',
+                'b.nickname',
+                'b.member_code',
+                'b.phone_number',
+                'b.born',
+                'b.email',
+                'b.ig',
+                'b.emergency_contact',
+                'b.address',
+                'b.photos',
+                'b.gender',
+                'c.package_name',
+                'c.days',
+                'c.package_price',
+                'e.name as method_payment_name',
+                'f.full_name as staff_name',
+                'g.full_name as fc_name',
+                'g.phone_number as fc_phone_number',
+                'h.id as current_check_in_members_id',
+                'h.check_out_time',
+                'h.check_in_time',
+            )
+            ->join('members as b', 'a.member_id', '=', 'b.id')
+            ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
+            ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
+            ->join(
+                'users as f',
+                'a.user_id',
+                '=',
+                'f.id'
+            )
+            ->join('fitness_consultants as g', 'a.fc_id', '=', 'g.id')
+            ->whereRaw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END = ?', ['Running'])
+            ->leftJoin(DB::raw('(SELECT * FROM check_in_members  order by check_in_time desc limit 1) as h'), 'h.member_registration_id', '=', 'a.id')
+            ->where('a.id', $id)
+            ->first();
+
+        $memberPhoto    = $memberRegistration->photos;
+        $memberName     = $memberRegistration->member_name;
+        $nickName       = $memberRegistration->nickname;
+        $phoneNumber    = $memberRegistration->phone_number;
+        $memberCode     = $memberRegistration->member_code;
+        $gender         = $memberRegistration->gender;
+        $born           = $memberRegistration->born;
+        $email          = $memberRegistration->email;
+        $ig             = $memberRegistration->ig;
+        $eContact       = $memberRegistration->emergency_contact;
+        $address        = $memberRegistration->address;
+
+        if (!$memberRegistration) {
+            return redirect()->back()->with('error', 'Member active not found or has ended');
+        }
+
+
+        $message = "";
+        if ($memberRegistration->current_check_in_members_id && !$memberRegistration->check_out_time) {
+            $checkInMember = CheckInMember::find($memberRegistration->current_check_in_members_id);
+            $checkInMember->update([
+                'check_out_time' => now()->tz('Asia/Jakarta'),
+            ]);
+            $message = 'Member Checked Out Successfully';
+        } else {
+            $checkOutTime = null; // Default value
+
+            $latestCheckIn = CheckInMember::where('member_registration_id', $memberRegistration->id)
+                ->orderBy('check_in_time', 'desc')
+                ->first();
+
+            if ($latestCheckIn && $latestCheckIn->check_out_time === null) {
+                $checkOutTime = now()->tz('Asia/Jakarta');
+            }
+
+            $data = [
+                'member_registration_id' => $memberRegistration->id,
+                'check_in_time' => now()->tz('Asia/Jakarta'),
+                'user_id' => Auth::user()->id,
+                'check_out_time' => $checkOutTime,
+            ];
+
+            CheckInMember::create($data);
+            $message = 'Member Checked In Successfully';
+        }
+
+        return view('admin.member-registration.member_details')->with([
+            'message' => $message,
+            'memberPhoto'   => $memberPhoto,
+            'memberName'    => $memberName,
+            'nickName'      => $nickName,
+            'memberCode'    => $memberCode,
+            'phoneNumber'   => $phoneNumber,
+            'born'          => $born,
+            'gender'        => $gender,
+            'email'         => $email,
+            'ig'            => $ig,
+            'eContact'      => $eContact,
+            'address'       => $address,
+        ]);
     }
 
     public function destroy($id)

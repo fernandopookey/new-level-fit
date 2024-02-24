@@ -131,7 +131,9 @@
                         <i class="la la-users"></i>
                     </span>
                     <div class="media-body text-white text-end">
-                        <p class="mb-1 text-white">Total Members</p>
+                        <a href="{{ route('members.index') }}">
+                            <p class="mb-1 text-white">Total Members</p>
+                        </a>
                         <h3 class="text-white">{{ $totalMember }}</h3>
                     </div>
                 </div>
@@ -146,7 +148,9 @@
                         <i class="la la-users"></i>
                     </span>
                     <div class="media-body text-white text-end">
-                        <p class="mb-1 text-white">Total Member Active</p>
+                        <a href="{{ route('member-active.index') }}">
+                            <p class="mb-1 text-white">Total Member Active</p>
+                        </a>
                         <h3 class="text-white">{{ $runningRegistrationsMemberCount }}</h3>
                     </div>
                 </div>
@@ -161,7 +165,9 @@
                         <i class="la la-users"></i>
                     </span>
                     <div class="media-body text-white text-end">
-                        <p class="mb-1 text-white">Total Member Expired</p>
+                        <a href="{{ route('member-expired.index') }}">
+                            <p class="mb-1 text-white">Total Member Expired</p>
+                        </a>
                         <h3 class="text-white">{{ $overRegistrationsMemberCount }}</h3>
                     </div>
                 </div>
@@ -180,7 +186,9 @@
                         <i class="la la-users"></i>
                     </span>
                     <div class="media-body text-white text-end">
-                        <p class="mb-1 text-white">Total Trainer</p>
+                        <a href="{{ route('staff.index') }}">
+                            <p class="mb-1 text-white">Total Trainer</p>
+                        </a>
                         <h3 class="text-white">{{ $totalTrainers }}</h3>
                     </div>
                 </div>
@@ -195,7 +203,9 @@
                         <i class="la la-users"></i>
                     </span>
                     <div class="media-body text-white text-end">
-                        <p class="mb-1 text-white">Trainer Session Active</p>
+                        <a href="{{ route('trainer-session.index') }}">
+                            <p class="mb-1 text-white">Trainer Session Active</p>
+                        </a>
                         <h3 class="text-white">{{ $runningTrainerSessionsCount }}</h3>
                     </div>
                 </div>
@@ -210,7 +220,9 @@
                         <i class="la la-users"></i>
                     </span>
                     <div class="media-body text-white text-end">
-                        <p class="mb-1 text-white">Trainer Session Expired</p>
+                        <a href="{{ route('trainer-session-over.index') }}">
+                            <p class="mb-1 text-white">Trainer Session Expired</p>
+                        </a>
                         <h3 class="text-white">{{ $overTrainerSessionsCount }}</h3>
                     </div>
                 </div>

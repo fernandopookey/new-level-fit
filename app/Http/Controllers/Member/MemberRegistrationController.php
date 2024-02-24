@@ -13,6 +13,7 @@ use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -72,10 +73,8 @@ class MemberRegistrationController extends Controller
             // ->leftJoin('check_in_members as h', 'a.id', '=', 'h.member_registration_id')
             //->leftJoin(DB::raw('(SELECT member_registration_id, MAX(check_in_time) as check_in_time, MAX(check_out_time) as check_out_time FROM check_in_members GROUP BY member_registration_id) as h'), 'a.id', '=', 'h.member_registration_id')
             ->leftJoin(DB::raw('(select * from (select a.* from (select * from check_in_members) as a inner join (SELECT max(id) as id FROM check_in_members group by member_registration_id) as b on a.id=b.id) as tableH) as h'), 'a.id', '=', 'h.member_registration_id')
-
             ->whereRaw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END = ?', ['Running'])
-            ->orderBy('check_out_time', 'desc')
-            ->orderBy('check_in_time', 'desc')
+            ->orderBy('h.check_in_time', 'desc')
             ->get();
 
 
@@ -96,6 +95,7 @@ class MemberRegistrationController extends Controller
                 $birthdayMessage2 = $birthdayMessage2 . $memberRegistration->member_name . '';
             }
         }
+
         $data = [
             'title'                 => 'Member Active List',
             'memberRegistrations'   => $memberRegistrations,
@@ -570,5 +570,30 @@ class MemberRegistrationController extends Controller
             'memberRegistration'        => $memberRegistration,
         ]);
         return $pdf->stream('Cuti Membership-' . $fileName1 . '-' . $fileName2 . '.pdf');
+    }
+
+    public function filter(Request $request)
+    {
+        $memberActive = MemberRegistration::orderBy('id', 'desc')
+            ->when(
+                $request->fromDate && $request->toDate,
+                function (Builder $builder) use ($request) {
+                    $builder->whereBetween(
+                        DB::raw('DATE(created_at)'),
+                        [
+                            $request->fromDate,
+                            $request->toDate
+                        ]
+                    );
+                }
+            )->paginate(10);
+
+        $data = [
+            'memberRegistrations'   => $memberActive,
+            'request'               => $request,
+            'content'               => 'admin/member-registration/filter'
+        ];
+
+        return view('admin.layouts.wrapper', $data);
     }
 }
