@@ -1,47 +1,3 @@
-<style>
-    .fireworks {
-        position: relative;
-        overflow: hidden;
-    }
-
-    .fireworks::after {
-        content: "";
-        position: absolute;
-        width: 100px;
-        height: 100px;
-        background-image: url('/cake.png');
-        background-repeat: no-repeat;
-        background-size: contain;
-        animation: fireworks 5s linear infinite;
-    }
-
-    @keyframes fireworks {
-        0% {
-            transform: translateY(0) rotateZ(0deg);
-            opacity: 0;
-        }
-
-        20% {
-            opacity: 1;
-        }
-
-        50% {
-            transform: translateY(-100px) rotateZ(180deg);
-            opacity: 0;
-        }
-
-        80% {
-            transform: translateY(0) rotateZ(360deg);
-            opacity: 1;
-        }
-
-        100% {
-            transform: translateY(0) rotateZ(360deg);
-            opacity: 0;
-        }
-    }
-</style>
-
 <div class="row">
     <div class="col-xl-12">
         <div class="row">
@@ -70,80 +26,11 @@
                     </form>
                 </div>
             </div>
-
-            {{-- <div class="col-xl-12">
-                    <div class="page-title flex-wrap justify-content-between">
-                        <form action="{{ route('member-active-filter') }}" class="text-right" method="GET">
-                            @csrf
-                            <div class="d-flex">
-                                <div class="col-md-5 d-flex">
-                                    <label class="mt-1 mr-1">Start: </label>
-                                    <input type="date" class="form-control input-sm" name="fromDate" id="fromDate"
-                                        required>
-                                </div>
-                                <div class="col-md-5 d-flex">
-                                    <label class="mt-1 mr-1">End: </label>
-                                    <input type="date" class="form-control input-sm" name="toDate" id="toDate"
-                                        required>
-                                </div>
-                                <button type="submit" name="search" class="btn btn-primary">Filter</button>
-                            </div>
-                        </form>
-                    </div>
-                </div> --}}
-            @if ($birthdayMessage2)
-                <div class="alert alert-success solid alert-dismissible fade show">
-                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
-                        fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="16" x2="12" y2="12"></line>
-                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                    </svg>
-                    <span>2 days to <strong>{{ $birthdayMessage2 }}'s </strong> birthday</span>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">X
-                    </button>
-                </div>
-            @endif
-            @if ($birthdayMessage1)
-                <div class="alert alert-primary solid alert-dismissible fade show">
-                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
-                        fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="16" x2="12" y2="12"></line>
-                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                    </svg>
-                    <span>1 days to <strong>{{ $birthdayMessage1 }}'s </strong> birthday</span>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">X
-                    </button>
-                </div>
-            @endif
-            @if ($birthdayMessage0)
-                {{-- <div class="alert alert-warning solid alert-dismissible fade show">
-                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
-                            fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <line x1="12" y1="16" x2="12" y2="12"></line>
-                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                        </svg>
-                        <span>Today is <strong>{{ $birthdayMessage0 }}'s </strong> birthday</span>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">X
-                        </button>
-                    </div> --}}
-                <div class="alert alert-warning solid alert-dismissible fade show fireworks">
-                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
-                        fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="16" x2="12" y2="12"></line>
-                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                    </svg>
-                    <span>Today is <strong>{{ $birthdayMessage0 }}'s </strong> birthday</span>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">X
-                    </button>
-                </div>
-            @endif
             <!--column-->
             <div class="col-xl-12 wow fadeInUp" data-wow-delay="1.5s">
                 <div class="table-responsive full-data">
+                    {{-- <table class="table-responsive-lg table display dataTablesCard student-tab dataTable no-footer"
+                        id="example-student"> --}}
                     <table class="table-responsive-lg table display dataTablesCard student-tab dataTable no-footer"
                         id="myTable">
                         <thead>
@@ -236,8 +123,6 @@
                                     </td>
                                     <td>
                                         <div>
-                                            <a href="{{ route('secondCheckIn', $item->id) }}"
-                                                class="btn light btn-info btn-xs mb-1 btn-block">Check In</a>
                                             @if (Auth::user()->role == 'ADMIN')
                                                 <a href="{{ route('member-active.edit', $item->id) }}"
                                                     class="btn light btn-warning btn-xs mb-1 btn-block">Edit</a>

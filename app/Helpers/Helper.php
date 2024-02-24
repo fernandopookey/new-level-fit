@@ -11,10 +11,19 @@ function DateFormat($date, $format)
     return \Carbon\Carbon::parse($date)->isoFormat($format);
 }
 
-function DateDiff($oldDate, $newDate)
+function DateDiff($oldDate, $newDate, $startZero = false)
 {
     $oldDate = \Carbon\Carbon::parse($oldDate);
     $newDate = \Carbon\Carbon::parse($newDate);
+    if ($startZero) {
+        $oldDate->hour = 0;
+        $oldDate->minute = 0;
+        $oldDate->second = 0;
+
+        $newDate->hour = 0;
+        $newDate->minute = 0;
+        $newDate->second = 0;
+    }
 
     return $oldDate->diffInDays($newDate);
 }

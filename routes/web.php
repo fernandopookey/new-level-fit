@@ -51,6 +51,8 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     // Route::get('print-member-card', [MemberController::class, 'print_member_card'])->name('print-member-card');
     Route::resource('print-member-card', '\App\Http\Controllers\Member\MemberPrintCardController');
     Route::resource('member-check-in', '\App\Http\Controllers\Member\MemberCheckInController');
+    // Route::get('check-in/{id}', 'MemberRegistrationController@checkIn')->name('secondCheckIn');
+    Route::get('check-in/{id}', [MemberCheckInController::class, 'secondStore'])->name('secondCheckIn');
     // Route::delete('/bulk-delete', '\App\Http\Controllers\Member\MemberCheckInController')->name('bulk-delete');
     Route::delete('bulk-delete-member-registration', [MemberCheckInController::class, 'bulkDelete'])->name('bulk-delete-member-registration');
     Route::delete('bulk-delete-trainer-session', [TrainerSessionCheckInController::class, 'bulkDelete'])->name('bulk-delete-trainer-session');
@@ -153,6 +155,16 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     Route::get('personal-trainer-filter', [MemberExpiredListController::class, 'filter'])->name('personal-trainer-filter');
 
     Route::get('personal-trainer-filter', [CheckInTrainerSession::class, 'checkMemberExistence'])->name('checkMemberExistence');
+
+    Route::get('member-active-filter', [MemberRegistrationController::class, 'filter'])->name('member-active-filter');
+
+    // Route::get('/member-details', function () {
+    //     return view('admin.member-registration.member_details');
+    // })->name('member.details');
+
+    Route::get('/tes', function () {
+        return view('admin.member-registration.tes');
+    })->name('member.details');
 });
 
 Auth::routes();
