@@ -55,13 +55,10 @@
                         id="myTable">
                         <thead>
                             <tr>
-                                @if (Auth::user()->role == 'ADMIN')
-                                    <th></th>
-                                @endif
                                 <th>No</th>
                                 <th>Image</th>
                                 <th>Member Data</th>
-                                <th>Package Data</th>
+                                <th>Last Check In</th>
                                 <th>Date</th>
                                 <th>Session & Status</th>
                                 <th>Trainer & Staff</th>
@@ -71,12 +68,6 @@
                         <tbody>
                             @foreach ($trainerSessions as $item)
                                 <tr>
-                                    @if (Auth::user()->role == 'ADMIN')
-                                        <td>
-                                            <input type="checkbox" name="selectedTrainerSessions[]"
-                                                value="{{ $item->id }}">
-                                        </td>
-                                    @endif
                                     <td>{{ $loop->iteration }}</td>
                                     <td>
                                         <div class="trans-list">
@@ -95,9 +86,16 @@
                                         <h6>{{ $item->member_phone }}</h6>
                                     </td>
                                     <td>
-                                        <h6>{{ $item->package_name }}, <br /></h6>
-                                        <h6>{{ formatRupiah($item->package_price) }},</h6>
-                                        <h6>{{ $item->member_registration_days }} Days</h6>
+                                        <span class="badge badge-info badge-lg">
+                                            @if (!$item->check_in_time && !$item->check_out_time)
+                                                Not Yet
+                                            @elseif ($item->check_in_time && $item->check_out_time)
+                                                {{ DateDiff($item->check_out_time, \Carbon\Carbon::now(), true) }}
+                                                day ago
+                                            @elseif ($item->check_in_time && !$item->check_out_time)
+                                                Running
+                                            @endif
+                                        </span>
                                     </td>
                                     <td>
                                         <h6>{{ DateFormat($item->start_date, 'DD MMMM YYYY') }}- <br />
@@ -108,20 +106,20 @@
                                         <h6>Session Total : {{ $item->number_of_session }}</h6>
                                         <h6>Remaining Session : {{ $item->remaining_sessions }}</h6>
                                         <h6>Status:
-                                            @if (!$item->check_in_time && !$item->check_out_time)
-                                                <span class="badge badge-primary">Not yet started</span>
-                                            @elseif ($item->check_in_time && $item->check_out_time == null)
-                                                <span class="badge badge-secondary">Checkout</span>
-                                            @else
-                                                <span class="badge badge-info">Running</span>
+                                            @if ((!$item->check_in_time && !$item->check_out_time) || ($item->check_in_time && $item->check_out_time))
+                                                <span class="badge badge-info">Not Start</span>
+                                            @elseif ($item->check_in_time && !$item->check_out_time)
+                                                <span class="badge badge-primary">Running</span>
                                             @endif
                                         </h6>
                                     </td>
                                     <td>
                                         <h6>Trainer : {{ $item->trainer_name }},</h6>
-                                        <h6>Staff Name: {{ $item->staff_name }}</h6>
+                                        <h6>Staff : {{ $item->staff_name }}</h6>
                                     </td>
                                     <td class="btn-group-vertical">
+                                        <a href="{{ route('PTSecondCheckIn', $item->id) }}"
+                                            class="btn light btn-info btn-xs mb-1 btn-block">Check In</a>
                                         @if (Auth::user()->role == 'ADMIN')
                                             <a href="{{ route('trainer-session.edit', $item->id) }}"
                                                 class="btn light btn-warning btn-xs mb-1">Edit</a>
@@ -151,10 +149,6 @@
                             @endforeach
                         </tbody>
                     </table>
-                    @if (Auth::user()->role == 'ADMIN')
-                        <button type="button" class="btn btn-danger" id="deleteSelectedTrainerSessions">Delete
-                            Selected</button>
-                    @endif
                 </div>
             </div>
             <!--/column-->

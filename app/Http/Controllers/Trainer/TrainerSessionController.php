@@ -62,8 +62,8 @@ class TrainerSessionController extends Controller
             ->join('users as g', 'a.user_id', '=', 'g.id')
             ->join('fitness_consultants as h', 'a.fc_id', '=', 'h.id')
             ->join('method_payments as i', 'a.method_payment_id', '=', 'i.id')
-
             ->whereRaw('CASE WHEN IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) > 0 THEN "Running" WHEN IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) < 0 THEN "kelebihan" ELSE "over" END = "Running"')
+            ->orderBy('cits.check_in_time', 'desc')
             ->get();
 
         $birthdayMessage3 = "";
@@ -105,7 +105,9 @@ class TrainerSessionController extends Controller
             'members'           => Member::get(),
             'personalTrainers'  => PersonalTrainer::get(),
             'trainerPackages'   => TrainerPackage::get(),
+            'methodPayment'     => MethodPayment::get(),
             'users'             => User::get(),
+            'fitnessConsultant' => FitnessConsultant::get(),
             'content'           => 'admin/trainer-session/create',
         ];
 
