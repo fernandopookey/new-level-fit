@@ -46,51 +46,38 @@
     <div class="col-xl-12">
         <div class="row">
             {{-- <form action="{{ route('member-active-bulk-delete') }}" method="POST"> --}}
-            @csrf
-            @method('delete')
+            {{-- @csrf
+            @method('delete') --}}
             <div class="col-xl-12">
                 <div class="page-title flex-wrap justify-content-between">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#checkIn2"
-                        id="checkInButton">Input Member Code</button>
+                    <a href="{{ route('member-active.index') }}" class="btn btn-primary">Refresh</a>
                     <form action="{{ route('member-active-filter') }}" class="text-right" method="GET">
                         @csrf
                         <div class="d-flex align-items-center">
-                            <div class="col-md-5 d-flex align-items-center">
-                                <label class="mt-1 mr-1">Start: </label>
+                            <div class="col-md-4 d-flex align-items-center">
                                 <input type="date" class="form-control input-sm" name="fromDate" id="fromDate"
                                     required>
                             </div>
-                            <div class="col-md-5 d-flex align-items-center">
-                                <label class="mt-1 mr-1">End: </label>
+                            <div class="mt-3 mx-2">
+                                <p>to</p>
+                            </div>
+                            <div class="col-md-4 d-flex align-items-center">
                                 <input type="date" class="form-control input-sm" name="toDate" id="toDate"
                                     required>
                             </div>
-                            <button type="submit" name="search" class="btn btn-primary">Filter</button>
+                            <div>
+                                <button type="submit" name="search" class="btn btn-primary mx-2">Filter</button>
+                            </div>
                         </div>
                     </form>
                 </div>
             </div>
-
-            {{-- <div class="col-xl-12">
-                    <div class="page-title flex-wrap justify-content-between">
-                        <form action="{{ route('member-active-filter') }}" class="text-right" method="GET">
-                            @csrf
-                            <div class="d-flex">
-                                <div class="col-md-5 d-flex">
-                                    <label class="mt-1 mr-1">Start: </label>
-                                    <input type="date" class="form-control input-sm" name="fromDate" id="fromDate"
-                                        required>
-                                </div>
-                                <div class="col-md-5 d-flex">
-                                    <label class="mt-1 mr-1">End: </label>
-                                    <input type="date" class="form-control input-sm" name="toDate" id="toDate"
-                                        required>
-                                </div>
-                                <button type="submit" name="search" class="btn btn-primary">Filter</button>
-                            </div>
-                        </form>
-                    </div>
-                </div> --}}
+            <div class="col-xl-12">
+                <div class="page-title flex-wrap justify-content-between">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#checkIn2"
+                        id="checkInButton">Input Member Code</button>
+                </div>
+            </div>
             @if ($birthdayMessage2)
                 <div class="alert alert-success solid alert-dismissible fade show">
                     <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
@@ -118,17 +105,6 @@
                 </div>
             @endif
             @if ($birthdayMessage0)
-                {{-- <div class="alert alert-warning solid alert-dismissible fade show">
-                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
-                            fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <line x1="12" y1="16" x2="12" y2="12"></line>
-                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                        </svg>
-                        <span>Today is <strong>{{ $birthdayMessage0 }}'s </strong> birthday</span>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">X
-                        </button>
-                    </div> --}}
                 <div class="alert alert-warning solid alert-dismissible fade show fireworks">
                     <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
                         fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
@@ -186,9 +162,6 @@
                                         <h6>{{ $item->member_name }},</h6>
                                         <h6>{{ $item->member_code }},</h6>
                                         <h6>{{ $item->phone_number }}</h6>
-                                        {{-- <h6 class="{{ $item->birthdayCelebrating }} text-light">
-                                                {{ DateFormat($item->born, 'DD MMMM YYYY') }}
-                                            </h6> --}}
                                     </td>
                                     <td>
                                         @php

@@ -1,13 +1,9 @@
 <div class="row">
     <div class="col-xl-12">
         <div class="row">
-            {{-- <form action="{{ route('member-active-bulk-delete') }}" method="POST"> --}}
-            @csrf
-            @method('delete')
             <div class="col-xl-12">
                 <div class="page-title flex-wrap justify-content-between">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#checkIn2"
-                        id="checkInButton">Input Member Code</button>
+                    <a href="{{ route('member-active.index') }}" class="btn btn-primary">Refresh</a>
                     <form action="{{ route('member-active-filter') }}" class="text-right" method="GET">
                         @csrf
                         <div class="d-flex align-items-center">
@@ -26,11 +22,15 @@
                     </form>
                 </div>
             </div>
+            <div class="col-xl-12">
+                <div class="page-title flex-wrap justify-content-between">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#checkIn2"
+                        id="checkInButton">Input Member Code</button>
+                </div>
+            </div>
             <!--column-->
             <div class="col-xl-12 wow fadeInUp" data-wow-delay="1.5s">
                 <div class="table-responsive full-data">
-                    {{-- <table class="table-responsive-lg table display dataTablesCard student-tab dataTable no-footer"
-                        id="example-student"> --}}
                     <table class="table-responsive-lg table display dataTablesCard student-tab dataTable no-footer"
                         id="myTable">
                         <thead>
@@ -162,8 +162,6 @@
                     @endif
                 </div>
             </div>
-            {{-- </form> --}}
-            <!--/column-->
         </div>
     </div>
 </div>

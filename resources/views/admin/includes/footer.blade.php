@@ -305,7 +305,7 @@
     });
 </script>
 
-<script>
+{{-- <script>
     document.addEventListener("DOMContentLoaded", function() {
         var defaultDate = new Date();
         var formattedDate = defaultDate.getFullYear() + '-' + ('0' + (defaultDate.getMonth() + 1)).slice(-2) +
@@ -315,19 +315,22 @@
         var defaultTime = defaultDate.getHours() + ':' + ('0' + defaultDate.getMinutes()).slice(-2);
         document.getElementsByClassName("editTime")[0].value = defaultTime;
     });
-</script>
+</script> --}}
 
-{{-- <script>
+<script>
     document.addEventListener("DOMContentLoaded", function() {
         var defaultDate = new Date();
-        var formattedDate = defaultDate.getFullYear() + '-' + ('0' + (defaultDate.getMonth() + 1)).slice(-2) +
-            '-' + ('0' + defaultDate.getDate()).slice(-2);
-        document.getElementById("mdate2").value = formattedDate;
+        var formattedDate = ('0' + defaultDate.getDate()).slice(-2) + '-' + defaultDate.toLocaleString(
+            'default', {
+                month: 'long'
+            }) + '-' + defaultDate.getFullYear();
+        document.getElementsByClassName("editDate")[0].value = formattedDate;
 
-        var defaultTime = defaultDate.getHours() + ':' + ('0' + defaultDate.getMinutes()).slice(-2);
-        document.getElementsByName("start_time2")[0].value = defaultTime;
+        var defaultTime = ('0' + defaultDate.getHours()).slice(-2) + ':' + ('0' + defaultDate.getMinutes())
+            .slice(-2);
+        document.getElementsByClassName("editTime")[0].value = defaultTime;
     });
-</script> --}}
+</script>
 
 <script>
     function showForm(formId) {

@@ -574,22 +574,58 @@ class MemberRegistrationController extends Controller
 
     public function filter(Request $request)
     {
-        $memberActive = MemberRegistration::orderBy('id', 'desc')
-            ->when(
-                $request->fromDate && $request->toDate,
-                function (Builder $builder) use ($request) {
-                    $builder->whereBetween(
-                        DB::raw('DATE(created_at)'),
-                        [
-                            $request->fromDate,
-                            $request->toDate
-                        ]
-                    );
-                }
-            )->paginate(10);
+        $query = DB::table('member_registrations as a')
+            ->select(
+                'a.id',
+                'a.start_date',
+                'a.description',
+                'a.days as member_registration_days',
+                'a.old_days',
+                'a.package_price as mr_package_price',
+                'a.admin_price as mr_admin_price',
+                'b.full_name as member_name',
+                'c.package_name',
+                'c.days',
+                'b.member_code',
+                'b.phone_number',
+                'b.born',
+                'b.photos',
+                'b.gender',
+                'c.package_name',
+                'c.package_price',
+                'c.days',
+                'e.name as method_payment_name',
+                'f.full_name as staff_name',
+                'g.full_name as fc_name',
+                'g.phone_number as fc_phone_number',
+                'h.check_in_time',
+                'h.check_out_time'
+            )
+            ->addSelect(
+                DB::raw("'bg-dark' as birthdayCelebrating"),
+                DB::raw('DATE_ADD(a.start_date, INTERVAL a.days DAY) as expired_date'),
+                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END as status'),
+                DB::raw('CONCAT(YEAR(CURDATE()), "-", MONTH(b.born), "-", DAY(b.born)) as member_birthday'),
+                DB::raw('DATEDIFF(CONCAT(YEAR(CURDATE()), "-", MONTH(b.born), "-", DAY(b.born)), CURDATE()) as days_until_birthday')
+            )
+            ->join('members as b', 'a.member_id', '=', 'b.id')
+            ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
+            ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
+            ->join('users as f', 'a.user_id', '=', 'f.id')
+            ->join('fitness_consultants as g', 'a.fc_id', '=', 'g.id')
+            ->leftJoin(DB::raw('(select * from (select a.* from (select * from check_in_members) as a inner join (SELECT max(id) as id FROM check_in_members group by member_registration_id) as b on a.id=b.id) as tableH) as h'), 'a.id', '=', 'h.member_registration_id')
+            ->whereRaw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END = ?', ['Running'])
+            ->orderBy('h.check_in_time', 'desc');
+
+        if ($request->fromDate && $request->toDate) {
+            $query->whereBetween('a.created_at', [$request->fromDate, $request->toDate]);
+        }
+
+        // Paginate the results
+        $memberRegistrations = $query->paginate(10);
 
         $data = [
-            'memberRegistrations'   => $memberActive,
+            'memberRegistrations'   => $memberRegistrations,
             'request'               => $request,
             'content'               => 'admin/member-registration/filter'
         ];
