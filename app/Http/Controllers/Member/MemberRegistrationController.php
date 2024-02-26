@@ -70,8 +70,6 @@ class MemberRegistrationController extends Controller
                 'f.id'
             )
             ->join('fitness_consultants as g', 'a.fc_id', '=', 'g.id')
-            // ->leftJoin('check_in_members as h', 'a.id', '=', 'h.member_registration_id')
-            //->leftJoin(DB::raw('(SELECT member_registration_id, MAX(check_in_time) as check_in_time, MAX(check_out_time) as check_out_time FROM check_in_members GROUP BY member_registration_id) as h'), 'a.id', '=', 'h.member_registration_id')
             ->leftJoin(DB::raw('(select * from (select a.* from (select * from check_in_members) as a inner join (SELECT max(id) as id FROM check_in_members group by member_registration_id) as b on a.id=b.id) as tableH) as h'), 'a.id', '=', 'h.member_registration_id')
             ->whereRaw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END = ?', ['Running'])
             ->orderBy('h.check_in_time', 'desc')
@@ -141,11 +139,11 @@ class MemberRegistrationController extends Controller
                 'gender'                => 'nullable',
                 'address'               => 'nullable',
                 'photos'                => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                'member_package_id'     => 'required|exists:member_packages,id',
-                'start_date'            => 'required',
-                'start_time'            => 'required',
-                'method_payment_id'     => 'required|exists:method_payments,id',
-                'fc_id'                 => 'required|exists:fitness_consultants,id',
+                // 'member_package_id'     => 'required_if:status,sell|exists:member_packages,id',
+                'start_date'            => 'required_if:status,sell',
+                'start_time'            => 'required_if:status,sell',
+                // 'method_payment_id'     => 'required_if:status,sell|exists:method_payments,id',
+                // 'fc_id'                 => 'required_if:status,sell|exists:fitness_consultants,id',
                 'description'           => 'nullable',
                 'member_code' => [
                     'nullable',
@@ -160,54 +158,65 @@ class MemberRegistrationController extends Controller
                 ],
             ]);
 
-            if ($request->hasFile('photos')) {
-                if ($request->photos != null) {
-                    $realLocation = "storage/" . $request->photos;
-                    if (file_exists($realLocation) && !is_dir($realLocation)) {
-                        unlink($realLocation);
+            if ($request->status == 'sell') {
+
+                $data += $request->validate([
+                    'member_package_id'     => 'required|exists:member_packages,id',
+                    'start_date'            => 'required',
+                    'start_time'            => 'required',
+                    'method_payment_id'     => 'required|exists:method_payments,id',
+                    'fc_id'                 => 'required|exists:fitness_consultants,id',
+                ]);
+
+                if ($request->hasFile('photos')) {
+                    if ($request->photos != null) {
+                        $realLocation = "storage/" . $request->photos;
+                        if (file_exists($realLocation) && !is_dir($realLocation)) {
+                            unlink($realLocation);
+                        }
                     }
+                    $photos = $request->file('photos');
+                    $file_name = time() . '-' . $photos->getClientOriginalName();
+
+                    $data['photos'] = $request->file('photos')->store('assets/member', 'public');
+                } else {
+                    $data['photos'] = $request->photos;
                 }
-                $photos = $request->file('photos');
-                $file_name = time() . '-' . $photos->getClientOriginalName();
 
-                $data['photos'] = $request->file('photos')->store('assets/member', 'public');
+                $data['born'] = Carbon::parse($data['born'])->format('Y-m-d');
+
+                $package = MemberPackage::findOrFail($data['member_package_id']);
+                $data['package_price'] = $package->package_price;
+
+                $data['user_id'] = Auth::user()->id;
+
+                $data['start_date'] =  $data['start_date'] . ' ' .  $data['start_time'];
+                $dateTime = new \DateTime($data['start_date']);
+                $data['start_date'] = $dateTime->format('Y-m-d H:i:s');
+                unset($data['start_time']);
+
+                $data['admin_price'] = $package->admin_price;
+                $data['days'] = $package->days;
+
+                $newMember = Member::create(array_intersect_key($data, array_flip([
+                    'full_name', 'phone_number', 'status', 'nickname',
+                    'born', 'member_code', 'email', 'ig', 'emergency_contact', 'gender', 'address', 'photos'
+                ])));
+
+                $data['member_id'] = $newMember->id;
+
+                MemberRegistration::create(array_intersect_key($data, array_flip([
+                    'member_id', 'member_package_id', 'start_date',
+                    'method_payment_id', 'fc_id', 'user_id', 'description', 'package_price', 'admin_price', 'days'
+                ])));
             } else {
-                $data['photos'] = $request->photos;
+                // $data['member_package_id'] = null;
+                // $data['method_payment_id'] = null;
+                // $data['fc_id'] = null;
+                $newMember = Member::create(array_intersect_key($data, array_flip([
+                    'full_name', 'phone_number', 'status'
+                ])));
             }
-
-            // if ($request->hasFile('photos')) {
-            //     $image = $request->file('photos');
-            //     $imageName = time() . '.' . $image->getClientOriginalExtension();
-            //     $image->move(public_path('images'), $imageName);
-            //     $data['photos'] = $imageName;
-            // }
-
-            $data['born'] = Carbon::parse($data['born'])->format('Y-m-d');
-
-            $package = MemberPackage::findOrFail($data['member_package_id']);
-            $data['package_price'] = $package->package_price;
-
-            $data['user_id'] = Auth::user()->id;
-
-            $data['start_date'] =  $data['start_date'] . ' ' .  $data['start_time'];
-            $dateTime = new \DateTime($data['start_date']);
-            $data['start_date'] = $dateTime->format('Y-m-d H:i:s');
-            unset($data['start_time']);
-
-            $data['admin_price'] = $package->admin_price;
-            $data['days'] = $package->days;
-
-            $newMember = Member::create(array_intersect_key($data, array_flip([
-                'full_name', 'phone_number', 'status', 'nickname',
-                'born', 'member_code', 'email', 'ig', 'emergency_contact', 'gender', 'address', 'photos'
-            ])));
-
-            $data['member_id'] = $newMember->id;
-
-            MemberRegistration::create(array_intersect_key($data, array_flip([
-                'member_id', 'member_package_id', 'start_date',
-                'method_payment_id', 'fc_id', 'user_id', 'description', 'package_price', 'admin_price', 'days'
-            ])));
 
             DB::commit();
 

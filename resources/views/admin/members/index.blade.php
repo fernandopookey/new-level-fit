@@ -64,11 +64,11 @@
                                         </td>
                                         <td>
                                             <div>
-                                                <button type="button"
+                                                {{-- <button type="button"
                                                     class="btn light btn-warning btn-xs btn-block mb-1"
                                                     data-bs-toggle="modal"
                                                     data-bs-target=".bd-example-modal-lg-edit{{ $item->id }}">Edit
-                                                    Member</button>
+                                                    Member</button> --}}
                                                 <button type="button" class="btn light btn-info btn-xs btn-block mb-1"
                                                     data-bs-toggle="modal"
                                                     data-bs-target=".bd-example-modal-lg-detail{{ $item->id }}">Detail
@@ -102,5 +102,4 @@
 
 
 @include('admin.members.create')
-@include('admin.members.edit')
 @include('admin.members.detail')

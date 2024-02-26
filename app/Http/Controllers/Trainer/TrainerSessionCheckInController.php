@@ -47,9 +47,9 @@ class TrainerSessionCheckInController extends Controller
                 'g.id as current_check_in_trainer_sessions_id',
                 'g.check_out_time'
             )
-            ->addSelect(DB::raw('IFNULL(c.number_of_session - f.check_in_count, c.number_of_session) as remaining_sessions'))
-            ->addSelect(DB::raw('CASE WHEN IFNULL(c.number_of_session - f.check_in_count, c.number_of_session) > 0 THEN "Running" WHEN IFNULL(c.number_of_session - f.check_in_count, c.number_of_session) < 0 THEN "kelebihan" ELSE "over" END AS session_status'))
             ->addSelect(
+                DB::raw('IFNULL(c.number_of_session - f.check_in_count, c.number_of_session) as remaining_sessions'),
+                DB::raw('CASE WHEN IFNULL(c.number_of_session - f.check_in_count, c.number_of_session) > 0 THEN "Running" WHEN IFNULL(c.number_of_session - f.check_in_count, c.number_of_session) < 0 THEN "kelebihan" ELSE "over" END AS session_status'),
                 DB::raw('DATE_ADD(a.start_date, INTERVAL a.days DAY) as expired_date'),
                 DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.days DAY) THEN "Over" ELSE "Running" END as expired_date_status')
             )
@@ -58,8 +58,10 @@ class TrainerSessionCheckInController extends Controller
             ->leftJoin('users as d', 'a.user_id', '=', 'd.id')
             ->leftJoin('personal_trainers as e', 'a.trainer_id', '=', 'e.id')
             ->leftJoin(DB::raw('(SELECT trainer_session_id, COUNT(id) as check_in_count FROM check_in_trainer_sessions GROUP BY trainer_session_id) as f'), 'f.trainer_session_id', '=', 'a.id')
-            ->leftJoin(DB::raw('(SELECT * FROM check_in_trainer_sessions  order by check_in_time desc limit 1) as g'), 'g.trainer_session_id', '=', 'a.id')
+            // ->leftJoin(DB::raw('(SELECT * FROM check_in_trainer_sessions  order by check_in_time desc limit 1) as g'), 'g.trainer_session_id', '=', 'a.id')
+            ->leftJoin(DB::raw("(select a.* from check_in_trainer_sessions a inner join (SELECT max(id) as id FROM check_in_trainer_sessions group by trainer_session_id) as b on a.id=b.id) as g"), 'g.trainer_session_id', '=', 'a.id')
             ->where('b.member_code', $request->input('member_code'))
+            ->whereRaw('NOW() < DATE_ADD(a.start_date, INTERVAL a.days DAY)')
             ->first();
 
         $memberPhoto    = $trainerSession->photos;
@@ -86,22 +88,10 @@ class TrainerSessionCheckInController extends Controller
             ]);
             $message = 'Trainer Session Checked Out Successfully';
         } else {
-            $checkOutTime = null; // Default value
-
-            $latestCheckIn = CheckInTrainerSession::where('trainer_session_id', $trainerSession->id)
-                ->orderBy('check_in_time', 'desc')
-                ->first();
-
-            if ($latestCheckIn && $latestCheckIn->check_out_time === null) {
-                $checkOutTime = now()->tz('Asia/Jakarta');
-            }
-
             $data = [
                 'trainer_session_id' => $trainerSession->id,
                 'check_in_time' => now()->tz('Asia/Jakarta'),
                 'user_id' => Auth::user()->id,
-                'check_out_time' => $checkOutTime,
-                'duration' => null,
             ];
 
             CheckInTrainerSession::create($data);
@@ -163,7 +153,8 @@ class TrainerSessionCheckInController extends Controller
             ->leftJoin('users as d', 'a.user_id', '=', 'd.id')
             ->leftJoin('personal_trainers as e', 'a.trainer_id', '=', 'e.id')
             ->leftJoin(DB::raw('(SELECT trainer_session_id, COUNT(id) as check_in_count FROM check_in_trainer_sessions GROUP BY trainer_session_id) as f'), 'f.trainer_session_id', '=', 'a.id')
-            ->leftJoin(DB::raw('(SELECT * FROM check_in_trainer_sessions  order by check_in_time desc limit 1) as g'), 'g.trainer_session_id', '=', 'a.id')
+            // ->leftJoin(DB::raw('(SELECT * FROM check_in_trainer_sessions  order by check_in_time desc limit 1) as g'), 'g.trainer_session_id', '=', 'a.id')
+            ->leftJoin(DB::raw("(select a.* from check_in_trainer_sessions a inner join (SELECT max(id) as id FROM check_in_trainer_sessions group by trainer_session_id) as b on a.id=b.id) as g"), 'g.trainer_session_id', '=', 'a.id')
             ->where('a.id', $id)
             ->first();
 
@@ -192,21 +183,10 @@ class TrainerSessionCheckInController extends Controller
             ]);
             $message = 'PT Checked Out Successfully';
         } else {
-            $checkOutTime = null; // Default value
-
-            $latestCheckIn = CheckInTrainerSession::where('trainer_session_id', $trainerSession->id)
-                ->orderBy('check_in_time', 'desc')
-                ->first();
-
-            if ($latestCheckIn && $latestCheckIn->check_out_time === null) {
-                $checkOutTime = now()->tz('Asia/Jakarta');
-            }
-
             $data = [
                 'trainer_session_id'    => $trainerSession->id,
                 'check_in_time'         => now()->tz('Asia/Jakarta'),
                 'user_id'               => Auth::user()->id,
-                'check_out_time'        => $checkOutTime,
             ];
 
             CheckInTrainerSession::create($data);
