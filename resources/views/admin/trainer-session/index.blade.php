@@ -2,6 +2,30 @@
     <div class="col-xl-12">
         <div class="row">
             <div class="col-xl-12">
+                <div class="page-title flex-wrap justify-content-between">
+                    <a href="{{ route('trainer-session.index') }}" class="btn btn-primary">Refresh</a>
+                    <form action="{{ route('trainer-session-filter') }}" class="text-right" method="GET">
+                        @csrf
+                        <div class="d-flex align-items-center">
+                            <div class="col-md-4 d-flex align-items-center">
+                                <input type="date" class="form-control input-sm" name="fromDate" id="fromDate"
+                                    required>
+                            </div>
+                            <div class="mt-3 mx-2">
+                                <p>to</p>
+                            </div>
+                            <div class="col-md-4 d-flex align-items-center">
+                                <input type="date" class="form-control input-sm" name="toDate" id="toDate"
+                                    required>
+                            </div>
+                            <div>
+                                <button type="submit" name="search" class="btn btn-primary mx-2">Filter</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-xl-12">
                 <div class="page-title flex-wrap">
                     <div>
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#checkIn2"

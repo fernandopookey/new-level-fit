@@ -41,6 +41,7 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     Route::get('/add-data', [MergeCreateDataController::class, 'index'])->name('add-data');
 
     Route::resource('member', '\App\Http\Controllers\Member\MemberController');
+
     Route::delete('members-bulk-delete', [MemberController::class, 'bulkDelete'])->name('members-bulk-delete');
 
     Route::resource('member-package', '\App\Http\Controllers\Member\MemberPackageController');
@@ -156,6 +157,7 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     Route::get('personal-trainer-filter', [CheckInTrainerSession::class, 'checkMemberExistence'])->name('checkMemberExistence');
 
     Route::get('member-active-filter', [MemberRegistrationController::class, 'filter'])->name('member-active-filter');
+    Route::get('trainer-session-filter', [TrainerSessionController::class, 'filter'])->name('trainer-session-filter');
 
     // Route::get('/member-details', function () {
     //     return view('admin.member-registration.member_details');

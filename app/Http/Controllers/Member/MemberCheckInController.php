@@ -48,7 +48,7 @@ class MemberCheckInController extends Controller
             )
             ->addSelect(
                 DB::raw('DATE_ADD(a.start_date, INTERVAL a.days DAY) as expired_date'),
-                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END as status'),
+                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.days DAY) THEN "Over" ELSE "Running" END as status'),
             )
             ->join('members as b', 'a.member_id', '=', 'b.id')
             ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
@@ -61,10 +61,12 @@ class MemberCheckInController extends Controller
             )
             ->join('fitness_consultants as g', 'a.fc_id', '=', 'g.id')
             // ->leftJoin('check_in_members as h', 'a.id', '=', 'h.member_registration_id')
-            // ->leftJoin(DB::raw('(SELECT member_registration_id, MAX(check_in_time) as check_in_time, MAX(check_out_time) as check_out_time FROM check_in_members GROUP BY member_registration_id) as i'), 'a.id', '=', 'i.member_registration_id')
-            ->whereRaw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END = ?', ['Running'])
-            ->leftJoin(DB::raw('(SELECT * FROM check_in_members  order by check_in_time desc limit 1) as h'), 'h.member_registration_id', '=', 'a.id')
+            //->leftJoin(DB::raw('(SELECT  check_in_time, MAX(check_out_time) as check_out_time FROM check_in_members GROUP BY member_registration_id) as h'), 'a.id', '=', 'h.member_registration_id')
+            //->leftJoin(DB::raw('(SELECT * FROM check_in_members  order by check_in_time desc limit 1) as h'), 'h.member_registration_id', '=', 'a.id')
+            //edited by angling
+            ->leftJoin(DB::raw("(select a.* from check_in_members a inner join (SELECT max(id) as id FROM check_in_members group by member_registration_id) as b on a.id=b.id) as h"), 'h.member_registration_id', '=', 'a.id')
             ->where('b.member_code', $request->input('member_code'))
+            ->whereRaw('NOW() < DATE_ADD(a.start_date, INTERVAL a.days DAY)')
             ->first();
 
         $memberPhoto    = $memberRegistration->photos;
@@ -86,27 +88,30 @@ class MemberCheckInController extends Controller
 
         $message = "";
         if ($memberRegistration->current_check_in_members_id && !$memberRegistration->check_out_time) {
+            // $checkInMember = CheckInMember::where([["member_registration_id", $memberRegistration->current_check_in_members_id], ["check_in_time", $memberRegistration->check_in_time]]);
+            //edited by angling
             $checkInMember = CheckInMember::find($memberRegistration->current_check_in_members_id);
+
             $checkInMember->update([
                 'check_out_time' => now()->tz('Asia/Jakarta'),
             ]);
             $message = 'Member Checked Out Successfully';
         } else {
-            $checkOutTime = null; // Default value
+            //edited by angling
+            //$checkOutTime = null; // Default value
 
-            $latestCheckIn = CheckInMember::where('member_registration_id', $memberRegistration->id)
-                ->orderBy('check_in_time', 'desc')
-                ->first();
+            // $latestCheckIn = CheckInMember::where('member_registration_id', $memberRegistration->id)
+            //     ->orderBy('check_in_time', 'desc')
+            //     ->first();
 
-            if ($latestCheckIn && $latestCheckIn->check_out_time === null) {
-                $checkOutTime = now()->tz('Asia/Jakarta');
-            }
+            // if ($latestCheckIn && $latestCheckIn->check_out_time === null) {
+            //     $checkOutTime = now()->tz('Asia/Jakarta');
+            // }
 
             $data = [
                 'member_registration_id' => $memberRegistration->id,
                 'check_in_time' => now()->tz('Asia/Jakarta'),
                 'user_id' => Auth::user()->id,
-                'check_out_time' => $checkOutTime,
             ];
 
             CheckInMember::create($data);
@@ -160,19 +165,19 @@ class MemberCheckInController extends Controller
                 'h.check_out_time',
                 'h.check_in_time',
             )
+            ->addSelect(
+                DB::raw('DATE_ADD(a.start_date, INTERVAL a.days DAY) as expired_date'),
+                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.days DAY) THEN "Over" ELSE "Running" END as status'),
+            )
             ->join('members as b', 'a.member_id', '=', 'b.id')
             ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
             ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
-            ->join(
-                'users as f',
-                'a.user_id',
-                '=',
-                'f.id'
-            )
+            ->join('users as f', 'a.user_id', '=', 'f.id')
             ->join('fitness_consultants as g', 'a.fc_id', '=', 'g.id')
             ->whereRaw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END = ?', ['Running'])
-            ->leftJoin(DB::raw('(SELECT * FROM check_in_members  order by check_in_time desc limit 1) as h'), 'h.member_registration_id', '=', 'a.id')
+            ->leftJoin(DB::raw("(select a.* from check_in_members a inner join (SELECT max(id) as id FROM check_in_members group by member_registration_id) as b on a.id=b.id) as h"), 'h.member_registration_id', '=', 'a.id')
             ->where('a.id', $id)
+            ->whereRaw('NOW() < DATE_ADD(a.start_date, INTERVAL a.days DAY)')
             ->first();
 
         $memberPhoto    = $memberRegistration->photos;
@@ -191,7 +196,6 @@ class MemberCheckInController extends Controller
             return redirect()->back()->with('error', 'Member active not found or has ended');
         }
 
-
         $message = "";
         if ($memberRegistration->current_check_in_members_id && !$memberRegistration->check_out_time) {
             $checkInMember = CheckInMember::find($memberRegistration->current_check_in_members_id);
@@ -200,21 +204,11 @@ class MemberCheckInController extends Controller
             ]);
             $message = 'Member Checked Out Successfully';
         } else {
-            $checkOutTime = null; // Default value
-
-            $latestCheckIn = CheckInMember::where('member_registration_id', $memberRegistration->id)
-                ->orderBy('check_in_time', 'desc')
-                ->first();
-
-            if ($latestCheckIn && $latestCheckIn->check_out_time === null) {
-                $checkOutTime = now()->tz('Asia/Jakarta');
-            }
 
             $data = [
                 'member_registration_id' => $memberRegistration->id,
                 'check_in_time' => now()->tz('Asia/Jakarta'),
                 'user_id' => Auth::user()->id,
-                'check_out_time' => $checkOutTime,
             ];
 
             CheckInMember::create($data);

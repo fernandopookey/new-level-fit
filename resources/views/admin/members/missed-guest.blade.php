@@ -6,8 +6,6 @@
                 @method('delete')
                 <div class="col-xl-12">
                     <div class="page-title flex-wrap justify-content-between">
-                        <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal"
-                            data-bs-target=".bd-example-modal-lg">+ New Member</button>
                         <a href="{{ route('member-report') }}" target="_blank" class="btn btn-info">Print PDF</a>
                     </div>
                 </div>
@@ -71,11 +69,8 @@
                                         </td>
                                         <td>
                                             <div>
-                                                <button type="button"
-                                                    class="btn light btn-warning btn-xs btn-block mb-1"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target=".bd-example-modal-lg-edit{{ $item->id }}">Edit
-                                                    Member</button>
+                                                <a href="{{ route('members.edit', $item->id) }}"
+                                                    class="btn light btn-warning btn-xs btn-block mb-1">Edit</a>
                                                 @if (Auth::user()->role == 'ADMIN')
                                                     <form action="{{ route('member.destroy', $item->id) }}"
                                                         onclick="return confirm('Delete Data ?')" method="POST">
@@ -103,7 +98,3 @@
         </div>
     </div>
 </div>
-
-
-@include('admin.members.create')
-@include('admin.members.edit')

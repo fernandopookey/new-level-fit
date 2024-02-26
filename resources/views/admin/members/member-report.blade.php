@@ -36,7 +36,7 @@
             @foreach ($members as $item)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{ $item->full_name }}</td>
+                    <td>{{ $item->member_name }}</td>
                     <td>{{ $item->member_code }}</td>
                     <td>{{ $item->phone_number }}</td>
                     <td>{{ $item->gender }}</td>

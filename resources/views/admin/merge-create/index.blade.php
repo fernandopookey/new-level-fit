@@ -146,14 +146,14 @@
                         <div class="mb-3">
                             <label class="form-label">Start Date</label>
                             <input type="text" name="start_date" value="{{ old('start_date') }}"
-                                class="form-control editDate mdate-custom3" placeholder="Choose start date" required>
+                                class="form-control editDate mdate-custom3" placeholder="Choose start date">
                         </div>
                     </div>
                     <input type="hidden" class="form-control editTime" name="start_time" autocomplete="off">
                     <div class="col-xl-6" id="method_payment">
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Method Payment</label>
-                            <select id="single-select3" name="method_payment_id" class="form-control" required>
+                            <select id="single-select3" name="method_payment_id" class="form-control">
                                 <option>
                                     <- Choose ->
                                 </option>
@@ -166,7 +166,7 @@
                     <div class="col-xl-6" id="fitness_consultant">
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Fitness Consultant</label>
-                            <select id="single-select4" name="fc_id" class="form-control" required>
+                            <select id="single-select4" name="fc_id" class="form-control">
                                 <option>
                                     <- Choose ->
                                 </option>
@@ -187,20 +187,8 @@
                         </div>
                     </div>
                 </div>
-                {{-- <div class="col-xl-6">
-                        <div class="mb-3">
-                            <label for="exampleFormControlTextarea1" class="form-label text-primary">
-                                Description
-                            </label>
-                            <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="6"
-                                placeholder="Enter Description">{{ old('description') }}</textarea>
-                        </div>
-                    </div> --}}
                 <div class="d-flex justify-content-between">
                     <button type="submit" class="btn btn-primary">Save</button>
-                    {{-- <a href="{{ route('member-active.index') }}" class="btn btn-info text-right">Member
-                        Registration
-                        List</a> --}}
                 </div>
             </form>
         </div>
