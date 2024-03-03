@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Member;
 
+use App\Exports\MemberExport;
 use App\Http\Controllers\Controller;
 use App\Models\Member\Member;
 use App\Models\Member\MemberPackage;
@@ -16,6 +17,8 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+
+use Maatwebsite\Excel\Facades\Excel;
 
 class MemberController extends Controller
 {
@@ -53,7 +56,7 @@ class MemberController extends Controller
 
     public function create()
     {
-        //
+        return Excel::download(new MemberExport(), 'member.xlsx');
     }
 
     public function store(Request $request)
