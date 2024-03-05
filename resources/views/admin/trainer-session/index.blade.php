@@ -84,7 +84,8 @@
                                 <th>Member Data</th>
                                 <th>Last Check In</th>
                                 <th>Date</th>
-                                <th>Session & Status</th>
+                                <th>Session</th>
+                                <th>Status</th>
                                 <th>Trainer & Staff</th>
                                 <th>Action</th>
                             </tr>
@@ -106,8 +107,6 @@
                                     </td>
                                     <td>
                                         <h6>{{ $item->member_name }},</h6>
-                                        <h6>{{ $item->member_code }},</h6>
-                                        <h6>{{ $item->member_phone }}</h6>
                                     </td>
                                     <td>
                                         <span class="badge badge-info badge-lg">
@@ -129,24 +128,34 @@
                                     <td>
                                         <h6>Session Total : {{ $item->number_of_session }}</h6>
                                         <h6>Remaining Session : {{ $item->remaining_sessions }}</h6>
-                                        <h6>Status:
-                                            @if ((!$item->check_in_time && !$item->check_out_time) || ($item->check_in_time && $item->check_out_time))
-                                                <span class="badge badge-info">Not Start</span>
-                                            @elseif ($item->check_in_time && !$item->check_out_time)
-                                                <span class="badge badge-primary">Running</span>
-                                            @endif
-                                        </h6>
+                                    </td>
+                                    <td>
+                                        @if ((!$item->check_in_time && !$item->check_out_time) || ($item->check_in_time && $item->check_out_time))
+                                            <span class="badge badge-info badge-lg">Not Start</span>
+                                        @elseif ($item->check_in_time && !$item->check_out_time)
+                                            <span class="badge badge-primary badge-lg">Running</span>
+                                        @endif
                                     </td>
                                     <td>
                                         <h6>Trainer : {{ $item->trainer_name }},</h6>
                                         <h6>Staff : {{ $item->staff_name }}</h6>
                                     </td>
-                                    <td class="btn-group-vertical">
-                                        <a href="{{ route('PTSecondCheckIn', $item->id) }}"
-                                            class="btn light btn-info btn-xs mb-1 btn-block">Check In</a>
+                                    <td>
+                                        @php
+                                            $now = \Carbon\Carbon::now()->tz('asia/jakarta');
+                                        @endphp
+                                        @if ($item->start_date < $now)
+                                            @if ((!$item->check_in_time && !$item->check_out_time) || ($item->check_in_time && $item->check_out_time))
+                                                <a href="{{ route('PTSecondCheckIn', $item->id) }}"
+                                                    class="btn light btn-info btn-xs mb-1 btn-block">Check In</a>
+                                            @elseif ($item->check_in_time && !$item->check_out_time)
+                                                <a href="{{ route('PTSecondCheckIn', $item->id) }}"
+                                                    class="btn light btn-info btn-xs mb-1 btn-block">Check Out</a>
+                                            @endif
+                                        @endif
                                         @if (Auth::user()->role == 'ADMIN')
                                             <a href="{{ route('trainer-session.edit', $item->id) }}"
-                                                class="btn light btn-warning btn-xs mb-1">Edit</a>
+                                                class="btn light btn-warning btn-xs mb-1 btn-block">Edit</a>
                                         @endif
                                         <a href="{{ route('pt-agreement', $item->id) }}" target="_blank"
                                             class="btn light btn-secondary btn-xs mb-1 btn-block">Agrement</a>
@@ -155,7 +164,7 @@
                                                 class="btn light btn-secondary btn-xs mb-1 btn-block">Cuti</a>
                                         @endif
                                         <a href="{{ route('trainer-session.show', $item->id) }}"
-                                            class="btn light btn-info btn-xs mb-1">Detail</a>
+                                            class="btn light btn-info btn-xs mb-1 btn-block">Detail</a>
                                         <button type="button" class="btn light btn-dark btn-xs mb-1 btn-block"
                                             data-bs-toggle="modal" data-bs-target=".freeze{{ $item->id }}"
                                             id="checkInButton">Freeze</button>

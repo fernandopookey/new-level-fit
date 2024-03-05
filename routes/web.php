@@ -163,6 +163,8 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     //     return view('admin.member-registration.member_details');
     // })->name('member.details');
 
+    Route::get('member-active/excel', [MemberRegistrationController::class, 'excel'])->name('memberRegistrationExcel');
+
     Route::get('/tes', function () {
         return view('admin.member-registration.tes');
     })->name('member.details');

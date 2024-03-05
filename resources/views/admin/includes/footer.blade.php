@@ -171,12 +171,15 @@
     }
 </script> --}}
 
-{{-- Datatables --}}
-{{-- <script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script> --}}
-{{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> --}}
 <script>
     $(document).ready(function() {
         let table = new DataTable('#myTable', {
+            buttons: [
+                'copyHtml5',
+                'excelHtml5',
+                'print',
+                'pdfHtml5'
+            ],
             order: [
                 [1, 'asc']
             ]
@@ -184,19 +187,23 @@
     });
 </script>
 
-
-{{-- <script>
-    @if (Session::has('success'))
-        toastr.success("{{ Session::get('success') }}")
-    @endif
-</script> --}}
-
 @if (Session::has('success'))
     <script>
         swal({
             title: "Success!",
             text: "{{ Session::get('success') }}",
             icon: "success",
+            button: "OK",
+        });
+    </script>
+@endif
+
+@if (Session::has('errorr'))
+    <script>
+        swal({
+            title: "Error!",
+            text: "{{ Session::get('errorr') }}",
+            icon: "error",
             button: "OK",
         });
     </script>
@@ -305,17 +312,20 @@
     });
 </script>
 
-{{-- <script>
+<script>
     document.addEventListener("DOMContentLoaded", function() {
-        var defaultDate = new Date();
-        var formattedDate = defaultDate.getFullYear() + '-' + ('0' + (defaultDate.getMonth() + 1)).slice(-2) +
-            '-' + ('0' + defaultDate.getDate()).slice(-2);
-        document.getElementsByClassName("editDate")[0].value = formattedDate;
+        // var defaultDate = new Date();
+        var formattedDate = ('0' + getDate()).slice(-2) + '-' + toLocaleString(
+            'default', {
+                month: 'long'
+            }) + '-' + defaultDate.getFullYear();
+        document.getElementsByClassName("changeDate")[0].value = formattedDate;
 
-        var defaultTime = defaultDate.getHours() + ':' + ('0' + defaultDate.getMinutes()).slice(-2);
-        document.getElementsByClassName("editTime")[0].value = defaultTime;
+        var defaultTime = ('0' + getHours()).slice(-2) + ':' + ('0' + getMinutes())
+            .slice(-2);
+        document.getElementsByClassName("changeDate")[0].value = defaultTime;
     });
-</script> --}}
+</script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {

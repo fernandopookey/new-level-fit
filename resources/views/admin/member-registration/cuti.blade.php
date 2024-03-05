@@ -85,7 +85,7 @@
         <tbody>
             <tr>
                 <td>Tanggal Pengajuan</td>
-                <td>{{ DateFormat($memberRegistration->updated_at, 'DD MMMM YYYY') }}</td>
+                <td>{{ DateFormat($memberRegistration->submission_date, 'DD MMMM YYYY, HH:mm') }}</td>
                 <td>Biaya Administrasi</td>
                 <td>{{ formatRupiah($memberRegistration->mr_admin_price) }}</td>
             </tr>

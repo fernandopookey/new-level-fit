@@ -17,6 +17,13 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithBatchInserts;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Imports\HeadingRowFormatter;
+
+HeadingRowFormatter::default('none');
 
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -56,8 +63,13 @@ class MemberController extends Controller
 
     public function create()
     {
-        return Excel::download(new MemberExport(), 'member.xlsx');
+        return Excel::download(new MemberExport(), 'members.xlsx');
     }
+
+    // public function query()
+    // {
+    //     return Member::query()->whereYear('created_at', $this->year);
+    // }
 
     public function store(Request $request)
     {

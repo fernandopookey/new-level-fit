@@ -65,7 +65,7 @@ class TrainerSessionController extends Controller
             ->join('method_payments as i', 'a.method_payment_id', '=', 'i.id')
             ->whereRaw('CASE WHEN IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) > 0 THEN "Running" WHEN IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) < 0 THEN "kelebihan" ELSE "over" END = "Running"')
             ->orderBy('cits.check_in_time', 'desc')
-            // ->orderBy('cits.check_out_time', 'desc')
+            ->orderBy('cits.check_out_time', 'desc')
             ->get();
 
         $birthdayMessage3 = "";
@@ -269,7 +269,8 @@ class TrainerSessionController extends Controller
             'start_date'           => 'required',
         ]);
         $data['user_id'] = Auth::user()->id;
-        $data['days'] =  DateDiff($data['start_date'], $data['expired_date']);
+
+        $data['days'] =  $item->days + $data['expired_date'];
         $data['old_days'] = $item->trainerPackages->days;
 
         $item->update($data);
@@ -278,7 +279,7 @@ class TrainerSessionController extends Controller
         unset($data['old_expired_date']);
         $item->update($data);
 
-        return redirect()->route('trainer-session.index')->with('message', 'Trainer Session Freeze Successfully');
+        return redirect()->route('trainer-session.index')->with('success', 'PT Freeze Successfully');
     }
 
     public function destroy(TrainerSession $trainerSession)

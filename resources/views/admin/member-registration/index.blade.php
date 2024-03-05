@@ -45,9 +45,6 @@
 <div class="row">
     <div class="col-xl-12">
         <div class="row">
-            {{-- <form action="{{ route('member-active-bulk-delete') }}" method="POST"> --}}
-            {{-- @csrf
-            @method('delete') --}}
             <div class="col-xl-12">
                 <div class="page-title flex-wrap justify-content-between">
                     <a href="{{ route('member-active.index') }}" class="btn btn-primary">Refresh</a>
@@ -76,6 +73,7 @@
                 <div class="page-title flex-wrap justify-content-between">
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#checkIn2"
                         id="checkInButton">Input Member Code</button>
+                    <a href="{{ url('/member-active/excel') }}" class="btn btn-info">Download Excel</a>
                 </div>
             </div>
             @if ($birthdayMessage2)
@@ -124,13 +122,10 @@
                         id="myTable">
                         <thead>
                             <tr>
-                                @if (Auth::user()->role == 'ADMIN')
-                                    <th></th>
-                                @endif
                                 <th>No</th>
                                 <th>Image</th>
-                                <th>Member Data</th>
-                                <th>Package Data</th>
+                                <th>Member Name</th>
+                                <th>Last Check In</th>
                                 <th>Date</th>
                                 <th>Status</th>
                                 <th>Staff</th>
@@ -140,12 +135,6 @@
                         <tbody>
                             @foreach ($memberRegistrations as $item)
                                 <tr>
-                                    @if (Auth::user()->role == 'ADMIN')
-                                        <td>
-                                            <input type="checkbox" name="selectedMemberActive[]"
-                                                value="{{ $item->id }}">
-                                        </td>
-                                    @endif
                                     <td>{{ $loop->iteration }}</td>
                                     <td>
                                         <div class="trans-list">
@@ -159,27 +148,35 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <h6>{{ $item->member_name }},</h6>
-                                        <h6>{{ $item->member_code }},</h6>
-                                        <h6>{{ $item->phone_number }}</h6>
+                                        <h6>{{ $item->member_name }}</h6>
                                     </td>
                                     <td>
                                         @php
-                                            $daysLeft = Carbon\Carbon::parse($item->expired_date)->diffInDays(Carbon\Carbon::now());
+                                            $daysLeft = Carbon\Carbon::parse($item->expired_date)->diffInDays(
+                                                Carbon\Carbon::now(),
+                                            );
                                         @endphp
                                         @if ($daysLeft <= 5 && $daysLeft == 3)
                                             <span class="badge badge-warning badge-lg">
-                                                <b>{{ $daysLeft }} Days Left</b><br />
-                                                {{ $item->package_name }}, <br />
-                                                {{ formatRupiah($item->package_price) }}, <br />
-                                                {{ $item->member_registration_days }} Days
+                                                @if (!$item->check_in_time && !$item->check_out_time)
+                                                    Not Yet
+                                                @elseif ($item->check_in_time && $item->check_out_time)
+                                                    {{ DateDiff($item->check_out_time, \Carbon\Carbon::now(), true) }}
+                                                    day ago
+                                                @elseif ($item->check_in_time && !$item->check_out_time)
+                                                    Running
+                                                @endif
                                             </span>
                                         @elseif($daysLeft <= 2)
                                             <span class="badge badge-danger badge-lg">
-                                                <b>{{ $daysLeft }} Days Left</b><br />
-                                                {{ $item->package_name }}, <br />
-                                                {{ formatRupiah($item->package_price) }}, <br />
-                                                {{ $item->member_registration_days }} Days
+                                                @if (!$item->check_in_time && !$item->check_out_time)
+                                                    Not Yet
+                                                @elseif ($item->check_in_time && $item->check_out_time)
+                                                    {{ DateDiff($item->check_out_time, \Carbon\Carbon::now(), true) }}
+                                                    day ago
+                                                @elseif ($item->check_in_time && !$item->check_out_time)
+                                                    Running
+                                                @endif
                                             </span>
                                         @else
                                             <span class="badge badge-info badge-lg">
@@ -200,45 +197,53 @@
                                     </td>
                                     <td>
                                         @if ((!$item->check_in_time && !$item->check_out_time) || ($item->check_in_time && $item->check_out_time))
-                                            <span class="badge badge-info">Not Start</span>
+                                            <span class="badge badge-info badge-lg">Not Start</span>
                                         @elseif ($item->check_in_time && !$item->check_out_time)
-                                            <span class="badge badge-primary">Running</span>
+                                            <span class="badge badge-primary badge-lg">Running</span>
                                         @endif
                                     <td>
                                         <h6>{{ $item->staff_name }}</h6>
                                     </td>
                                     <td>
-                                        <div>
-                                            <a href="{{ route('secondCheckIn', $item->id) }}"
-                                                class="btn light btn-info btn-xs mb-1 btn-block">Check In</a>
-                                            @if (Auth::user()->role == 'ADMIN')
-                                                <a href="{{ route('member-active.edit', $item->id) }}"
-                                                    class="btn light btn-warning btn-xs mb-1 btn-block">Edit</a>
+                                        @php
+                                            $now = \Carbon\Carbon::now()->tz('asia/jakarta');
+                                        @endphp
+                                        @if ($item->start_date < $now)
+                                            @if ((!$item->check_in_time && !$item->check_out_time) || ($item->check_in_time && $item->check_out_time))
+                                                <a href="{{ route('secondCheckIn', $item->id) }}"
+                                                    class="btn light btn-info btn-xs mb-1 btn-block">Check In</a>
+                                            @elseif ($item->check_in_time && !$item->check_out_time)
+                                                <a href="{{ route('secondCheckIn', $item->id) }}"
+                                                    class="btn light btn-info btn-xs mb-1 btn-block">Check Out</a>
                                             @endif
-                                            <a href="{{ route('membership-agreement', $item->id) }}" target="_blank"
-                                                class="btn light btn-secondary btn-xs mb-1 btn-block">Agrement</a>
-                                            @if ($item->old_days != 0)
-                                                <a href="{{ route('cuti', $item->id) }}" target="_blank"
-                                                    class="btn light btn-secondary btn-xs mb-1 btn-block">Cuti</a>
-                                            @endif
-                                            <a href="{{ route('member-active.show', $item->id) }}"
-                                                class="btn light btn-info btn-xs mb-1 btn-block">Detail</a>
-                                            <button type="button" class="btn light btn-light btn-xs mb-1 btn-block"
-                                                data-bs-toggle="modal" data-bs-target=".freeze{{ $item->id }}"
-                                                id="checkInButton">Freeze</button>
-                                            <a href="{{ route('renewal', $item->id) }}"
-                                                class="btn light btn-dark btn-xs mb-1 btn-block">Renewal</a>
-                                            @if (Auth::user()->role == 'ADMIN')
-                                                <form action="{{ route('member-active.destroy', $item->id) }}"
-                                                    method="POST">
-                                                    @method('delete')
-                                                    @csrf
-                                                    <button type="submit"
-                                                        class="btn light btn-danger btn-xs btn-block mb-1"
-                                                        onclick="return confirm('Delete data ?')">Delete</button>
-                                                </form>
-                                            @endif
-                                        </div>
+                                        @endif
+                                        @if (Auth::user()->role == 'ADMIN')
+                                            <a href="{{ route('member-active.edit', $item->id) }}"
+                                                class="btn light btn-warning btn-xs mb-1 btn-block">Edit</a>
+                                        @endif
+                                        <a href="{{ route('membership-agreement', $item->id) }}" target="_blank"
+                                            class="btn light btn-secondary btn-xs mb-1 btn-block">Agrement</a>
+                                        @if ($item->old_days != 0)
+                                            <a href="{{ route('cuti', $item->id) }}" target="_blank"
+                                                class="btn light btn-secondary btn-xs mb-1 btn-block">Cuti</a>
+                                        @endif
+                                        <a href="{{ route('member-active.show', $item->id) }}"
+                                            class="btn light btn-info btn-xs mb-1 btn-block">Detail</a>
+                                        <button type="button" class="btn light btn-light btn-xs mb-1 btn-block"
+                                            data-bs-toggle="modal" data-bs-target=".freeze{{ $item->id }}"
+                                            id="checkInButton">Freeze</button>
+                                        <a href="{{ route('renewal', $item->id) }}"
+                                            class="btn light btn-dark btn-xs mb-1 btn-block">Renewal</a>
+                                        @if (Auth::user()->role == 'ADMIN')
+                                            <form action="{{ route('member-active.destroy', $item->id) }}"
+                                                method="POST">
+                                                @method('delete')
+                                                @csrf
+                                                <button type="submit"
+                                                    class="btn light btn-danger btn-xs btn-block mb-1"
+                                                    onclick="return confirm('Delete {{ $item->member_name }} member package ?')">Delete</button>
+                                            </form>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
@@ -250,7 +255,6 @@
                     @endif
                 </div>
             </div>
-            {{-- </form> --}}
             <!--/column-->
         </div>
     </div>

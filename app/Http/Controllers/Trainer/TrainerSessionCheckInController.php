@@ -13,14 +13,28 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class TrainerSessionCheckInController extends Controller
 {
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'member_code'   => 'required|exists:members,member_code'
+        // $data = $request->validate([
+        //     'member_code'   => 'required|exists:members,member_code'
+        // ]);
+
+        $validator = Validator::make($request->all(), [
+            'member_code' => 'required|exists:members,member_code',
+        ], [
+            'member_code.exists' => 'CARD NOT FOUND',
         ]);
+
+        if ($validator->fails()) {
+            $errorMessage = $validator->errors()->first('member_code');
+            echo "<script>alert('$errorMessage');</script>";
+            echo "<script>window.location.href = '" . route('trainer-session.index') . "';</script>";
+            return;
+        }
 
         $trainerSession = DB::table('trainer_sessions as a')
             ->select(
