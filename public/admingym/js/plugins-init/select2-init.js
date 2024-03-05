@@ -22,6 +22,8 @@
 
     $("#single-select10").select2();
 
+    $(".single-select").select2();
+
     // multi select box
     $(".multi-select").select2();
 

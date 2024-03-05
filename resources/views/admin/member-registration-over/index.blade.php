@@ -69,7 +69,7 @@
                                 <th>No</th>
                                 <th>Image</th>
                                 <th>Member's Data</th>
-                                <th>Package Data</th>
+                                <th>Last Check In</th>
                                 <th>Date</th>
                                 <th>Status</th>
                                 <th>Staff</th>
@@ -100,11 +100,45 @@
                                         <h6>{{ $item->phone_number }}</h6>
                                     </td>
                                     <td>
-                                        <span class="badge badge-danger badge-lg">
-                                            {{ $item->package_name }}, <br />
-                                            {{ formatRupiah($item->package_price) }}, <br />
-                                            {{ $item->member_registration_days }} Days <br />
-                                        </span>
+                                        @php
+                                            $daysLeft = Carbon\Carbon::parse($item->expired_date)->diffInDays(
+                                                Carbon\Carbon::now(),
+                                            );
+                                        @endphp
+                                        @if ($daysLeft <= 5 && $daysLeft == 3)
+                                            <span class="badge badge-warning badge-lg">
+                                                @if (!$item->check_in_time && !$item->check_out_time)
+                                                    Not Yet
+                                                @elseif ($item->check_in_time && $item->check_out_time)
+                                                    {{ DateDiff($item->check_out_time, \Carbon\Carbon::now(), true) }}
+                                                    day ago
+                                                @elseif ($item->check_in_time && !$item->check_out_time)
+                                                    Running
+                                                @endif
+                                            </span>
+                                        @elseif($daysLeft <= 2)
+                                            <span class="badge badge-danger badge-lg">
+                                                @if (!$item->check_in_time && !$item->check_out_time)
+                                                    Not Yet
+                                                @elseif ($item->check_in_time && $item->check_out_time)
+                                                    {{ DateDiff($item->check_out_time, \Carbon\Carbon::now(), true) }}
+                                                    day ago
+                                                @elseif ($item->check_in_time && !$item->check_out_time)
+                                                    Running
+                                                @endif
+                                            </span>
+                                        @else
+                                            <span class="badge badge-info badge-lg">
+                                                @if (!$item->check_in_time && !$item->check_out_time)
+                                                    Not Yet
+                                                @elseif ($item->check_in_time && $item->check_out_time)
+                                                    {{ DateDiff($item->check_out_time, \Carbon\Carbon::now(), true) }}
+                                                    day ago
+                                                @elseif ($item->check_in_time && !$item->check_out_time)
+                                                    Running
+                                                @endif
+                                            </span>
+                                        @endif
                                     </td>
                                     <td>
                                         <h6>{{ DateFormat($item->start_date, 'DD MMMM YYYY') }}-{{ DateFormat($item->expired_date, 'DD MMMM YYYY') }}
@@ -112,9 +146,9 @@
                                     </td>
                                     <td>
                                         @if ($item->status == 'Running')
-                                            <span class="badge badge-primary">Running</span>
+                                            <span class="badge badge-primary badge-lg">Running</span>
                                         @else
-                                            <span class="badge badge-danger">Over</span>
+                                            <span class="badge badge-danger badge-lg">Over</span>
                                         @endif
                                     </td>
                                     <td>
@@ -130,6 +164,8 @@
                                                 class="btn light btn-secondary btn-xs mb-1 btn-block">Agrement</a>
                                             <a href="{{ route('member-expired.show', $item->id) }}"
                                                 class="btn light btn-info btn-xs mb-1 btn-block">Detail</a>
+                                            <a href="{{ route('renewal', $item->id) }}"
+                                                class="btn light btn-dark btn-xs mb-1 btn-block">Renewal</a>
                                             @if (Auth::user()->role == 'ADMIN')
                                                 <form action="{{ route('member-active.destroy', $item->id) }}"
                                                     onclick="return confirm('Delete Data ?')" method="POST">

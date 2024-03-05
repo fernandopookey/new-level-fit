@@ -14,23 +14,38 @@ class MemberRegistrationOverController extends Controller
     {
         $memberRegistrationsOver = DB::table('member_registrations as a')
             ->select(
-                'a.package_price',
+                'a.id',
                 'a.start_date',
-                'a.admin_price',
                 'a.description',
                 'a.days as member_registration_days',
-                'a.id',
+                'a.old_days',
+                'a.package_price as mr_package_price',
+                'a.admin_price as mr_admin_price',
                 'b.full_name as member_name',
                 'b.member_code',
                 'b.phone_number',
+                'b.born',
                 'b.photos',
                 'b.gender',
                 'c.package_name',
                 'c.days',
+                'c.package_name',
+                'c.package_price',
+                'c.days',
                 'e.name as method_payment_name',
                 'f.full_name as staff_name',
-                DB::raw('DATE_ADD(a.start_date, INTERVAL c.days DAY) as expired_date'),
-                DB::raw('"Over" as status'),
+                'g.full_name as fc_name',
+                'g.phone_number as fc_phone_number',
+                'h.check_in_time',
+                'h.check_out_time',
+            )
+            ->addSelect(
+                DB::raw("'bg-dark' as birthdayCelebrating"), //0 tidak ultah, 3 hari lagi ultah, 2 hari lagi, 1 hari lagi
+                DB::raw('DATE_ADD(a.start_date, INTERVAL a.days DAY) as expired_date'),
+                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END as status'),
+                // DB::raw('CONCAT(YEAR(CURDATE()), "-", MONTH(b.born), "-", DAY(b.born)) as member_birthday')
+                DB::raw('CONCAT(YEAR(CURDATE()), "-", MONTH(b.born), "-", DAY(b.born)) as member_birthday'),
+                DB::raw('DATEDIFF(CONCAT(YEAR(CURDATE()), "-", MONTH(b.born), "-", DAY(b.born)), CURDATE()) as days_until_birthday'),
                 DB::raw('SUM(a.package_price) as total_price'),
                 DB::raw('SUM(a.admin_price) as admin_price')
             )
@@ -38,6 +53,8 @@ class MemberRegistrationOverController extends Controller
             ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
             ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
             ->join('users as f', 'a.user_id', '=', 'f.id')
+            ->join('fitness_consultants as g', 'a.fc_id', '=', 'g.id')
+            ->leftJoin(DB::raw('(select * from (select a.* from (select * from check_in_members) as a inner join (SELECT max(id) as id FROM check_in_members group by member_registration_id) as b on a.id=b.id) as tableH) as h'), 'a.id', '=', 'h.member_registration_id')
             ->whereRaw('NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY)')
             ->groupBy(
                 'a.id',
@@ -46,15 +63,20 @@ class MemberRegistrationOverController extends Controller
                 'a.description',
                 'a.package_price',
                 'a.days',
+                'a.old_days',
                 'b.full_name',
                 'b.member_code',
                 'b.phone_number',
                 'b.photos',
                 'b.gender',
+                'b.born',
                 'c.package_name',
                 'c.days',
+                'c.package_price',
                 'e.name',
                 'f.full_name',
+                'g.full_name',
+                'g.phone_number',
                 'expired_date',
                 'status'
             )

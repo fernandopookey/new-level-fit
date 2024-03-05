@@ -7,7 +7,7 @@
                     @method('PUT')
                     @csrf
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Check In Member</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Freeze Member</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -53,52 +53,28 @@
                                         class="form-control" style="background-color: rgb(231, 229, 229);" disabled>
                                 </div>
                             </div>
-                            {{-- <div class="col-xl-12">
-                                <div class="mb-3">
-                                    <h5>Days Off</h5>
-                                    <input type="number" name="days_off" id="memberCode" class="form-control"
-                                        autocomplete="off" required>
-                                </div>
-                            </div>
-                            value="2024-03-01"
-                            --}}
-
-                            {{-- <div class="col-xl-3">
-                                <div class="mb-3">
-                                    <label class="form-label">Start Date</label> --}}
                             <input type="hidden" name="start_date"
                                 value="{{ DateFormat($item->start_date, 'YYYY-MM-DD') }}"
                                 class="form-control mdate-custom" required autocomplete="off" readonly>
-                            {{-- </div>
-                            </div> --}}
-                            <div class="col-xl-12">
+                            {{-- <div class="col-xl-12">
                                 <div class="mb-3">
                                     <label class="form-label">Expired Date</label>
                                     <input type="date" name="expired_date"
                                         value="{{ old('expired_date', $item->expired_date) }}"
                                         class="form-control mdate-custom2" required autocomplete="off">
                                 </div>
-                            </div>
-                            {{-- <div class="col-xl-3">
-                                <div class="mb-3">
-                                    <label class="form-label">Start Date</label>
-                                    <input type="text" name="start_date" value="{{ old('start_date') }}"
-                                        class="form-control editDate2 mdate-custom" placeholder="Choose start date"
-                                        required>
-                                </div>
-                            </div>
-                            --}}
-                            {{-- <div class="col-xl-3">
-                                <div class="mb-3">
-                                    <label class="form-label">Start Time</label>
-                                    <div class="input-group clockpicker2" data-placement="left" data-align="top"
-                                        data-autobtn-close="true">
-                                        <input type="text" class="form-control editTime2" name="start_time"
-                                            autocomplete="off" required>
-                                        <span class="input-group-text"><i class="far fa-clock"></i></span>
-                                    </div>
-                                </div>
                             </div> --}}
+                            <div class="col-xl-6">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Periode Cuti</label>
+                                    <select name="expired_date" class="form-control" required>
+                                        <option selected>Select</option>
+                                        <option value="30">1 Month</option>
+                                        <option value="60">2 Month</option>
+                                        <option value="90">3 Month</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">

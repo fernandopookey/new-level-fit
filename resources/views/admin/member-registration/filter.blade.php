@@ -79,7 +79,9 @@
                                     </td>
                                     <td>
                                         @php
-                                            $daysLeft = Carbon\Carbon::parse($item->expired_date)->diffInDays(Carbon\Carbon::now());
+                                            $daysLeft = Carbon\Carbon::parse($item->expired_date)->diffInDays(
+                                                Carbon\Carbon::now(),
+                                            );
                                         @endphp
                                         @if ($daysLeft <= 5 && $daysLeft == 3)
                                             <span class="badge badge-warning badge-lg">

@@ -26,7 +26,7 @@
                     <span class="nav-text">Members</span>
                 </a>
                 <ul aria-expanded="false">
-                    <li><a href="{{ route('members.index') }}">Sell</a></li>
+                    <li><a href="{{ route('members.index') }}">Member List</a></li>
                     <li><a href="{{ route('missed-guest.index') }}">Missed Guest</a></li>
                     {{-- <li><a href="{{ route('member-payment.index') }}">Member Payment</a></li> --}}
 

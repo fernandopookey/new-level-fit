@@ -24,7 +24,7 @@
 
 <div class="row">
 
-    <div class="col-xl-6 col-sm-6">
+    <div class="col-xl-3 col-sm-3">
         <div class="card">
             <div class="card-body">
                 <ul class="d-flex align-items-center">
@@ -47,7 +47,7 @@
             </div>
         </div>
     </div>
-    {{-- <div class="col-xl-3 col-sm-6">
+    <div class="col-xl-3 col-sm-3">
         <div class="card">
             <div class="card-body">
                 <ul class="d-flex align-items-center">
@@ -63,14 +63,14 @@
                         </svg>
                     </li>
                     <li class="text-end">
-                        <span><b>Admin Price Member Registration Amount</b></span>
+                        <span><b>Admin Amount</b></span>
                         <h5 class="my-3">{{ formatRupiah($adminPriceMemberRegistration) }}</h5>
                     </li>
                 </ul>
             </div>
         </div>
-    </div> --}}
-    <div class="col-xl-6 col-sm-6">
+    </div>
+    <div class="col-xl-3 col-sm-3">
         <div class="card">
             <div class="card-body">
                 <ul class="d-flex align-items-center">
@@ -93,7 +93,7 @@
             </div>
         </div>
     </div>
-    {{-- <div class="col-xl-3 col-sm-6">
+    <div class="col-xl-3 col-sm-3">
         <div class="card">
             <div class="card-body">
                 <ul class="d-flex align-items-center">
@@ -109,13 +109,13 @@
                         </svg>
                     </li>
                     <li class="text-end">
-                        <span><b>Admin Price Trainer Session Amount</b></span>
+                        <span><b>LGT Amount</b></span>
                         <h5 class="my-3">{{ formatRupiah($adminPriceTrainerSession) }}</h5>
                     </li>
                 </ul>
             </div>
         </div>
-    </div> --}}
+    </div>
 </div>
 
 <hr />
@@ -124,109 +124,110 @@
 {{-- MEMBER --}}
 <div class="row">
     <div class="col-xl-4 col-xxl-4 col-lg-4 col-sm-4">
-        <div class="widget-stat card bg-primary">
-            <div class="card-body p-4">
-                <div class="media">
-                    <span class="me-3">
-                        <i class="la la-users"></i>
-                    </span>
-                    <div class="media-body text-white text-end">
-                        <a href="{{ route('members.index') }}">
+        <a href="{{ route('members.index') }}">
+            <div class="widget-stat card bg-primary">
+                <div class="card-body p-4">
+                    <div class="media">
+                        <span class="me-3">
+                            <i class="la la-users"></i>
+                        </span>
+                        <div class="media-body text-white text-end">
+
                             <p class="mb-1 text-white">Total Members</p>
-                        </a>
-                        <h3 class="text-white">{{ $totalMember }}</h3>
+                            <h3 class="text-white">{{ $totalMember }}</h3>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </a>
     </div>
     <div class="col-xl-4 col-xxl-4 col-lg-4 col-sm-4">
-        <div class="widget-stat card bg-info">
-            <div class="card-body  p-4">
-                <div class="media">
-                    <span class="me-3">
-                        <i class="la la-users"></i>
-                    </span>
-                    <div class="media-body text-white text-end">
-                        <a href="{{ route('member-active.index') }}">
+        <a href="{{ route('member-active.index') }}">
+            <div class="widget-stat card bg-info">
+                <div class="card-body  p-4">
+                    <div class="media">
+                        <span class="me-3">
+                            <i class="la la-users"></i>
+                        </span>
+                        <div class="media-body text-white text-end">
                             <p class="mb-1 text-white">Total Member Active</p>
-                        </a>
-                        <h3 class="text-white">{{ $runningRegistrationsMemberCount }}</h3>
+                            <h3 class="text-white">{{ $runningRegistrationsMemberCount }}</h3>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </a>
     </div>
     <div class="col-xl-4 col-xxl-4 col-lg-4 col-sm-4">
-        <div class="widget-stat card bg-danger">
-            <div class="card-body p-4">
-                <div class="media">
-                    <span class="me-3">
-                        <i class="la la-users"></i>
-                    </span>
-                    <div class="media-body text-white text-end">
-                        <a href="{{ route('member-expired.index') }}">
+        <a href="{{ route('member-expired.index') }}">
+            <div class="widget-stat card bg-danger">
+                <div class="card-body p-4">
+                    <div class="media">
+                        <span class="me-3">
+                            <i class="la la-users"></i>
+                        </span>
+                        <div class="media-body text-white text-end">
                             <p class="mb-1 text-white">Total Member Expired</p>
-                        </a>
-                        <h3 class="text-white">{{ $overRegistrationsMemberCount }}</h3>
+                            <h3 class="text-white">{{ $overRegistrationsMemberCount }}</h3>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </a>
     </div>
 </div>
 
 {{-- TRAINER --}}
 <div class="row">
     <div class="col-xl-4 col-xxl-4 col-lg-6 col-sm-6">
-        <div class="widget-stat card bg-primary">
-            <div class="card-body p-4">
-                <div class="media">
-                    <span class="me-3">
-                        <i class="la la-users"></i>
-                    </span>
-                    <div class="media-body text-white text-end">
-                        <a href="{{ route('staff.index') }}">
+        <a href="{{ route('staff.index') }}">
+            <div class="widget-stat card bg-primary">
+                <div class="card-body p-4">
+                    <div class="media">
+                        <span class="me-3">
+                            <i class="la la-users"></i>
+                        </span>
+                        <div class="media-body text-white text-end">
                             <p class="mb-1 text-white">Total Trainer</p>
-                        </a>
-                        <h3 class="text-white">{{ $totalTrainers }}</h3>
+                            <h3 class="text-white">{{ $totalTrainers }}</h3>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </a>
     </div>
     <div class="col-xl-4 col-xxl-4 col-lg-6 col-sm-6">
-        <div class="widget-stat card bg-info">
-            <div class="card-body  p-4">
-                <div class="media">
-                    <span class="me-3">
-                        <i class="la la-users"></i>
-                    </span>
-                    <div class="media-body text-white text-end">
-                        <a href="{{ route('trainer-session.index') }}">
+        <a href="{{ route('trainer-session.index') }}">
+            <div class="widget-stat card bg-info">
+                <div class="card-body  p-4">
+                    <div class="media">
+                        <span class="me-3">
+                            <i class="la la-users"></i>
+                        </span>
+                        <div class="media-body text-white text-end">
                             <p class="mb-1 text-white">Trainer Session Active</p>
-                        </a>
-                        <h3 class="text-white">{{ $runningTrainerSessionsCount }}</h3>
+                            <h3 class="text-white">{{ $runningTrainerSessionsCount }}</h3>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </a>
     </div>
     <div class="col-xl-4 col-xxl-4 col-lg-6 col-sm-6">
-        <div class="widget-stat card bg-danger">
-            <div class="card-body  p-4">
-                <div class="media">
-                    <span class="me-3">
-                        <i class="la la-users"></i>
-                    </span>
-                    <div class="media-body text-white text-end">
-                        <a href="{{ route('trainer-session-over.index') }}">
+        <a href="{{ route('trainer-session-over.index') }}">
+            <div class="widget-stat card bg-danger">
+                <div class="card-body  p-4">
+                    <div class="media">
+                        <span class="me-3">
+                            <i class="la la-users"></i>
+                        </span>
+                        <div class="media-body text-white text-end">
                             <p class="mb-1 text-white">Trainer Session Expired</p>
-                        </a>
-                        <h3 class="text-white">{{ $overTrainerSessionsCount }}</h3>
+                            <h3 class="text-white">{{ $overTrainerSessionsCount }}</h3>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </a>
     </div>
 </div>

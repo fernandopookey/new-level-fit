@@ -9,21 +9,35 @@ use App\Models\Member\MemberRegistration;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class MemberCheckInController extends Controller
 {
     public function store(Request $request)
     {
-        $data = $request->validate([
+        // $data = $request->validate([
+        //     'member_code' => 'required|exists:members,member_code',
+        // ]);
+
+        $validator = Validator::make($request->all(), [
             'member_code' => 'required|exists:members,member_code',
+        ], [
+            'member_code.exists' => 'CARD NOT FOUND',
         ]);
+
+        if ($validator->fails()) {
+            $errorMessage = $validator->errors()->first('member_code');
+            echo "<script>alert('$errorMessage');</script>";
+            echo "<script>window.location.href = '" . route('member-active.index') . "';</script>";
+            return;
+        }
 
         $memberRegistration = DB::table('member_registrations as a')
             ->select(
                 'a.id',
                 'a.start_date',
                 'a.description',
-                'a.days',
+                'a.days as number_of_days',
                 'b.full_name as member_name',
                 'b.nickname',
                 'b.member_code',
@@ -80,6 +94,10 @@ class MemberCheckInController extends Controller
         $ig             = $memberRegistration->ig;
         $eContact       = $memberRegistration->emergency_contact;
         $address        = $memberRegistration->address;
+        $memberPackage  = $memberRegistration->package_name;
+        $days           = $memberRegistration->number_of_days;
+        $startDate      = $memberRegistration->start_date;
+        $expiredDate    = $memberRegistration->expired_date;
 
         if (!$memberRegistration) {
             return redirect()->back()->with('error', 'Member active not found or has ended');
@@ -132,6 +150,10 @@ class MemberCheckInController extends Controller
             'ig'            => $ig,
             'eContact'      => $eContact,
             'address'       => $address,
+            'memberPackage' => $memberPackage,
+            'days'          => $days,
+            'startDate'     => $startDate,
+            'expiredDate'   => $expiredDate
         ]);
     }
 
@@ -142,7 +164,7 @@ class MemberCheckInController extends Controller
                 'a.id',
                 'a.start_date',
                 'a.description',
-                'a.days',
+                'a.days as number_of_days',
                 'b.full_name as member_name',
                 'b.nickname',
                 'b.member_code',
@@ -191,6 +213,10 @@ class MemberCheckInController extends Controller
         $ig             = $memberRegistration->ig;
         $eContact       = $memberRegistration->emergency_contact;
         $address        = $memberRegistration->address;
+        $memberPackage  = $memberRegistration->package_name;
+        $days           = $memberRegistration->number_of_days;
+        $startDate      = $memberRegistration->start_date;
+        $expiredDate    = $memberRegistration->expired_date;
 
         if (!$memberRegistration) {
             return redirect()->back()->with('error', 'Member active not found or has ended');
@@ -228,6 +254,10 @@ class MemberCheckInController extends Controller
             'ig'            => $ig,
             'eContact'      => $eContact,
             'address'       => $address,
+            'memberPackage' => $memberPackage,
+            'days'          => $days,
+            'startDate'     => $startDate,
+            'expiredDate'   => $expiredDate
         ]);
     }
 

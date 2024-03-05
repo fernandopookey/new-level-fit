@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Member;
 
+use App\Exports\MemberRegistrationExport;
 use App\Http\Controllers\Controller;
 use App\Models\Member\Member;
 use App\Models\Member\MemberPackage;
@@ -19,6 +20,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class MemberRegistrationController extends Controller
@@ -35,13 +37,13 @@ class MemberRegistrationController extends Controller
                 'a.package_price as mr_package_price',
                 'a.admin_price as mr_admin_price',
                 'b.full_name as member_name',
-                'c.package_name',
-                'c.days',
                 'b.member_code',
                 'b.phone_number',
                 'b.born',
                 'b.photos',
                 'b.gender',
+                'c.package_name',
+                'c.days',
                 'c.package_name',
                 'c.package_price',
                 'c.days',
@@ -73,6 +75,7 @@ class MemberRegistrationController extends Controller
             ->leftJoin(DB::raw('(select * from (select a.* from (select * from check_in_members) as a inner join (SELECT max(id) as id FROM check_in_members group by member_registration_id) as b on a.id=b.id) as tableH) as h'), 'a.id', '=', 'h.member_registration_id')
             ->whereRaw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END = ?', ['Running'])
             ->orderBy('h.check_in_time', 'desc')
+            ->orderBy('h.check_out_time', 'desc')
             ->get();
 
 
@@ -296,7 +299,9 @@ class MemberRegistrationController extends Controller
                 'e.name as method_payment_name',
                 'f.full_name as staff_name',
                 'g.full_name as fc_name',
-                'g.phone_number as fc_phone_number'
+                'g.phone_number as fc_phone_number',
+                'h.check_in_time',
+                'h.check_out_time'
             )
             ->addSelect(
                 DB::raw('DATE_ADD(a.start_date, INTERVAL a.days DAY) as expired_date'),
@@ -307,6 +312,7 @@ class MemberRegistrationController extends Controller
             ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
             ->join('users as f', 'a.user_id', '=', 'f.id')
             ->join('fitness_consultants as g', 'a.fc_id', '=', 'g.id')
+            ->leftJoin(DB::raw('(select * from (select a.* from (select * from check_in_members) as a inner join (SELECT max(id) as id FROM check_in_members group by member_registration_id) as b on a.id=b.id) as tableH) as h'), 'a.id', '=', 'h.member_registration_id')
             ->where('a.id', $id)
             ->get();
 
@@ -421,19 +427,24 @@ class MemberRegistrationController extends Controller
 
         $item->update($data);
 
-        return redirect()->route('member-expired.index')->with('message', 'Member Updated Successfully');
+        return redirect()->route('member-active.index')->with('message', 'Member Updated Successfully');
     }
 
     public function freeze(Request $request, string $id)
     {
         $item = MemberRegistration::find($id);
+        // dd($item->days);
         $data = $request->validate([
-            'expired_date'            => 'required',
-            'start_date'           => 'required',
+            'expired_date'  => 'required',
+            'start_date'    => 'required'
         ]);
         $data['user_id'] = Auth::user()->id;
-        $data['days'] =  DateDiff($data['start_date'], $data['expired_date']);
+        // $data['days'] =  DateDiff($data['start_date'], $data['expired_date']);
+
+        $data['days'] =  $item->days + $data['expired_date'];
+
         $data['old_days'] = $item->memberPackage->days;
+        $data['submission_date'] = Carbon::now()->tz('Asia/Jakarta');
 
         $item->update($data);
 
@@ -443,32 +454,15 @@ class MemberRegistrationController extends Controller
         return redirect()->route('member-active.index')->with('message', 'Cuti Membership Successfully Added');
     }
 
-    public function destroy(MemberRegistration $memberRegistration)
+    public function destroy($id)
     {
+        $memberRegistration = MemberRegistration::find($id);
+
         try {
             $memberRegistration->delete();
-            return redirect()->back()->with('success', 'Member Registration Deleted Successfully');
-            // return redirect(route('member-active.index'))->with('success', 'Data Member Berhasil Di hapus');
+            return redirect()->back()->with('success', $memberRegistration->members->full_name . 'member package delete successfully');
         } catch (\Throwable $e) {
-            return redirect()->back()->with('error', 'Deleted Failed, Delete Member Check In First');
-        }
-    }
-
-    public function bulkDelete(Request $request)
-    {
-        $selectedItems = $request->input('selectedMemberActive');
-        try {
-            foreach ($selectedItems as $itemId) {
-                $memberActive = MemberRegistration::find($itemId);
-
-                if (!empty($memberActive)) {
-                    $memberActive->delete();
-                }
-            }
-
-            return redirect()->back()->with('message', 'Members Active Deleted Successfully');
-        } catch (\Throwable $th) {
-            return redirect()->back()->with('error', 'Deleted Failed, Please check other pages that are using this member');
+            return redirect()->back()->with('errorr', 'Deleted Failed, Delete Member Check In First');
         }
     }
 
@@ -538,6 +532,7 @@ class MemberRegistrationController extends Controller
                 'a.old_days',
                 'a.updated_at',
                 'a.created_at',
+                'a.submission_date',
                 'b.full_name as member_name', // alias for members table name column
                 'c.package_name',
                 'c.days',
@@ -640,5 +635,10 @@ class MemberRegistrationController extends Controller
         ];
 
         return view('admin.layouts.wrapper', $data);
+    }
+
+    public function excel()
+    {
+        return Excel::download(new MemberRegistrationExport(), 'member-active.xlsx');
     }
 }

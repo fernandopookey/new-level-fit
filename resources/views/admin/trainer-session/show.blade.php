@@ -94,9 +94,9 @@
                             </td>
                             <td scope="col">
                                 <div class="trans-list">
-                                    @if ($trainerSession->members->photos)
-                                        <img src="{{ Storage::url($item->photos) }}" class="lazyload" width="100"
-                                            alt="image">
+                                    @if ($trainerSessionss->photos)
+                                        <img src="{{ Storage::url($trainerSessionss->photos) }}" class="lazyload"
+                                            width="100" alt="image">
                                     @else
                                         <img src="{{ asset('default.png') }}" class="lazyload" width="100"
                                             alt="default image">
@@ -213,6 +213,51 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-xl-12">
+    <div class="card">
+        <div class="card-body">
+            <h3 class="heading">Check In Time & Check Out Time</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        @if (Auth::user()->role == 'ADMIN')
+                            <td></td>
+                        @endif
+                        <th>No</th>
+                        <th>Check In Time</th>
+                        <th>Check Out Time</th>
+                        @if (Auth::user()->role == 'ADMIN')
+                            <th>Action</th>
+                        @endif
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($checkInTrainerSession as $item)
+                        <tr>
+                            @if (Auth::user()->role == 'ADMIN')
+                                <td><input type="checkbox" name="selectedItems[]" value="{{ $item->id }}"></td>
+                            @endif
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ DateFormat($item->check_in_time, 'DD MMMM YYYY, HH:mm') }}</td>
+                            <td>{{ DateFormat($item->check_out_time, 'DD MMMM YYYY, HH:mm') }}</td>
+                            @if (Auth::user()->role == 'ADMIN')
+                                <td>
+                                    <form action="{{ route('member-check-in.destroy', $item->id) }}"
+                                        onclick="return confirm('Delete Data ?')" method="POST">
+                                        @method('delete')
+                                        @csrf
+                                        <button type="submit" class="btn light btn-danger btn-xs mb-1">Delete</button>
+                                    </form>
+                                </td>
+                            @endif
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

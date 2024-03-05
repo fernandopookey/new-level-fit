@@ -94,16 +94,16 @@
 <div class="col-xl-12">
     <div class="card">
         <div class="card-body">
-            <h3 class="heading">Check In:</h3>
+            <h3 class="heading">Check In Time & Check Out Time</h3>
             <table class="table">
                 <thead>
                     <tr>
                         @if (Auth::user()->role == 'ADMIN')
-                            <td>Checklist</td>
+                            <td></td>
                         @endif
                         <th>No</th>
-                        <th>Check In Date</th>
-                        <th>Staff</th>
+                        <th>Check In Time</th>
+                        <th>Check Out Time</th>
                         @if (Auth::user()->role == 'ADMIN')
                             <th>Action</th>
                         @endif
@@ -116,8 +116,8 @@
                                 <td><input type="checkbox" name="selectedItems[]" value="{{ $item->id }}"></td>
                             @endif
                             <td>{{ $loop->iteration }}</td>
-                            <td>{{ $item->check_in_date }}</td>
-                            <td>{{ $item->users->full_name }}</td>
+                            <td>{{ DateFormat($item->check_in_time, 'DD MMMM YYYY, HH:mm') }}</td>
+                            <td>{{ DateFormat($item->check_out_time, 'DD MMMM YYYY, HH:mm') }}</td>
                             @if (Auth::user()->role == 'ADMIN')
                                 <td>
                                     <form action="{{ route('member-check-in.destroy', $item->id) }}"

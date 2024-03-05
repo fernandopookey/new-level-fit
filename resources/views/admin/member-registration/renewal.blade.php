@@ -30,8 +30,8 @@
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Member Package</label>
                                 <select name="member_package_id" class="form-control" id="single-select">
-                                    <option value="{{ $memberRegistration->member_package_id }}" selected>
-                                        {{ old('member_package_id', $memberRegistration->memberPackage->package_name) }}
+                                    <option>
+                                        <- Choose ->
                                     </option>
                                     @foreach ($memberPackage as $item)
                                         <option value="{{ $item->id }}">{{ $item->package_name }}</option>
@@ -39,32 +39,22 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-xl-3">
+                        <div class="col-xl-6">
                             <div class="mb-3">
                                 <label class="form-label">Start Date</label>
-                                <input type="text" name="start_date"
-                                    value="{{ old('start_date', date('Y-m-d', strtotime($memberRegistration->start_date))) }}"
-                                    class="form-control" id="mdate" required autocomplete="off">
+                                <input type="text" name="start_date" value="{{ old('start_date') }}"
+                                    class="form-control editDate mdate-custom3" required autocomplete="off">
                             </div>
                         </div>
-                        <div class="col-xl-3">
-                            <div class="mb-3">
-                                <label class="form-label">Start Time</label>
-                                <div class="input-group clockpicker" data-placement="left" data-align="top"
-                                    data-autobtn-close="true">
-                                    <input type="text" class="form-control" name="start_time"
-                                        value="{{ old('start_time', date('H:i', strtotime($memberRegistration->start_date))) }}"
-                                        autocomplete="off">
-                                    <span class="input-group-text"><i class="far fa-clock"></i></span>
-                                </div>
-                            </div>
-                        </div>
+                        <input type="hidden" class="form-control" name="start_time"
+                            value="{{ old('start_time', date('H:i', strtotime($memberRegistration->start_date))) }}"
+                            autocomplete="off">
                         <div class="col-xl-6">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Method Payment</label>
                                 <select name="method_payment_id" class="form-control" id="single-select5">
-                                    <option value="{{ $memberRegistration->method_payment_id }}" selected>
-                                        {{ old('method_payment_id', $memberRegistration->methodPayment->name) }}
+                                    <option>
+                                        <- Choose ->
                                     </option>
                                     @foreach ($methodPayment as $item)
                                         <option value="{{ $item->id }}">{{ $item->name }}</option>
@@ -76,8 +66,8 @@
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Fitness Consultant</label>
                                 <select id="single-select3" name="fc_id" class="form-control" required>
-                                    <option value="{{ $memberRegistration->fc_id }}" selected>
-                                        {{ old('fc_id', $memberRegistration->fitnessConsultant->full_name) }}
+                                    <option>
+                                        <- Choose ->
                                     </option>
                                     @foreach ($fitnessConsultant as $item)
                                         <option value="{{ $item->id }}">{{ $item->full_name }} |

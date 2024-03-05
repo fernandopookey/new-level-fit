@@ -35,10 +35,37 @@
     @if (session('address'))
         <p>{{ session('address') }}</p>
     @endif
+    @if (session('memberPackage'))
+        <p>{{ session('memberPackage') }}</p>
+    @endif
+    @if (session('days'))
+        <p>{{ session('days') }}</p>
+    @endif
+    @if (session('startDate'))
+        <p>{{ session('startDate') }}</p>
+    @endif
+    @if (session('expiredDate'))
+        <p>{{ session('expiredDate') }}</p>
+    @endif
 
 </div>
 
 <script>
+    function formatDate(date) {
+        var day = date.getDate();
+        var monthIndex = date.getMonth();
+        var year = date.getFullYear();
+
+        var monthNames = [
+            "January", "February", "March",
+            "April", "May", "June", "July",
+            "August", "September", "October",
+            "November", "December"
+        ];
+
+        return day + ' ' + monthNames[monthIndex] + ' ' + year;
+    }
+
     var message = "{{ $message }}";
     var memberPhoto = "{{ $memberPhoto }}";
     var memberName = "{{ $memberName }}";
@@ -51,6 +78,13 @@
     var ig = "{{ $ig }}";
     var eContact = "{{ $eContact }}";
     var address = "{{ $address }}";
+    var memberPackage = "{{ $memberPackage }}";
+    var days = "{{ $days }}";
+    var startDateStr = "{{ $startDate }}";
+    var expiredDateStr = "{{ $expiredDate }}";
+
+    var startDate = new Date(startDateStr);
+    var expiredDate = new Date(expiredDateStr);
 
     var contentHTML = `
         <div style="text-align: center;">
@@ -65,7 +99,7 @@
                 @endif
             </div>
             <h2 style="margin-top: 10px;">${memberName}</h2>
-            <table class="table" style="margin: auto;">
+            <table class="table" border="1" style="margin: auto;">
                 <thead>
                     <tr>
                         <th><b>Nick Name</b></th>
@@ -106,6 +140,29 @@
                 </thead>
             </table>
         </div>
+
+        <hr />
+
+         <table class="table" border="1" style="margin: auto;">
+                <thead>
+                    <tr>
+                        <th><b>Member Package</b></th>
+                        <td>${memberPackage}</td>
+                    </tr>
+                    <tr>
+                        <th><b>Number of Days</b></th>
+                        <td>${days}</td>
+                    </tr>
+                    <tr>
+                        <th><b>Start Date</b></th>
+                        <td>${formatDate(startDate)}</td>
+                    </tr>
+                    <tr>
+                        <th><b>Expired Date</b></th>
+                        <td>${formatDate(expiredDate)}</td>
+                    </tr>
+                </thead>
+            </table>
     `;
 
     function openNewWindow(contentHTML, width, height) {
@@ -122,6 +179,6 @@
     }
 
     document.addEventListener("DOMContentLoaded", function() {
-        openNewWindow(contentHTML, 600, 500);
+        openNewWindow(contentHTML, 800, 700);
     });
 </script>

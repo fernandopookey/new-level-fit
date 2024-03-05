@@ -61,12 +61,23 @@
                                 class="form-control mdate-custom" required autocomplete="off" readonly>
                             {{-- </div>
                             </div> --}}
-                            <div class="col-xl-12">
+                            {{-- <div class="col-xl-12">
                                 <div class="mb-3">
                                     <label class="form-label">Expired Date</label>
                                     <input type="date" name="expired_date"
                                         value="{{ old('expired_date', $item->expired_date) }}"
                                         class="form-control mdate-custom2" required autocomplete="off">
+                                </div>
+                            </div> --}}
+                            <div class="col-xl-6">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Periode Cuti</label>
+                                    <select name="expired_date" class="form-control" required>
+                                        <option selected>Select</option>
+                                        <option value="30">1 Month</option>
+                                        <option value="60">2 Month</option>
+                                        <option value="90">3 Month</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
