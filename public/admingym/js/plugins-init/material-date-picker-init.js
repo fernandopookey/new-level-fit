@@ -74,4 +74,36 @@
         format: "YYYY-MM-DD HH:mm",
         minDate: new Date(),
     });
+
+    // Disable input edit member registration
+    $(document).ready(function () {
+        var input1 = $("#input1");
+        var input2 = $("#input2");
+
+        input1.on("change", function () {
+            if (input1.val() !== "") {
+                input2.css("display", "none");
+                $("#parentInput2").css("display", "none");
+            } else {
+                input2.css("display", "block");
+            }
+        });
+
+        input2.on("change", function () {
+            if (input2.val() !== "") {
+                input1.css("display", "none");
+                $("#parentInput1").css("display", "none");
+            } else {
+                input1.css("display", "block");
+            }
+        });
+    });
 })(jQuery);
+
+$(document).on("click", ".member-button", function () {
+    var memberName = $(this).data("name");
+    var memberPhone = $(this).data("phone");
+    $("#fullNameInput").val(memberName);
+    $("#phoneInput").val(memberPhone);
+    $("#memberModal").modal("hide");
+});

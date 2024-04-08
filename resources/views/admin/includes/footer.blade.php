@@ -342,6 +342,21 @@
     });
 </script>
 
+{{-- Expired Time --}}
+<script>
+    // Get the current date and time in the Indonesia timezone
+    var currentDate = new Date();
+    var options = {
+        timeZone: 'Asia/Jakarta',
+        hour: '2-digit',
+        minute: '2-digit'
+    };
+    var formattedDefaultTime = currentDate.toLocaleTimeString('id-ID', options);
+
+    // Assign the formatted current time to an input field or display it wherever needed
+    document.getElementById("expired_time").value = formattedDefaultTime;
+</script>
+
 <script>
     function showForm(formId) {
         document.getElementById('memberForm').style.display = 'none';
@@ -451,12 +466,16 @@
         var sellRadio = document.getElementById('sell');
         var missedGuestRadio = document.getElementById('missed');
 
-        var elementsToShow = ['born', 'member_code', 'gender', 'status', 'address', 'description', 'formFile',
-            'output', 'nickname', 'email', 'ig', 'emergency_contact', 'member_package', 'start_date',
+        var elementsToShow = ['born', 'member_code', 'card_number', 'gender', 'status', 'address',
+            'description', 'formFile',
+            'output', 'nickname', 'email', 'ig', 'emergency_contact', 'ec_name', 'member_package',
+            'start_date',
             'method_payment', 'fitness_consultant',
         ];
-        var elementsToHide = ['born', 'member_code', 'gender', 'status', 'address', 'description', 'formFile',
-            'output', 'nickname', 'email', 'ig', 'emergency_contact', 'member_package', 'start_date',
+        var elementsToHide = ['born', 'member_code', 'card_number', 'gender', 'status', 'address',
+            'description', 'formFile',
+            'output', 'nickname', 'email', 'ig', 'emergency_contact', 'ec_name', 'member_package',
+            'start_date',
             'method_payment', 'fitness_consultant',
         ];
 

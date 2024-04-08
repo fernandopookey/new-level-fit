@@ -87,18 +87,15 @@
                 <td>Tanggal Pengajuan</td>
                 <td>{{ DateFormat($memberRegistration->submission_date, 'DD MMMM YYYY, HH:mm') }}</td>
                 <td>Biaya Administrasi</td>
-                <td>{{ formatRupiah($memberRegistration->mr_admin_price) }}</td>
+                <td>{{ formatRupiah($memberRegistration->total_price_continue) }}</td>
             </tr>
             <tr>
                 <td>Periode Cuti</td>
-                {{-- <td>{{ $memberRegistration->member_registration_days - $memberRegistration->old_days }} Days</td> --}}
-                @if (!$memberRegistration->old_days)
-                    <td>0 Days</td>
-                @else
-                    <td>{{ $memberRegistration->member_registration_days - $memberRegistration->old_days }} Days</td>
-                @endif
+                <td>{{ DateFormat($memberRegistration->submission_date, 'DD MMMM YYYY') }} -
+                    {{ DateFormat($memberRegistration->expired_leave_days, 'DD MMMM YYYY') }}
+                    ({{ $memberRegistration->total_days }} Days)</td>
                 <td>Tanggal Pembayaran</td>
-                <td>{{ DateFormat($memberRegistration->created_at, 'DD MMMM YYYY') }}</td>
+                <td>{{ DateFormat($memberRegistration->submission_date, 'DD MMMM YYYY') }}</td>
             </tr>
             <tr>
                 <td>Expired Member</td>

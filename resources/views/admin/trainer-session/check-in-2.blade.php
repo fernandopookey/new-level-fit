@@ -18,11 +18,12 @@
                         </div>
                     @endif
                     <div class="row">
-                        <input type="hidden" name="member_code">
+                        <input type="hidden" name="card_number">
                         <div class="col-xl-12">
                             <div class="mb-0">
                                 <p>Member Code</p>
-                                <input type="text" name="member_code" id="memberCode" class="form-control" autofocus>
+                                <input type="text" name="card_number" id="card_number" class="form-control"
+                                    autofocus>
                             </div>
                         </div>
                     </div>

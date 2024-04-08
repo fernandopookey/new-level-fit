@@ -55,6 +55,15 @@
                                 id="exampleFormControlInput1" autocomplete="off">
                         </div>
                     </div>
+                    <div class="col-xl-6" id="card_number">
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Card Number</label>
+                            <div class="d-flex">
+                                <input type="text" name="card_number" value="{{ old('card_number') }}"
+                                    class="form-control" id="exampleFormControlInput1" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-xl-6">
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Email</label>
@@ -74,7 +83,15 @@
                             <label for="exampleFormControlInput1" class="form-label">Emergency
                                 Contact</label>
                             <input type="text" name="emergency_contact"
-                                value="{{ old('emergency_contact', $members->emergency_contact) }}" class="form-control"
+                                value="{{ old('emergency_contact', $members->emergency_contact) }}"
+                                class="form-control" id="exampleFormControlInput1" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="col-xl-6" id="ec_name">
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Emergency Contact
+                                Name</label>
+                            <input type="text" name="ec_name" value="{{ old('ec_name') }}" class="form-control"
                                 id="exampleFormControlInput1" autocomplete="off">
                         </div>
                     </div>
@@ -172,7 +189,11 @@
                 </div>
                 <div class="d-flex justify-content-between">
                     <button type="submit" class="btn btn-primary">Update</button>
-                    <a href="{{ route('members.index') }}" class="btn btn-info text-right">Back</a>
+                    @if ($members->status == 'sell')
+                        <a href="{{ route('members.index') }}" class="btn btn-info text-right">Back</a>
+                    @else
+                        <a href="{{ route('missed-guest.index') }}" class="btn btn-info text-right">Back</a>
+                    @endif
                 </div>
             </form>
         </div>

@@ -41,7 +41,7 @@ function BirthdayDiff($bornDate)
     $nowDate->hour = 0;
     $nowDate->minute = 0;
     $nowDate->second = 0;
-
+    // dd($birthday);
     // Hitung selisih hari antara hari ini dan ulang tahun berikutnya
     $daysUntilNextBirthday = $nowDate->diff($birthday);
 

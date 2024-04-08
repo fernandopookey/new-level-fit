@@ -1,13 +1,6 @@
 <div class="row">
     <div class="col-xl-12">
         <div class="row">
-            {{-- <div class="col-xl-12">
-                    <div class="page-title flex-wrap justify-content-between">
-                        <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal"
-                            data-bs-target=".bd-example-modal-lg">+ New Member</button>
-                        <a href="{{ route('member-report') }}" target="_blank" class="btn btn-info">Print PDF</a>
-                    </div>
-                </div> --}}
             <div class="col-xl-12">
                 <div class="page-title flex-wrap justify-content-between">
                     <a href="{{ url('/members/create') }}" class="btn btn-info">Download Excel</a>
@@ -24,8 +17,9 @@
                                 <th>Image</th>
                                 <th>Full Name</th>
                                 <th>Phone Number</th>
-                                <th>Member Code</th>
+                                <th>No Member</th>
                                 <th>Date of Birth</th>
+                                <th>Created At</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -57,16 +51,15 @@
                                         <h6>{{ DateFormat($item->born, 'DD MMMM YYYY') ?? 'No Data' }}</h6>
                                     </td>
                                     <td>
+                                        <h6>{{ DateFormat($item->created_at, 'DD MMMM YYYY') ?? 'No Data' }}</h6>
+                                    </td>
+                                    <td>
                                         <div>
-                                            {{-- <button type="button"
-                                                    class="btn light btn-warning btn-xs btn-block mb-1"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target=".bd-example-modal-lg-edit{{ $item->id }}">Edit
-                                                    Member</button> --}}
-                                            <button type="button" class="btn light btn-info btn-xs btn-block mb-1"
-                                                data-bs-toggle="modal"
-                                                data-bs-target=".bd-example-modal-lg-detail{{ $item->id }}">Detail
-                                                Member</button>
+                                            <a href="{{ route('edit-member-sell', $item->id) }}"
+                                                class="btn light btn-warning btn-xs btn-block mb-1">Edit
+                                                Member</a>
+                                            <a href="{{ route('members.show', $item->id) }}"
+                                                class="btn light btn-info btn-xs btn-block mb-1">Detail Member</a>
                                             @if (Auth::user()->role == 'ADMIN')
                                                 <form action="{{ route('member.destroy', $item->id) }}"
                                                     onclick="return confirm('Delete Data ?')" method="POST">
@@ -92,7 +85,3 @@
         </div>
     </div>
 </div>
-
-
-@include('admin.members.create')
-@include('admin.members.detail')

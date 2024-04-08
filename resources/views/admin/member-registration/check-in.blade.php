@@ -2,8 +2,8 @@
     <div class="modal fade freeze{{ $item->id }}" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <form action="{{ route('member-registration-freeze', $item->id) }}" method="POST"
-                    enctype="multipart/form-data">
+                <form id="freezeForm{{ $item->id }}" action="{{ route('member-registration-freeze', $item->id) }}"
+                    method="POST" enctype="multipart/form-data">
                     @method('PUT')
                     @csrf
                     <div class="modal-header">
@@ -56,14 +56,6 @@
                             <input type="hidden" name="start_date"
                                 value="{{ DateFormat($item->start_date, 'YYYY-MM-DD') }}"
                                 class="form-control mdate-custom" required autocomplete="off" readonly>
-                            {{-- <div class="col-xl-12">
-                                <div class="mb-3">
-                                    <label class="form-label">Expired Date</label>
-                                    <input type="date" name="expired_date"
-                                        value="{{ old('expired_date', $item->expired_date) }}"
-                                        class="form-control mdate-custom2" required autocomplete="off">
-                                </div>
-                            </div> --}}
                             <div class="col-xl-6">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Periode Cuti</label>
@@ -75,10 +67,20 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-xl-6">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Cuti Price</label>
+                                    <input type="text" name="price" value="{{ old('price') }}"
+                                        class="form-control rupiah" id="exampleFormControlInput1" autocomplete="off"
+                                        required>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        {{-- <button type="submit" class="btn btn-primary">Submit</button> --}}
+                        <button type="submit" class="btn btn-primary"
+                            onclick="return validateFreezeForm({{ $item->id }})">Submit</button>
                         <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Close</button>
                     </div>
                 </form>
@@ -86,3 +88,17 @@
         </div>
     </div>
 @endforeach
+
+<script>
+    function validateFreezeForm(itemId) {
+        var form = document.getElementById('freezeForm' + itemId);
+        var selectElement = form.querySelector('select[name="expired_date"]');
+        var selectedOption = selectElement.options[selectElement.selectedIndex].value;
+
+        if (selectedOption === 'Select') {
+            alert('Mohon pilih periode cuti !!!');
+            return false;
+        }
+        return true;
+    }
+</script>

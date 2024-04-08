@@ -27,20 +27,6 @@
                                     class="form-control" id="exampleFormControlInput1" autocomplete="off" required>
                             </div>
                         </div>
-                        {{-- <div class="col-xl-6">
-                            <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label">Package Type</label>
-                                <select name="package_type_id" class="form-control" aria-label="Default select example"
-                                    required>
-                                    <option disabled selected value>
-                                        <- Choose ->
-                                    </option>
-                                    @foreach ($trainerPackageType as $item)
-                                        <option value="{{ $item->id }}">{{ $item->package_type_name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div> --}}
                         <div class="col-xl-3">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Number Of Session</label>
@@ -71,13 +57,24 @@
                                     required>
                             </div>
                         </div>
-                        <div class="col-xl-12">
+                        <div class="col-xl-6">
                             <div class="mb-3">
                                 <label for="exampleFormControlTextarea1" class="form-label text-primary">
                                     Description
                                 </label>
                                 <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="6"
                                     placeholder="Enter Description">{{ old('description') }}</textarea>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 mt-4">
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="status" value=""
+                                        id="flexCheckDefault">
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                        LGT
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>

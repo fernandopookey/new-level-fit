@@ -4,7 +4,7 @@
             <form action="{{ route('member-check-in.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Input Member Code</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Input Card Number</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -18,11 +18,11 @@
                         </div>
                     @endif
                     <div class="row">
-                        <input type="hidden" name="member_code">
+                        <input type="hidden" name="card_number">
                         <div class="col-xl-12">
                             <div class="mb-3">
-                                <p>Member Code</p>
-                                <input type="text" name="member_code" id="memberCode" class="form-control" autofocus>
+                                <p>Card Number</p>
+                                <input type="text" name="card_number" id="memberCode" class="form-control" autofocus>
                             </div>
                         </div>
                     </div>

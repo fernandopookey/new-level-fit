@@ -73,6 +73,10 @@
                 <td>{{ $memberRegistration->emergency_contact }}</td>
             </tr>
             <tr>
+                <td>Nama Kontak Darurat</td>
+                <td>{{ $memberRegistration->ec_name }}</td>
+            </tr>
+            <tr>
                 <td>Email</td>
                 <td>{{ $memberRegistration->email }}</td>
             </tr>
@@ -93,7 +97,7 @@
         <tbody>
             <tr>
                 <td>Tanggal Pembayaran</td>
-                <td>{{ $memberRegistration->start_date }}</td>
+                <td>{{ DateFormat($memberRegistration->start_date, 'DD MMMM YYYY') }}</td>
                 <td>Harga Paket</td>
                 <td>{{ formatRupiah($memberRegistration->mr_package_price) }}</td>
             </tr>

@@ -27,12 +27,13 @@ class MissedGuestController extends Controller
                 'a.address',
                 'a.status',
                 'a.photos',
+                'a.created_at'
             )
             ->where('a.status', '=', 'missed_guest')
             ->get();
 
         $data = [
-            'title'             => 'Member List',
+            'title'             => 'Missed Guest',
             'members'           => $members,
             // 'users'             => User::get(),
             'content'           => 'admin/members/missed-guest'

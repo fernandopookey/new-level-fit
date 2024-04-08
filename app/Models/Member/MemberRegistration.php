@@ -60,10 +60,146 @@ class MemberRegistration extends Model
         return $this->hasMany(CheckInMember::class);
     }
 
-    public static function getList()
+    public function leaveDays()
     {
-        $sql = "";
+        return $this->hasMany(LeaveDay::class);
+    }
 
-        return DB::select($sql);
+    public static function getActiveList($card_number = "")
+    {
+        $sql = "SELECT mbr_reg.id, mbr_reg.start_date, mbr_reg.days as member_registration_days,
+            mbr_reg.package_price as mr_package_price,  mbr_reg.admin_price as mr_admin_price,
+            mbr.id as member_id, mbr.full_name as member_name, mbr.nickname, mbr.email, mbr.ig, mbr.emergency_contact, mbr.ec_name,
+            mbr.address, mbr.member_code, mbr_reg.days,
+            mbr.phone_number, mbr.born, mbr.photos, mbr.gender, mbr.id_code_count,
+            mbr_pkg.package_name, mbr_pkg.days, mbr_pkg.package_price,
+            mtd_pay.name as method_payment_name, usr.full_name as staff_name,
+            fit_cons.full_name as fc_name, fit_cons.phone_number as fc_phone_number,
+            cim_view.current_check_in_members_id, cim_view.check_in_time, cim_view.check_out_time, cim_view.updated_at_check_in,
+            lds_view.submission_date, lds_continue_view.submission_date_continue,  lds_view.days as number_of_leave_days, lds_view.total_days,
+            'bg-dark' as birthdayCelebrating,
+            
+            DATE_ADD(mbr_reg.start_date, INTERVAL COALESCE(lds_view.total_days, 0) + mbr_reg.days DAY) as expired_date,
+            DATE_ADD(lds_view.submission_date, INTERVAL lds_view.days DAY) as expired_leave_days,
+
+            CASE WHEN NOW() > DATE_ADD(mbr_reg.start_date, INTERVAL mbr_reg.days DAY) THEN 'Over'
+                WHEN NOW() BETWEEN mbr_reg.start_date AND DATE_ADD(mbr_reg.start_date, INTERVAL mbr_reg.days DAY) THEN 'Running'
+                ELSE 'Not Started'
+                END as status,
+            CASE when member_registration_id_continue is null then 'No Leave Days' else 'Freeze' end as leave_day_status, 
+            CONCAT(YEAR(CURDATE()), ' - ', MONTH(mbr.born), ' - ', DAY(mbr.born)) as member_birthday,
+            DATEDIFF(CONCAT(YEAR(CURDATE()), ' - ', MONTH(mbr.born), ' - ', DAY(mbr.born)), CURDATE()) as days_until_birthday
+            from members as mbr
+
+            inner join member_registrations mbr_reg on mbr.id = mbr_reg.member_id
+            inner join member_packages mbr_pkg on mbr_pkg.id = mbr_reg.member_package_id
+            inner join method_payments mtd_pay on mtd_pay.id = mbr_reg.method_payment_id
+            inner join users usr on usr.id=mbr_reg.user_id
+            left join fitness_consultants fit_cons on fit_cons.id = mbr_reg.fc_id
+
+            left join (select cim1.id as current_check_in_members_id, cim1.updated_at as updated_at_check_in, cim1.member_registration_id, cim1.check_in_time, cim1.check_out_time from check_in_members cim1
+            inner join (SELECT max(id) as max_id FROM check_in_members group by member_registration_id) as cim2 on cim1.id=cim2.max_id) as cim_view on cim_view.member_registration_id = mbr_reg.id
+
+            left join (select lds.member_registration_id, lds.submission_date, price, days, ifnull(total_days,0) as total_days, max_id from leave_days as lds
+            inner join (select max(id) as max_id, SUM(days) as total_days from leave_days
+            group by member_registration_id) as view_max_id on view_max_id.max_id =lds.id) as lds_view
+            on mbr_reg.id = lds_view.member_registration_id 
+
+            left join (SELECT ld.id, ld.member_registration_id as member_registration_id_continue, ld.submission_date as submission_date_continue, 
+                ld_view.total_days as total_days_continue FROM  leave_days ld 
+                INNER JOIN 
+                (SELECT leave_day_continue_id, sum(days) AS total_days 
+                FROM (SELECT id,ifnull(leave_day_continue_id, id) AS leave_day_continue_id,days FROM leave_days) AS view_1
+                GROUP BY leave_day_continue_id) AS ld_view ON ld.id=ld_view.leave_day_continue_id 
+                WHERE NOW() BETWEEN ld.submission_date AND DATE_ADD(ld.submission_date, INTERVAL (ifnull(total_days,0)) DAY)) as lds_continue_view
+                on mbr_reg.id = lds_continue_view.member_registration_id_continue
+
+            where NOW() BETWEEN mbr_reg.start_date AND DATE_ADD(mbr_reg.start_date, INTERVAL (mbr_reg.days + ifnull(total_days,0)) DAY) "
+            . ($card_number ? " and mbr.card_number='$card_number' " : '') . "
+            order by cim_view.updated_at_check_in desc";
+        $activeMemberRegistrations = DB::select($sql);
+
+        // $sql = "SELECT ld.id, ld.member_registration_id, ld.submission_date, ld_view.total_days FROM  leave_days ld 
+        //         INNER JOIN 
+        //         (SELECT leave_day_continue_id, sum(days) AS total_days 
+        //         FROM (SELECT id,ifnull(leave_day_continue_id, id) AS leave_day_continue_id,days FROM leave_days) AS view_1
+        //         GROUP BY leave_day_continue_id) AS ld_view ON ld.id=ld_view.leave_day_continue_id 
+        //         WHERE NOW() BETWEEN ld.submission_date AND DATE_ADD(ld.submission_date, INTERVAL (ifnull(total_days,0)) DAY) ";
+
+        // $freezedMemberRegistrations = DB::select($sql);
+
+        // foreach ($activeMemberRegistrations as $activeMemberRegistration) {
+        //     foreach ($freezedMemberRegistrations as $freezedMemberRegistration) {
+        //         if ($activeMemberRegistration->id == $freezedMemberRegistration->member_registration_id) {
+
+        //             $activeMemberRegistration->leave_day_status = "Freeze";
+        //         }
+        //     }
+        // }
+
+        // CASE WHEN NOW() > DATE_ADD(lds_view.submission_date, INTERVAL lds_view.days DAY) THEN 'Ended'
+        //         WHEN NOW() BETWEEN lds_view.submission_date AND DATE_ADD(lds_view.submission_date, INTERVAL lds_view.days DAY) THEN 'Freeze'
+        //         ELSE 'No Leave Days'
+        //         END as leave_day_status
+
+        return $activeMemberRegistrations;
+    }
+
+    public static function getActiveListById($id = "")
+    {
+        $sql = "SELECT mbr_reg.id, mbr_reg.start_date, mbr_reg.days as member_registration_days,
+            mbr_reg.package_price as mr_package_price,  mbr_reg.admin_price as mr_admin_price,
+            mbr.id as member_id, mbr.full_name as member_name, mbr.nickname, mbr.email, mbr.ig, mbr.emergency_contact, mbr.ec_name,
+            mbr.address, mbr.member_code, mbr_reg.days,
+            mbr.phone_number, mbr.born, mbr.photos, mbr.gender, mbr.id_code_count,
+            mbr_pkg.package_name, mbr_pkg.days, mbr_pkg.package_price,
+            mtd_pay.name as method_payment_name, usr.full_name as staff_name,
+            fit_cons.full_name as fc_name, fit_cons.phone_number as fc_phone_number,
+            cim_view.current_check_in_members_id, cim_view.check_in_time, cim_view.check_out_time, cim_view.updated_at_check_in,
+            lds_view.submission_date, lds_continue_view.submission_date_continue,  lds_view.days as number_of_leave_days, lds_view.total_days, lds_continue_view.total_price_continue,
+            'bg-dark' as birthdayCelebrating,
+            
+            DATE_ADD(mbr_reg.start_date, INTERVAL COALESCE(lds_view.total_days, 0) + mbr_reg.days DAY) as expired_date,
+            DATE_ADD(lds_view.submission_date, INTERVAL lds_view.days DAY) as expired_leave_days,
+
+            CASE WHEN NOW() > DATE_ADD(mbr_reg.start_date, INTERVAL mbr_reg.days DAY) THEN 'Over'
+                WHEN NOW() BETWEEN mbr_reg.start_date AND DATE_ADD(mbr_reg.start_date, INTERVAL mbr_reg.days DAY) THEN 'Running'
+                ELSE 'Not Started'
+                END as status,
+            CASE when member_registration_id_continue is null then 'No Leave Days' else 'Freeze' end as leave_day_status, 
+            CONCAT(YEAR(CURDATE()), ' - ', MONTH(mbr.born), ' - ', DAY(mbr.born)) as member_birthday,
+            DATEDIFF(CONCAT(YEAR(CURDATE()), ' - ', MONTH(mbr.born), ' - ', DAY(mbr.born)), CURDATE()) as days_until_birthday
+            from members as mbr
+
+            inner join member_registrations mbr_reg on mbr.id = mbr_reg.member_id
+            inner join member_packages mbr_pkg on mbr_pkg.id = mbr_reg.member_package_id
+            inner join method_payments mtd_pay on mtd_pay.id = mbr_reg.method_payment_id
+            inner join users usr on usr.id=mbr_reg.user_id
+            left join fitness_consultants fit_cons on fit_cons.id = mbr_reg.fc_id
+
+            left join (select cim1.id as current_check_in_members_id, cim1.updated_at as updated_at_check_in, cim1.member_registration_id, cim1.check_in_time, cim1.check_out_time from check_in_members cim1
+            inner join (SELECT max(id) as max_id FROM check_in_members group by member_registration_id) as cim2 on cim1.id=cim2.max_id) as cim_view on cim_view.member_registration_id = mbr_reg.id
+
+            left join (select lds.member_registration_id, lds.submission_date, price, days, ifnull(total_days,0) as total_days, max_id from leave_days as lds
+            inner join (select max(id) as max_id, SUM(days) as total_days from leave_days
+            -- inner join (select max(id) as max_id, SUM(price) as cuti_price from leave_days
+            group by member_registration_id) as view_max_id on view_max_id.max_id =lds.id) as lds_view
+            on mbr_reg.id = lds_view.member_registration_id
+
+            LEFT JOIN (SELECT ld.id, ld.member_registration_id as member_registration_id_continue, ld.submission_date as submission_date_continue, ld.price,
+            ld_view.total_days as total_days_continue, ld_view.total_price AS total_price_continue FROM  leave_days ld 
+            INNER JOIN 
+            (SELECT leave_day_continue_id, SUM(days) AS total_days, SUM(price) AS total_price
+            FROM (SELECT id,ifnull(leave_day_continue_id, id) AS leave_day_continue_id, days, price FROM leave_days) AS view_1
+            GROUP BY leave_day_continue_id) AS ld_view ON ld.id=ld_view.leave_day_continue_id 
+            WHERE NOW() BETWEEN ld.submission_date AND DATE_ADD(ld.submission_date, INTERVAL (ifnull(total_days,0)) DAY)) as lds_continue_view
+            on mbr_reg.id = lds_continue_view.member_registration_id_continue
+
+            where NOW() BETWEEN mbr_reg.start_date AND DATE_ADD(mbr_reg.start_date, INTERVAL (mbr_reg.days + ifnull(total_days,0)) DAY) "
+            . ($id ? " and mbr_reg.id = '$id' " : '') . "
+            order by cim_view.updated_at_check_in desc";
+        $activeMemberRegistrations = DB::select($sql);
+
+        return $activeMemberRegistrations;
     }
 }

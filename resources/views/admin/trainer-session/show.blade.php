@@ -1,108 +1,79 @@
-{{-- <div class="col-xl-12">
-    <div class="page-title flex-wrap justify-content-between">
-        <a href="{{ route('print-trainer-session-detail-pdf') }}" target="_blank" class="btn btn-info">Print PDF</a>
-    </div>
-</div> --}}
-
 <div class="col-xl-12">
     <div class="card">
         <div class="card-body">
             <div class="teacher-deatails">
-                <h3 class="heading">Personal Data :</h3>
-
-                <table class="table">
-                    <tbody>
+                <h3 class="heading">Member's Profile:</h3>
+                <table class="table" border="2">
+                    <tbody style="color: rgb(85, 85, 85);">
                         <tr>
-                            <td scope="col">
-                                <h6>Full Name</h6>
-                            </td>
-                            <td scope="col">
-                                <span>{{ $trainerSession->members->full_name }}</span>
-                            </td>
-                            <td scope="col">
-                                <h6>Nick Name</h6>
-                            </td>
-                            <td scope="col">
-                                <span>{{ $trainerSession->members->nickname }}</span>
-                            </td>
+                            <th scope="col">
+                                <b>Full Name</b>
+                            </th>
+                            <th style="border-right: 2px solid rgb(212, 212, 212);">
+                                : {{ $query->first()->member_name }}
+                            </th>
+                            <th scope="col">
+                                <b>Nick Name</b>
+                            </th>
+                            <th style="border-right: 2px solid rgb(212, 212, 212);">
+                                : {{ $query->first()->nickname }}
+                            </th>
                         </tr>
                         <tr>
-                            <td scope="col">
-                                <h6>Member Code</h6>
-                            </td>
-                            <td scope="col">
-                                <span>{{ $trainerSession->members->member_code }}</span>
-                            </td>
-                            <td scope="col">
-                                <h6>Gender</h6>
-                            </td>
-                            <td scope="col">
-                                <span>{{ $trainerSession->members->gender }}</span>
-                            </td>
+                            <th scope="col">
+                                <b>Member Number</b>
+                            </th>
+                            <th style="border-right: 2px solid rgb(212, 212, 212);">
+                                : {{ $query->first()->member_code }}
+                            </th>
+                            <th scope="col">
+                                <b>Card Number</b>
+                            </th>
+                            <th style="border-right: 2px solid rgb(212, 212, 212);">
+                                : {{ $query->first()->card_number }}
+                            </th>
                         </tr>
                         <tr>
-                            <td scope="col">
-                                <h6>Date of birth</h6>
-                            </td>
-                            <td scope="col">
-                                <span>{{ DateFormat($trainerSession->members->born, 'DD MMMM YYYY') }}</span>
-                            </td>
-                            <td scope="col">
-                                <h6>Phone Number</h6>
-                            </td>
-                            <td scope="col">
-                                <span>{{ $trainerSession->members->phone_number }}</span>
-                            </td>
+                            <th scope="col">
+                                <b>Date of birth</b>
+                            </th>
+                            <th style="border-right: 2px solid rgb(212, 212, 212);">
+                                : {{ DateFormat($query->first()->born, 'DD MMMM YYYY') }}
+                            </th>
+                            <th scope="col">
+                                <b>Phone Number</b>
+                            </th>
+                            <th style="border-right: 2px solid rgb(212, 212, 212);">
+                                : {{ $query->first()->member_phone }}
+                            </th>
                         </tr>
                         <tr>
-                            <td scope="col">
-                                <h6>Email</h6>
-                            </td>
-                            <td scope="col">
-                                <span>{{ $trainerSession->members->email }}</span>
-                            </td>
-                            <td scope="col">
-                                <h6>Instagram</h6>
-                            </td>
-                            <td scope="col">
-                                <span>{{ $trainerSession->members->ig }}</span>
-                            </td>
+                            <th scope="col">
+                                <b>Gender</b>
+                            </th>
+                            <th style="border-right: 2px solid rgb(212, 212, 212);">
+                                : {{ $query->first()->gender }}
+                            </th>
+                            <th scope="col">
+                                <b>Address</b>
+                            </th>
+                            <th style="border-right: 2px solid rgb(212, 212, 212);">
+                                : {{ $query->first()->address }}
+                            </th>
                         </tr>
                         <tr>
-                            <td scope="col">
-                                <h6>Emergency Contact</h6>
-                            </td>
-                            <td scope="col">
-                                <span>{{ $trainerSession->members->emergency_contact }}</span>
-                            </td>
-                            <td scope="col">
-                                <h6>Address</h6>
-                            </td>
-                            <td scope="col">
-                                <span>{{ $trainerSession->members->address }}</span>
-                            </td>
+                            <th><b>Email</th>
+                            <th style="text-transform: lowercase; border-right: 2px solid rgb(212, 212, 212);">:
+                                {{ $query->first()->email }}</th>
+                            <th><b>Instragram</th>
+                            <th>: {{ $query->first()->ig }}</th>
                         </tr>
                         <tr>
-                            <td scope="col">
-                                <h6>Description</h6>
-                            </td>
-                            <td scope="col">
-                                <span>{{ $trainerSession->members->emergency_contact }}</span>
-                            </td>
-                            <td scope="col">
-                                <h6>Photos</h6>
-                            </td>
-                            <td scope="col">
-                                <div class="trans-list">
-                                    @if ($trainerSessionss->photos)
-                                        <img src="{{ Storage::url($trainerSessionss->photos) }}" class="lazyload"
-                                            width="100" alt="image">
-                                    @else
-                                        <img src="{{ asset('default.png') }}" class="lazyload" width="100"
-                                            alt="default image">
-                                    @endif
-                                </div>
-                            </td>
+                            <th><b>Emergency Contact</th>
+                            <th style="text-transform: lowercase; border-right: 2px solid rgb(212, 212, 212);">:
+                                {{ $query->first()->emergency_contact }}</th>
+                            <th><b>Emergency Contact Name</th>
+                            <th>: {{ $query->first()->ec_name }}</th>
                         </tr>
                     </tbody>
                 </table>
@@ -111,156 +82,52 @@
     </div>
 </div>
 
-<div class="col-xl-12">
-    <div class="card">
-        <div class="card-body">
-            <div class="teacher-deatails">
-                <h3 class="heading">Package Data & Other :</h3>
-                <table class="table">
-                    <tbody>
-                        <tr>
-                            <td scope="col">
-                                <h6>PT by</h6>
-                            </td>
-                            <td scope="col">
-                                <span>{{ $trainerSession->personalTrainers->full_name }}</span>
-                            </td>
-                            <td scope="col">
-                                <h6>Trainer Phone Number</h6>
-                            </td>
-                            <td scope="col">
-                                <span>{{ $trainerSession->personalTrainers->phone_number }}</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td scope="col">
-                                <h6>Session Total</h6>
-                            </td>
-                            <td scope="col">
-                                <span>{{ $trainerSession->number_of_session }}</span>
-                            </td>
-                            <td scope="col">
-                                <h6>Remaining Session</h6>
-                            </td>
-                            <td scope="col">
-                                <span>{{ $trainerSessionss->remaining_sessions }}</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td scope="col">
-                                <h6>Number of Days</h6>
-                            </td>
-                            <td scope="col">
-                                <span>{{ $trainerSession->days }}</span>
-                            </td>
-                            <td scope="col">
-                                <h6>Package Price</h6>
-                            </td>
-                            <td scope="col">
-                                <span>{{ formatRupiah($trainerSession->package_price) }}</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td scope="col">
-                                <h6>Start Date</h6>
-                            </td>
-                            <td scope="col">
-                                <span>{{ DateFormat($trainerSession->start_date, 'DD MMMM YYYY') }}</span>
-                            </td>
-                            <td scope="col">
-                                <h6>Expired Date</h6>
-                            </td>
-                            <td scope="col">
-                                <span>{{ DateFormat($trainerSessionss->expired_date, 'DD MMMM YYYY') }}</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td scope="col">
-                                <h6>Method Payment</h6>
-                            </td>
-                            <td scope="col">
-                                <span>{{ $trainerSessionss->method_payment_name }}</span>
-                            </td>
-                            <td scope="col">
-                                <h6>Trainer Package Description</h6>
-                            </td>
-                            <td scope="col">
-                                <span>{{ $trainerSession->trainerPackages->description }}</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td scope="col">
-                                <h6>Trainer Session Description</h6>
-                            </td>
-                            <td scope="col">
-                                <span>{{ $trainerSession->description }}</span>
-                            </td>
-                            <td scope="col">
-                                <h6>Fitness Consultant</h6>
-                            </td>
-                            <td scope="col">
-                                <span>{{ $trainerSession->fitnessConsultants->full_name }}</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td scope="col">
-                                <h6>Staff</h6>
-                            </td>
-                            <td scope="col">
-                                <span>{{ $trainerSession->users->full_name }}</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+@foreach ($query as $query)
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="teacher-deatails">
+                    <h3 class="heading">Package Info: {{ $loop->iteration }}</h3>
+                    <table class="table">
+                        <tbody style="color: rgb(85, 85, 85);">
+                            <tr>
+                                <th><b>Package Name</b></th>
+                                <th>{{ $query->package_name }}</th>
+                            </tr>
+                            <tr>
+                                <th><b>Number Of Days</th>
+                                <th>{{ $query->ts_number_of_days }} Days</th>
+                            </tr>
+                            <tr>
+                                <th><b>Package Price</b></th>
+                                <th>{{ formatRupiah($query->ts_package_price) }}</th>
+                            </tr>
+                            <tr>
+                                <th><b>Start Date</th>
+                                <th>{{ DateFormat($query->start_date, 'DD MMMM YYYY') }}</th>
+                            </tr>
+                            <tr>
+                                <th><b>Expired Date</th>
+                                <th>{{ DateFormat($query->expired_date, 'DD MMMM YYYY') }}</th>
+                            </tr>
+                            <tr>
+                                <th><b>Method Payment</b></th>
+                                <th>{{ $query->method_payment_name }}</th>
+                            </tr>
+                            <tr>
+                                <th><b>Description</b></th>
+                                <th>{{ $query->description }}</th>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <a href="{{ route('pt-agreement', $query->id) }}" class="btn btn-primary btn-sm"
+                    target="_blank">Download
+                    Agrement {{ $loop->iteration }}</a>
             </div>
         </div>
     </div>
-</div>
-
-<div class="col-xl-12">
-    <div class="card">
-        <div class="card-body">
-            <h3 class="heading">Check In Time & Check Out Time</h3>
-            <table class="table">
-                <thead>
-                    <tr>
-                        @if (Auth::user()->role == 'ADMIN')
-                            <td></td>
-                        @endif
-                        <th>No</th>
-                        <th>Check In Time</th>
-                        <th>Check Out Time</th>
-                        @if (Auth::user()->role == 'ADMIN')
-                            <th>Action</th>
-                        @endif
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($checkInTrainerSession as $item)
-                        <tr>
-                            @if (Auth::user()->role == 'ADMIN')
-                                <td><input type="checkbox" name="selectedItems[]" value="{{ $item->id }}"></td>
-                            @endif
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ DateFormat($item->check_in_time, 'DD MMMM YYYY, HH:mm') }}</td>
-                            <td>{{ DateFormat($item->check_out_time, 'DD MMMM YYYY, HH:mm') }}</td>
-                            @if (Auth::user()->role == 'ADMIN')
-                                <td>
-                                    <form action="{{ route('member-check-in.destroy', $item->id) }}"
-                                        onclick="return confirm('Delete Data ?')" method="POST">
-                                        @method('delete')
-                                        @csrf
-                                        <button type="submit" class="btn light btn-danger btn-xs mb-1">Delete</button>
-                                    </form>
-                                </td>
-                            @endif
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
+@endforeach
 
 @if ($remainingSessions == 0)
     <div class="col-xl-12">
