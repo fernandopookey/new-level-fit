@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Member;
 
 use App\Exports\MemberExport;
+use App\Exports\TrainnerExport;
 use App\Http\Controllers\Controller;
 use App\Models\Member\Member;
 use App\Models\Member\MemberPackage;
@@ -17,10 +18,10 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Concerns\ToModel;
-use Maatwebsite\Excel\Concerns\WithBatchInserts;
-use Maatwebsite\Excel\Concerns\WithChunkReading;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
+// use Maatwebsite\Excel\Concerns\ToModel;
+// use Maatwebsite\Excel\Concerns\WithBatchInserts;
+// use Maatwebsite\Excel\Concerns\WithChunkReading;
+// use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 
 HeadingRowFormatter::default('none');
@@ -37,25 +38,116 @@ class MemberController extends Controller
                 'a.full_name',
                 'a.nickname',
                 'a.member_code',
+                'a.card_number',
                 'a.gender',
                 'a.born',
                 'a.phone_number',
                 'a.email',
                 'a.ig',
                 'a.emergency_contact',
+                'a.ec_name',
                 'a.address',
                 'a.status',
                 'a.photos',
+                'a.created_at'
             )
             ->where('a.status', '=', 'sell')
+            ->orderBy('created_at', 'desc')
+            ->orderBy('updated_at', 'desc')
             ->get();
 
         $data = [
             'title'             => 'Member List',
             'members'           => $sell,
             // 'users'             => User::get(),
-            'memberLastCode'    => Member::latest('id')->first(),
             'content'           => 'admin/members/index'
+        ];
+
+        return view('admin.layouts.wrapper', $data);
+    }
+
+    // public function dayVisit()
+    // {
+    //     $sell = DB::table('members as a')
+    //         ->select(
+    //             'a.id',
+    //             'a.full_name',
+    //             'a.nickname',
+    //             'a.member_code',
+    //             'a.card_number',
+    //             'a.gender',
+    //             'a.born',
+    //             'a.phone_number',
+    //             'a.email',
+    //             'a.ig',
+    //             'a.emergency_contact',
+    //             'a.ec_name',
+    //             'a.address',
+    //             'a.status',
+    //             'a.photos',
+    //             'a.created_at'
+    //         )
+    //         ->where('a.status', '=', 'one_day_visit')
+    //         ->orderBy('created_at', 'desc')
+    //         ->get();
+
+    //     $data = [
+    //         'title'             => 'Member List',
+    //         'members'           => $sell,
+    //         // 'users'             => User::get(),
+    //         'content'           => 'admin/one-visit/index'
+    //     ];
+
+    //     return view('admin.layouts.wrapper', $data);
+    // }
+
+    public function dayVisit()
+    {
+        $memberRegistrations = DB::table('member_registrations as a')
+            ->select(
+                'a.id',
+                'a.start_date',
+                'a.description',
+                'a.days as member_registration_days',
+                'a.old_days',
+                'a.package_price as mr_package_price',
+                'a.admin_price as mr_admin_price',
+                'a.updated_at',
+                'b.id as member_id',
+                'b.full_name as member_name',
+                'b.phone_number',
+                'c.package_name',
+                'c.days',
+                'c.package_price',
+                'e.name as method_payment_name',
+                'f.full_name as staff_name',
+            )
+            ->addSelect(
+                // DB::raw('DATE_ADD(a.start_date, INTERVAL COALESCE(ld.days, 0) + a.days DAY) as expired_date'),
+                DB::raw('CASE 
+                    WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.days DAY) THEN "Over" 
+                    WHEN NOW() BETWEEN a.start_date AND DATE_ADD(a.start_date, INTERVAL a.days DAY) THEN "Running" 
+                    ELSE "Not Started" 
+                END as status')
+            )
+            ->join('members as b', 'a.member_id', '=', 'b.id')
+            ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
+            ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
+            ->join(
+                'users as f',
+                'a.user_id',
+                '=',
+                'f.id'
+            )
+            ->whereRaw('NOW() BETWEEN a.start_date AND DATE_ADD(a.start_date, INTERVAL a.days DAY)')
+            //         ->where('a.status', '=', 'one_day_visit')
+            //         ->orderBy('created_at', 'desc')
+            ->get();
+
+        $data = [
+            'title'                 => '1 Day Visit',
+            'memberRegistrations'   => $memberRegistrations,
+            'content'               => 'admin/one-visit/index'
         ];
 
         return view('admin.layouts.wrapper', $data);
@@ -66,67 +158,15 @@ class MemberController extends Controller
         return Excel::download(new MemberExport(), 'members.xlsx');
     }
 
-    // public function query()
-    // {
-    //     return Member::query()->whereYear('created_at', $this->year);
-    // }
-
     public function store(Request $request)
     {
-        // $data = $request->validate([
-        //     'full_name'         => 'required',
-        //     'phone_number'      => 'required',
-        //     'nickname'          => 'nullable',
-        //     'member_code'       => 'nullable',
-        //     'gender'            => 'nullable',
-        //     'born'              => 'nullable',
-        //     'email'             => 'nullable',
-        //     'ig'                => 'nullable',
-        //     'emergency_contact' => 'nullable',
-        //     'address'           => 'nullable',
-        //     'description'       => 'nullable',
-        //     'photos'            => 'mimes:png,jpg,jpeg|max:2048',
-        //     'status'            => 'required'
-        // ]);
-
-
-        // $data['user_id'] = Auth::user()->id;
-        // $data['gender'] = $request->input('gender', 'Not Selected');
-        // $data['born'] = Carbon::parse($data['born'])->format('Y-m-d');
-
-        // if ($request->filled('member_code')) {
-        //     $memberCode = $request->member_code;
-        //     $existingRecord = Member::where('member_code', $memberCode)->first();
-
-        //     if ($existingRecord) {
-        //         return redirect()->back()->with('error', 'Code already exists');
-        //     }
-        // }
-
-        // if ($request->hasFile('photos')) {
-
-        //     if ($request->photos != null) {
-        //         $realLocation = "storage/" . $request->photos;
-        //         if (file_exists($realLocation) && !is_dir($realLocation)) {
-        //             unlink($realLocation);
-        //         }
-        //     }
-
-        //     $photos = $request->file('photos');
-        //     $file_name = time() . '-' . $photos->getClientOriginalName();
-
-        //     $data['photos'] = $request->file('photos')->store('assets/member', 'public');
-        // } else {
-        //     $data['photos'] = $request->photos;
-        // }
-        // Member::create($data);
-        // return redirect()->back()->with('message', 'Member Added Successfully');
+        // 
     }
 
     public function edit(string $id)
     {
         $data = [
-            'title'                 => 'Edit Member',
+            'title'                 => 'Edit Missed Guest',
             // 'memberRegistration'    => MemberRegistration::find($id),
             'members'               => Member::find($id),
             'memberLastCode'        => Member::latest('id')->first(),
@@ -139,11 +179,72 @@ class MemberController extends Controller
         return view('admin.layouts.wrapper', $data);
     }
 
+    public function secondEdit($id)
+    {
+        $data = [
+            'title'                 => 'Edit Member',
+            'members'               => Member::find($id),
+            'memberLastCode'        => Member::latest('id')->first(),
+            'memberPackage'         => MemberPackage::get(),
+            'methodPayment'         => MethodPayment::get(),
+            'fitnessConsultant'     => FitnessConsultant::get(),
+            'content'               => 'admin/members/second-edit',
+        ];
+
+        return view('admin.layouts.wrapper', $data);
+    }
+
+    public function secondUpdate(Request $request, $id)
+    {
+        $item = Member::find($id);
+        $data = $request->validate([
+            'full_name'             => 'nullable',
+            'nickname'              => 'nullable',
+            'member_code'           => 'nullable',
+            'card_number'           => 'nullable',
+            'gender'                => 'nullable',
+            'born'                  => 'nullable',
+            'phone_number'          => 'nullable',
+            'email'                 => 'nullable',
+            'ig'                    => 'nullable',
+            'emergency_contact'     => 'nullable',
+            'ec_name'               => 'nullable',
+            'address'               => 'nullable',
+            'photos'                => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:1048',
+            'status'                => 'nullable',
+        ]);
+
+        $data['born'] = Carbon::parse($data['born'])->format('Y-m-d');
+
+        if ($request->hasFile('photos')) {
+
+            if ($item->photos != null) {
+                $realLocation = "storage/" . $item->photos;
+                if (file_exists($realLocation) && !is_dir($realLocation)) {
+                    unlink($realLocation);
+                }
+            }
+
+            $photos = $request->file('photos');
+            $file_name = time() . '-' . $photos->getClientOriginalName();
+
+            $data['photos'] = $request->file('photos')->store('assets/member', 'public');
+        } else {
+            $data['photos'] = $item->photos;
+        }
+
+
+        $item->update($data);
+
+        return redirect()->route('members.index')->with('success', 'Member Updated Successfully');
+    }
+
     public function update(Request $request, string $id)
     {
+        // dd($id);
         DB::beginTransaction();
         try {
-            $member = Member::findOrFail($id); // Menemukan anggota yang ingin diperbarui
+            $member = Member::findOrFail($id);
 
             $data = $request->validate([
                 'full_name'             => 'required',
@@ -154,6 +255,7 @@ class MemberController extends Controller
                 'email'                 => 'nullable',
                 'ig'                    => 'nullable',
                 'emergency_contact'     => 'nullable',
+                'ec_name'               => 'nullable',
                 'gender'                => 'nullable',
                 'address'               => 'nullable',
                 'photos'                => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -169,7 +271,18 @@ class MemberController extends Controller
                         if ($value) {
                             $exists = Member::where('member_code', $value)->where('id', '!=', $id)->exists();
                             if ($exists) {
-                                $fail('The member code has already been taken.');
+                                $fail('The member number has already been taken.');
+                            }
+                        }
+                    }
+                ],
+                'card_number' => [
+                    'nullable',
+                    function ($attribute, $value, $fail) use ($id) {
+                        if ($value) {
+                            $exists = Member::where('card_number', $value)->where('id', '!=', $id)->exists();
+                            if ($exists) {
+                                $fail('The card number has already been taken.');
                             }
                         }
                     }
@@ -211,7 +324,7 @@ class MemberController extends Controller
             // Perbarui data anggota
             $member->update(array_intersect_key($data, array_flip([
                 'full_name', 'phone_number', 'status', 'nickname',
-                'born', 'member_code', 'email', 'ig', 'emergency_contact', 'gender', 'address', 'photos'
+                'born', 'member_code', 'card_number', 'email', 'ig', 'emergency_contact', 'ec_name', 'gender', 'address', 'photos'
             ])));
 
             // Buat atau perbarui data pendaftaran anggota
@@ -227,67 +340,23 @@ class MemberController extends Controller
 
             DB::commit();
 
-            return redirect()->back()->with('success', 'Member Registration Updated Successfully');
+            return redirect()->route('members.index')->with('success', 'Member Missed Guest Updated Successfully');
         } catch (Exception $e) {
             DB::rollback();
             throw $e;
         }
     }
 
-    // public function update(Request $request, string $id)
-    // {
-    //     $item = Member::find($id);
-    //     $data = $request->validate([
-    //         'full_name'         => 'nullable',
-    //         'phone_number'      => 'nullable',
-    //         'nickname'          => 'nullable',
-    //         'member_code'       => 'nullable',
-    //         'gender'            => 'nullable',
-    //         'born'              => 'nullable',
-    //         'email'             => 'nullable',
-    //         'ig'                => 'nullable',
-    //         'emergency_contact' => 'nullable',
-    //         'address'           => 'nullable',
-    //         'status'            => 'nullable',
-    //         'description'       => 'nullable',
-    //         'photos'            => 'mimes:png,jpg,jpeg|max:2048'
-    //     ]);
+    public function show($id)
+    {
+        $data = [
+            'title'     => 'Detail Member Registration',
+            'members'   => Member::find($id),
+            'content'   => 'admin/members/detail',
+        ];
 
-    //     $data['user_id'] = Auth::user()->id;
-
-    //     if (!isset($data['member_code'])) {
-    //         $data['member_code'] = $item->member_code;
-    //     } elseif ($data['member_code'] !== $item->member_code) {
-    //         $member = $data['member_code'];
-    //         $memberCode = $member;
-
-    //         $existingRecord = Member::where('member_code', $memberCode)->first();
-    //         if ($existingRecord && $existingRecord->id != $id) {
-    //             return redirect()->back()->with('error', 'Code already exists');
-    //         }
-    //         $data['member_code'] = $memberCode;
-    //     }
-
-    //     if ($request->hasFile('photos')) {
-
-    //         if ($request->photos != null) {
-    //             $realLocation = "storage/" . $request->photos;
-    //             if (file_exists($realLocation) && !is_dir($realLocation)) {
-    //                 unlink($realLocation);
-    //             }
-    //         }
-
-    //         $photos = $request->file('photos');
-    //         $file_name = time() . '-' . $photos->getClientOriginalName();
-
-    //         $data['photos'] = $request->file('photos')->store('assets/member', 'public');
-    //     } else {
-    //         $data['photos'] = $request->photos;
-    //     }
-
-    //     $item->update($data);
-    //     return redirect()->route('members.index')->with('message', 'Member Updated Successfully');
-    // }
+        return view('admin.layouts.wrapper', $data);
+    }
 
     public function destroy(Member $member)
     {
@@ -303,7 +372,6 @@ class MemberController extends Controller
             $member->delete();
             return redirect()->back()->with('message', 'Member Deleted Successfully');
         } catch (\Throwable $e) {
-            // Alert::error('Error', $e->getMessage());
             return redirect()->back()->with('error', 'Member Deleted Failed, please check other session where using this member');
         }
     }
@@ -344,5 +412,18 @@ class MemberController extends Controller
             'users'     => $users,
         ])->setPaper('a4', 'landscape');
         return $pdf->stream('member-report.pdf');
+    }
+
+    public function resetCheckIn(Request $request, string $id)
+    {
+        // dd($id);
+        $item = Member::find($id);
+        $name = $item->full_name;
+        // dd($name);
+        // $data['id_code_count'] = 0;
+        $item->id_code_count = 0;
+        $item->save();
+
+        return redirect()->route('member-active.index')->with('success', 'Member ' . $name . ' Reset Check In Successfully');
     }
 }

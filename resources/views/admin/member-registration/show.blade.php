@@ -1,140 +1,120 @@
+<!-- Tampilkan data dari tabel members hanya sekali -->
 <div class="col-xl-12">
     <div class="card">
         <div class="card-body">
             <div class="teacher-deatails">
-                <h3 class="heading">Member's Data:</h3>
-                <table class="table">
-                    <thead>
+                <h3 class="heading">Member's Profile:</h3>
+                <table class="table" border="2">
+                    <tbody style="color: rgb(85, 85, 85);">
                         <tr>
                             <th><b>Full Name</b></th>
-                            <th>{{ $memberRegistration->member_name }}</th>
-                        </tr>
-                        <tr>
-                            <th><b>Phone Number</b></th>
-                            <th>{{ $memberRegistration->phone_number }}</th>
-                        </tr>
-                        <tr>
-                            <th><b>Nick Name</b></th>
-                            <th>{{ $memberRegistration->nickname }}</th>
+                            <th style="border-right: 2px solid rgb(212, 212, 212);">
+                                : {{ $memberRegistration->first()->member_name }}
+                            </th>
+                            <th><b>Nickname</th>
+                            <th>: {{ $memberRegistration->first()->nickname }}</th>
                         </tr>
                         <tr>
                             <th><b>Member Code</th>
-                            <th>{{ $memberRegistration->member_code }}</th>
+                            <th style="border-right: 2px solid rgb(212, 212, 212);">
+                                : {{ $memberRegistration->first()->member_code }}</th>
+                            <th><b>Card Number</th>
+                            <th>: {{ $memberRegistration->first()->card_number }}</th>
                         </tr>
                         <tr>
-                            <th><b>Gender</b></th>
-                            <th>{{ $memberRegistration->gender }}</th>
+                            <th><b>Date of Birth</th>
+                            <th style="border-right: 2px solid rgb(212, 212, 212);">
+                                : {{ DateFormat($memberRegistration->first()->born, 'DD MMMM YYYY') }}</th>
+                            <th><b>Phone Number</th>
+                            <th>: {{ $memberRegistration->first()->phone_number }}</th>
                         </tr>
                         <tr>
-                            <th><b>Date of Birth</b></th>
-                            <th>{{ DateFormat($memberRegistration->born, 'DD MMMM YYYY') }}</th>
+                            <th><b>Gender</th>
+                            <th style="border-right: 2px solid rgb(212, 212, 212);">
+                                : {{ $memberRegistration->first()->gender }}</th>
+                            <th><b>Address</th>
+                            <th>: {{ $memberRegistration->first()->address }}</th>
                         </tr>
                         <tr>
-                            <th><b>Email</b></th>
-                            <th>{{ $memberRegistration->email }}</th>
+                            <th><b>Email</th>
+                            <th style="text-transform: lowercase; border-right: 2px solid rgb(212, 212, 212);">:
+                                {{ $memberRegistration->first()->email }}</th>
+                            <th><b>Instragram</th>
+                            <th>: {{ $memberRegistration->first()->ig }}</th>
                         </tr>
                         <tr>
-                            <th><b>Instagram</b></th>
-                            <th>{{ $memberRegistration->ig }}</th>
+                            <th><b>Emergency Contact</th>
+                            <th style="text-transform: lowercase; border-right: 2px solid rgb(212, 212, 212);">:
+                                {{ $memberRegistration->first()->emergency_contact }}</th>
+                            <th><b>Emergency Contact Name</th>
+                            <th>: {{ $memberRegistration->first()->ec_name }}</th>
                         </tr>
-                        <tr>
-                            <th><b>Emergency Contact</b></th>
-                            <th>{{ $memberRegistration->emergency_contact }}</th>
-                        </tr>
-                        <tr>
-                            <th><b>Address</b></th>
-                            <th>{{ $memberRegistration->address }}</th>
-                        </tr>
-                        <tr>
-                            <th><b>Description</b></th>
-                            <th>{{ $memberRegistration->description }}</th>
-                        </tr>
-                        <tr>
-                            <th><b>Start Date</b></th>
-                            <th>{{ $memberRegistration->start_date }}</th>
-                        </tr>
-                        <tr>
-                            <th><b>Expired Date</b></th>
-                            <th>{{ $memberRegistration->expired_date }}</th>
-                        </tr>
-                    </thead>
+                        </thead>
                 </table>
             </div>
         </div>
+    </div>
+</div>
 
-        <div class="card-body">
-            <div class="">
-                <h3 class="heading">Package Info:</h3>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th><b>Package Name</b></th>
-                            <th>{{ $memberRegistration->package_name }}</th>
-                        </tr>
-                        <tr>
-                            <th><b>Number Of Days</th>
-                            <th>{{ $memberRegistration->member_registration_days }} Days</th>
-                        </tr>
-                        <tr>
-                            <th><b>Package Price</b></th>
-                            <th>{{ formatRupiah($memberRegistration->mr_package_price) }}</th>
-                        </tr>
-                        <tr>
-                            <th><b>Method Payment</b></th>
-                            <th>{{ $memberRegistration->method_payment_name }}</th>
-                        </tr>
-                    </thead>
-                </table>
+@foreach ($memberRegistration as $memberRegistration)
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="teacher-deatails">
+                    <h3 class="heading">Package Info: {{ $loop->iteration }}</h3>
+                    <table class="table">
+                        <tbody style="color: rgb(85, 85, 85);">
+                            <tr>
+                                <th><b>Package Name</b></th>
+                                <th>{{ $memberRegistration->package_name }}</th>
+                                {{-- {{ $memberRegistration->total_leave_days }} --}}
+                            </tr>
+                            <tr>
+                                <th><b>Number Of Days</th>
+                                <th>{{ $memberRegistration->member_registration_days }} Days</th>
+                            </tr>
+                            <tr>
+                                <th><b>Package Price</b></th>
+                                <th>{{ formatRupiah($memberRegistration->mr_package_price) }}</th>
+                            </tr>
+                            <tr>
+                                <th><b>Admin Price</b></th>
+                                <th>{{ formatRupiah($memberRegistration->mr_admin_price) }}</th>
+                            </tr>
+                            <tr>
+                                <th><b>Start Date</th>
+                                <th>{{ DateFormat($memberRegistration->start_date, 'DD MMMM YYYY') }}</th>
+                            </tr>
+                            <tr>
+                                <th><b>Expired Date</th>
+                                <th>{{ DateFormat($memberRegistration->expired_date, 'DD MMMM YYYY') }}</th>
+                            </tr>
+                            <tr>
+                                <th><b>Method Payment</b></th>
+                                <th>{{ $memberRegistration->method_payment_name }}</th>
+                            </tr>
+                            <tr>
+                                <th><b>Description</b></th>
+                                <th>{{ $memberRegistration->description }}</th>
+                            </tr>
+                            <tr>
+                                <th><b>Leave Days</b></th>
+                                @if ($memberRegistration->leave_day_status == 'Freeze')
+                                    <th>{{ $memberRegistration->total_leave_days }}</th>
+                                @else
+                                    <th>No Leave Days</th>
+                                @endif
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <a href="{{ route('membership-agreement', $memberRegistration->id) }}" class="btn btn-primary btn-sm"
+                    target="_blank">Download
+                    Agrement</a>
             </div>
         </div>
-
     </div>
-</div>
-
-<div class="col-xl-12">
-    <div class="card">
-        <div class="card-body">
-            <h3 class="heading">Check In Time & Check Out Time</h3>
-            <table class="table">
-                <thead>
-                    <tr>
-                        @if (Auth::user()->role == 'ADMIN')
-                            <td></td>
-                        @endif
-                        <th>No</th>
-                        <th>Check In Time</th>
-                        <th>Check Out Time</th>
-                        @if (Auth::user()->role == 'ADMIN')
-                            <th>Action</th>
-                        @endif
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($memberRegistrationCheckIn as $item)
-                        <tr>
-                            @if (Auth::user()->role == 'ADMIN')
-                                <td><input type="checkbox" name="selectedItems[]" value="{{ $item->id }}"></td>
-                            @endif
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ DateFormat($item->check_in_time, 'DD MMMM YYYY, HH:mm') }}</td>
-                            <td>{{ DateFormat($item->check_out_time, 'DD MMMM YYYY, HH:mm') }}</td>
-                            @if (Auth::user()->role == 'ADMIN')
-                                <td>
-                                    <form action="{{ route('member-check-in.destroy', $item->id) }}"
-                                        onclick="return confirm('Delete Data ?')" method="POST">
-                                        @method('delete')
-                                        @csrf
-                                        <button type="submit" class="btn light btn-danger btn-xs mb-1">Delete</button>
-                                    </form>
-                                </td>
-                            @endif
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
+@endforeach
 
 @if ($memberRegistration->status == 'Running')
     <div class="col-xl-12">

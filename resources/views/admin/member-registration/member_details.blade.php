@@ -47,7 +47,6 @@
     @if (session('expiredDate'))
         <p>{{ session('expiredDate') }}</p>
     @endif
-
 </div>
 
 <script>
@@ -169,7 +168,8 @@
         var leftPosition = (screen.width - width) / 2;
         var topPosition = (screen.height - height) / 2;
 
-        var newWindow = window.open('', '_blank', 'width=' + width + ', height=' + height + ', left=' + leftPosition +
+        var newWindow = window.open('', '_blank', 'width=' + width + ', height=' + height + ', left=' +
+            leftPosition +
             ', top=' + topPosition);
         newWindow.document.write(contentHTML);
 
@@ -179,6 +179,6 @@
     }
 
     document.addEventListener("DOMContentLoaded", function() {
-        openNewWindow(contentHTML, 800, 700);
+        openNewWindow(contentHTML, 1000, 1000);
     });
 </script>

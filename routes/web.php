@@ -13,6 +13,7 @@ use App\Http\Controllers\Report\MemberExpiredListController;
 use App\Http\Controllers\Report\MemberListController;
 use App\Http\Controllers\Report\TrainerGoListController;
 use App\Http\Controllers\Staff\StaffController;
+use App\Http\Controllers\Trainer\LGTController;
 use App\Http\Controllers\Trainer\TrainerSessionCheckInController;
 use App\Http\Controllers\Trainer\TrainerSessionController;
 use App\Http\Controllers\Trainer\TrainerSessionOverController;
@@ -39,10 +40,14 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/add-data', [MergeCreateDataController::class, 'index'])->name('add-data');
+    Route::get('/1-day-visit-lead', [MergeCreateDataController::class, 'create'])->name('one-day-visit-lead');
+    Route::get('/openMembers', [MergeCreateDataController::class, 'openMembers'])->name('openMembers');
+    Route::post('renewal/store/{id}', [MemberRegistrationController::class, 'renewMemberRegistration'])->name('renewMemberRegistration');
+    // Route::get('1-day-visit', [MemberController::class, 'dayVisit'])->name('1-day-visit');
+    Route::get('one-day-visit', [MemberRegistrationController::class, 'oneDayVisit'])->name('oneDayVisit');
+
 
     Route::resource('member', '\App\Http\Controllers\Member\MemberController');
-
-    Route::delete('members-bulk-delete', [MemberController::class, 'bulkDelete'])->name('members-bulk-delete');
 
     Route::resource('member-package', '\App\Http\Controllers\Member\MemberPackageController');
     Route::resource('member-package-type', '\App\Http\Controllers\Member\MemberPackageTypeController');
@@ -54,8 +59,8 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     Route::resource('member-check-in', '\App\Http\Controllers\Member\MemberCheckInController');
     Route::get('check-in/{id}', [MemberCheckInController::class, 'secondStore'])->name('secondCheckIn');
     Route::get('pt-check-in/{id}', [TrainerSessionCheckInController::class, 'secondStore'])->name('PTSecondCheckIn');
-    Route::delete('bulk-delete-member-registration', [MemberCheckInController::class, 'bulkDelete'])->name('bulk-delete-member-registration');
-    Route::delete('bulk-delete-trainer-session', [TrainerSessionCheckInController::class, 'bulkDelete'])->name('bulk-delete-trainer-session');
+    Route::post('lgt-check-in', [TrainerSessionCheckInController::class, 'lgtStore'])->name('LGTCheckIn');
+    Route::get('lgt-second-check-in/{id}', [TrainerSessionCheckInController::class, 'lgtSecondStore'])->name('LGTSecondCheckIn');
 
     Route::resource('trainer', '\App\Http\Controllers\Trainer\TrainerController');
     Route::resource('trainer-package', '\App\Http\Controllers\Trainer\TrainerPackageController');
@@ -77,13 +82,7 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     Route::resource('personal-trainer', '\App\Http\Controllers\Staff\PersonalTrainerController');
     Route::resource('physiotherapy', '\App\Http\Controllers\Staff\PhysiotherapyController');
     Route::resource('pt-leader', '\App\Http\Controllers\Staff\PTLeaderController');
-
-    Route::resource('locker-package', '\App\Http\Controllers\Admin\LockerPackageController');
-    Route::resource('locker-transaction', '\App\Http\Controllers\Admin\LockerTransactionController');
-
-    Route::resource('studio-booking', '\App\Http\Controllers\Admin\StudioBookingController');
-    Route::resource('studio-package', '\App\Http\Controllers\Admin\StudioPackageController');
-    Route::resource('studio-transactions', '\App\Http\Controllers\Admin\StudioTransactionController');
+    Route::get('trainer-report-excel', [MemberRegistrationController::class, 'excel'])->name('trainer-report-excel');
 
     Route::resource('trainer-session', '\App\Http\Controllers\Trainer\TrainerSessionController');
     Route::resource('trainer-session-over', '\App\Http\Controllers\Trainer\TrainerSessionOverController');
@@ -92,11 +91,14 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     Route::put('trainer-session-freeze/{id}/freeze', [TrainerSessionController::class, 'freeze'])->name('trainer-session-freeze');
     Route::resource('running-session', '\App\Http\Controllers\Trainer\RunningSessionController');
     Route::get('cutiTrainerSession/{id}', [TrainerSessionController::class, 'cuti'])->name('cutiTrainerSession');
+    Route::get('leave-days-lgt/{id}', [LGTController::class, 'cuti'])->name('cutiLGT');
+    Route::get('leave-day-list/{id}', [TrainerSessionController::class, 'listCuti'])->name('pt-leave-days-list');
+
+    Route::get('lgt', [LGTController::class, 'index'])->name('lgt');
 
     Route::resource('trainer-session-FO', '\App\Http\Controllers\Trainer\TrainerSessionFOController');
     Route::get('cetak-trainer-session-pdf', [TrainerSessionController::class, 'cetak_pdf'])->name('cetak-trainer-session-pdf');
     Route::get('print-trainer-session-detail-pdf', [TrainerSessionController::class, 'print_trainer_session_detail_pdf'])->name('print-trainer-session-detail-pdf');
-    // Route::delete('trainer-session-bulk-delete', [TrainerSessionController::class, 'bulkDelete'])->name('trainer-session-bulk-delete');
     Route::post('/delete-selected-trainer-sessions', [TrainerSessionController::class, 'deleteSelectedTrainerSessions'])->name('delete-selected-trainer-sessions');
     Route::post('/delete-selected-trainer-sessions-over', [TrainerSessionOverController::class, 'deleteSelectedTrainerSessionsOver'])->name('delete-selected-trainer-sessions-over');
     Route::get('pt-agreement/{id}', [TrainerSessionController::class, 'agreement'])->name('pt-agreement');
@@ -122,6 +124,8 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
 
     Route::resource('member-list', '\App\Http\Controllers\Report\MemberListController');
     Route::resource('member-active', '\App\Http\Controllers\Member\MemberRegistrationController');
+    Route::get('mmember-active-excel', [MemberRegistrationController::class, 'excel'])->name('member-active-excel');
+    Route::get('mmember-expired-excel', [MemberRegistrationOverController::class, 'excel'])->name('member-expired-excel');
     Route::resource('member-expired', '\App\Http\Controllers\Member\MemberRegistrationOverController');
     Route::resource('members', '\App\Http\Controllers\Member\MemberController');
     Route::get('all-member', [MemberListController::class, 'allData'])->name('all-member');
@@ -130,17 +134,10 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     Route::get('membership-agreement/{id}', [MemberRegistrationController::class, 'agreement'])->name('membership-agreement');
     Route::put('member-registration-freeze/{id}/freeze', [MemberRegistrationController::class, 'freeze'])->name('member-registration-freeze');
     Route::get('member-report', [MemberController::class, 'cetak_pdf'])->name('member-report');
-    // Route::post('/delete-selected-members', 'MemberRegistrationController@deleteSelectedMembers')->name('delete-selected-members');
-    // Route::post('/delete-selected-members', [MemberRegistrationController::class, 'deleteSelectedMembers'])->name('delete-selected-members');
-    // Route::post('/delete-selected-members-over', [MemberRegistrationOverController::class, 'deleteSelectedMembersOver'])->name('delete-selected-members-over');
-    Route::delete('member-active-bulk-delete', [MemberRegistrationController::class, 'bulkDelete'])->name('member-active-bulk-delete');
     Route::get('cuti/{id}', [MemberRegistrationController::class, 'cuti'])->name('cuti');
     Route::get('renewal/{id}', [MemberRegistrationController::class, 'renewal'])->name('renewal');
     // Route::put('renewal/{id}', [MemberRegistrationController::class, 'renewMember'])->name('memberRenewal');
     // Route::post('renewal/store', [MemberRegistrationController::class, 'renewMemberRegistration'])->name('renewMemberRegistration');
-    Route::post('renewal/store/{id}', [MemberRegistrationController::class, 'renewMemberRegistration'])->name('renewMemberRegistration');
-
-
 
     // Route::resource('renewal', '\App\Http\Controllers\Member\MemberRenewalController');
 
@@ -156,14 +153,22 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
 
     Route::get('personal-trainer-filter', [CheckInTrainerSession::class, 'checkMemberExistence'])->name('checkMemberExistence');
 
-    Route::get('member-active-filter', [MemberRegistrationController::class, 'filter'])->name('member-active-filter');
+    // Route::get('member-active-filter', [MemberRegistrationController::class, 'filter'])->name('member-active-filter');
+    Route::get('/filter-data', [MemberRegistrationController::class, 'filterData']);
+    Route::get('member-pending', [MemberRegistrationController::class, 'pending'])->name('member-pending');
     Route::get('trainer-session-filter', [TrainerSessionController::class, 'filter'])->name('trainer-session-filter');
+    Route::get('edit-member-sell/{id}', [MemberController::class, 'secondEdit'])->name('edit-member-sell');
+    Route::post('update-member-sell/{id}', [MemberController::class, 'secondUpdate'])->name('update-member-sell');
 
     // Route::get('/member-details', function () {
     //     return view('admin.member-registration.member_details');
     // })->name('member.details');
 
     Route::get('member-active/excel', [MemberRegistrationController::class, 'excel'])->name('memberRegistrationExcel');
+    Route::get('reset-check-in/{id}', [MemberController::class, 'resetCheckIn'])->name('resetCheckIn');
+    Route::get('pt/excel', [StaffController::class, 'excel'])->name('ptReportExcel');
+
+    // Route::get('pt-report-excel', [StaffController::class, 'tes'])->name('pt-report-excel');
 
     Route::get('/tes', function () {
         return view('admin.member-registration.tes');

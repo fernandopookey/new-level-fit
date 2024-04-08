@@ -18,7 +18,6 @@ class TrainerPackageController extends Controller
         $data = [
             'title'                 => 'Trainer Package List',
             'trainerPackage'        => TrainerPackage::get(),
-            'trainerPackageType'    => TrainerPackageType::get(),
             'users'                 => User::get(),
             'content'               => 'admin/trainer-package/index'
         ];
@@ -31,12 +30,23 @@ class TrainerPackageController extends Controller
         //
     }
 
+    // public function store(TrainerPackageStoreRequest $request)
+    // {
+    //     $data = $request->all();
+    //     $data['user_id'] = Auth::user()->id;
+    //     TrainerPackage::create($data);
+    //     return redirect()->route('trainer-package.index')->with('success', 'Trainer Package Added Successfully');
+    // }
+
     public function store(TrainerPackageStoreRequest $request)
     {
         $data = $request->all();
         $data['user_id'] = Auth::user()->id;
+        $data['status'] = $request->has('status') ? 'LGT' : null;
+
         TrainerPackage::create($data);
-        return redirect()->route('trainer-package.index')->with('message', 'Trainer Package Added Successfully');
+
+        return redirect()->route('trainer-package.index')->with('success', 'Trainer Package Added Successfully');
     }
 
     public function edit(string $id)
@@ -50,16 +60,16 @@ class TrainerPackageController extends Controller
         $data = $request->all();
         $data['user_id'] = Auth::user()->id;
         $item->update($data);
-        return redirect()->route('trainer-package.index')->with('message', 'Trainer Package Updated Successfully');
+        return redirect()->route('trainer-package.index')->with('success', 'Trainer Package Updated Successfully');
     }
 
     public function destroy(TrainerPackage $trainerPackage)
     {
         try {
             $trainerPackage->delete();
-            return redirect()->back()->with('message', 'Trainer Package Deleted Successfully');
+            return redirect()->back()->with('success', 'Trainer Package Deleted Successfully');
         } catch (\Throwable $th) {
-            return redirect()->back()->with('error', 'Failed, please check other session where using this trainer package');
+            return redirect()->back()->with('errorr', 'Failed, please check other session where using this trainer package');
         }
     }
 }

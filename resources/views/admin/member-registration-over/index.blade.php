@@ -4,9 +4,9 @@
             <div class="col-xl-12">
                 <div class="page-title flex-wrap justify-content-between">
                     <div>
-                        <a href="{{ route('print-member-registration-over-pdf') }}" target="_blank"
-                            class="btn btn-info">Cetak
-                            PDF</a>
+                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            Download Excel
+                        </button>
                     </div>
                     <div>
                         @if (!empty($memberRegistrationsOver))
@@ -27,7 +27,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-4">
+            {{-- <div class="col-xl-4">
                 <div class="page-title flex-wrap">
                     <div>
                         @php
@@ -55,7 +55,7 @@
                         </table>
                     </div>
                 </div>
-            </div>
+            </div> --}}
             <!--column-->
             <div class="col-xl-12 wow fadeInUp" data-wow-delay="1.5s">
                 <div class="table-responsive full-data">
@@ -65,23 +65,18 @@
                         id="myTable">
                         <thead>
                             <tr>
-                                <th></th>
                                 <th>No</th>
                                 <th>Image</th>
                                 <th>Member's Data</th>
                                 <th>Last Check In</th>
                                 <th>Date</th>
                                 <th>Status</th>
-                                <th>Staff</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($memberRegistrationsOver as $item)
                                 <tr>
-                                    <td>
-                                        <input type="checkbox" name="selectedMembersOver[]" value="{{ $item->id }}">
-                                    </td>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>
                                         <div class="trans-list">
@@ -95,79 +90,35 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <h6>{{ $item->member_name }},</h6>
-                                        <h6>{{ $item->member_code }},</h6>
-                                        <h6>{{ $item->phone_number }}</h6>
+                                        <h6>{{ $item->full_name }},</h6>
+                                        <h6>{{ $item->member_code }}</h6>
                                     </td>
                                     <td>
-                                        @php
-                                            $daysLeft = Carbon\Carbon::parse($item->expired_date)->diffInDays(
-                                                Carbon\Carbon::now(),
-                                            );
-                                        @endphp
-                                        @if ($daysLeft <= 5 && $daysLeft == 3)
-                                            <span class="badge badge-warning badge-lg">
-                                                @if (!$item->check_in_time && !$item->check_out_time)
-                                                    Not Yet
-                                                @elseif ($item->check_in_time && $item->check_out_time)
-                                                    {{ DateDiff($item->check_out_time, \Carbon\Carbon::now(), true) }}
-                                                    day ago
-                                                @elseif ($item->check_in_time && !$item->check_out_time)
-                                                    Running
-                                                @endif
-                                            </span>
-                                        @elseif($daysLeft <= 2)
-                                            <span class="badge badge-danger badge-lg">
-                                                @if (!$item->check_in_time && !$item->check_out_time)
-                                                    Not Yet
-                                                @elseif ($item->check_in_time && $item->check_out_time)
-                                                    {{ DateDiff($item->check_out_time, \Carbon\Carbon::now(), true) }}
-                                                    day ago
-                                                @elseif ($item->check_in_time && !$item->check_out_time)
-                                                    Running
-                                                @endif
-                                            </span>
-                                        @else
-                                            <span class="badge badge-info badge-lg">
-                                                @if (!$item->check_in_time && !$item->check_out_time)
-                                                    Not Yet
-                                                @elseif ($item->check_in_time && $item->check_out_time)
-                                                    {{ DateDiff($item->check_out_time, \Carbon\Carbon::now(), true) }}
-                                                    day ago
-                                                @elseif ($item->check_in_time && !$item->check_out_time)
-                                                    Running
-                                                @endif
-                                            </span>
-                                        @endif
+                                        <span class="badge badge-danger badge-lg">
+                                            Expired
+                                        </span>
                                     </td>
                                     <td>
-                                        <h6>{{ DateFormat($item->start_date, 'DD MMMM YYYY') }}-{{ DateFormat($item->expired_date, 'DD MMMM YYYY') }}
+                                        <h6>{{ DateFormat($item->start_date, 'DD MMMM YYYY') }}-{{ DateFormat($item->max_end_date, 'DD MMMM YYYY') }}
                                         </h6>
                                     </td>
                                     <td>
-                                        @if ($item->status == 'Running')
-                                            <span class="badge badge-primary badge-lg">Running</span>
-                                        @else
-                                            <span class="badge badge-danger badge-lg">Over</span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <h6>{{ $item->staff_name }}</h6>
+                                        <span class="badge badge-danger badge-lg">Expired</span>
                                     </td>
                                     <td>
                                         <div>
-                                            @if (Auth::user()->role == 'ADMIN')
+                                            {{-- @if (Auth::user()->role == 'ADMIN')
                                                 <a href="{{ route('member-active.edit', $item->id) }}"
                                                     class="btn light btn-warning btn-xs mb-1 btn-block">Edit</a>
-                                            @endif
-                                            <a href="{{ route('membership-agreement', $item->id) }}" target="_blank"
+                                            @endif --}}
+                                            <a href="{{ route('membership-agreement', $item->mr_id) }}" target="_blank"
                                                 class="btn light btn-secondary btn-xs mb-1 btn-block">Agrement</a>
-                                            <a href="{{ route('member-expired.show', $item->id) }}"
+                                            <a href="{{ route('member-active.show', $item->mr_id) }}"
                                                 class="btn light btn-info btn-xs mb-1 btn-block">Detail</a>
-                                            <a href="{{ route('renewal', $item->id) }}"
+                                            <a href="{{ route('renewal', $item->mr_id) }}"
                                                 class="btn light btn-dark btn-xs mb-1 btn-block">Renewal</a>
                                             @if (Auth::user()->role == 'ADMIN')
-                                                <form action="{{ route('member-active.destroy', $item->id) }}"
+                                                <form action="{{ route('member-active.destroy', $item->mr_id) }}"
                                                     onclick="return confirm('Delete Data ?')" method="POST">
                                                     @method('delete')
                                                     @csrf
@@ -181,11 +132,51 @@
                             @endforeach
                         </tbody>
                     </table>
-                    <button type="button" class="btn btn-danger" id="deleteSelectedMembersOver">Delete
-                        Selected</button>
                 </div>
             </div>
             <!--/column-->
         </div>
     </div>
 </div>
+
+{{-- MODAL --}}
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label class="form-label">From Date</label>
+                            <input type="date" id="fromDate" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label class="form-label">To Date</label>
+                            <input type="date" id="toDate" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="reloadPage()" class="btn btn-primary">Download</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function reloadPage() {
+        var fromDate = document.getElementById("fromDate").value;
+        var toDate = document.getElementById("toDate").value;
+
+        window.open(window.location.href + '?excel=1&fromDate=' + fromDate + '&toDate=' + toDate, '_self');
+    }
+</script>

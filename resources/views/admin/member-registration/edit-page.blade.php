@@ -16,14 +16,16 @@
                         </div>
                     @endif
                     <div class="row">
+                        {{-- <input type="date" id="input1">
+                        <input type="date" id="input2"> --}}
                         <div class="col-xl-6">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Full Name</label>
                                 <select id="single-select4" name="member_id" class="form-control" required disabled>
-                                    <option value="{{ $memberRegistration->members->member_id }}" selected>
+                                    <option value="{{ $memberRegistration->member_id }}" selected>
                                         {{ old('member_id', $memberRegistration->members->full_name) }} |
                                         {{ old('member_id', $memberRegistration->members->member_code) }} |
-                                        {{ old('member_id', $memberRegistration->members->gender) }}
+                                        {{ old('member_id', $memberRegistration->members->phone_number) }}
                                     </option>
                                 </select>
                             </div>
@@ -31,45 +33,63 @@
                         <div class="col-xl-6">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Member Package</label>
-                                <select name="member_package_id" class="form-control" id="single-select" disabled>
+                                <select name="member_package_id" class="form-control" id="single-select">
                                     <option value="{{ $memberRegistration->member_package_id }}" selected>
                                         {{ old('member_package_id', $memberRegistration->memberPackage->package_name) }}
+                                        |
+                                        {{ old('member_package_id', FormatRupiah($memberRegistration->package_price)) }}
+                                        |
+                                        {{ old('member_package_id', FormatRupiah($memberRegistration->admin_price)) }}
                                     </option>
+                                    @foreach ($memberPackage as $item)
+                                        <option value="{{ $item->id }}">{{ $item->package_name }} |
+                                            {{ formatRupiah($item->package_price) }} |
+                                            {{ formatRupiah($item->admin_price) }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
-                        <div class="col-xl-6">
+                        <div class="col-xl-6" id="parentInput1">
                             <div class="mb-3">
                                 <label class="form-label">Start Date</label>
-                                <input type="text" name="start_date"
+                                <input type="text" name="start_date" id="input1"
                                     value="{{ old('start_date', DateFormat($memberRegistration->start_date, 'DD MMMM YYYY')) }}"
                                     class="form-control mdate-custom" required autocomplete="off">
-                                {{-- <input type="text" name="start_date"
-                                    value="{{ old('start_date', $memberRegistration->start_date) }}"
-                                    class="form-control mdate-custom3" required autocomplete="off"> --}}
                             </div>
                         </div>
-                        {{-- <div class="col-xl-3">
+                        <div class="col-xl-6" id="parentInput2">
                             <div class="mb-3">
-                                <label class="form-label">Start Time</label>
-                                <div class="input-group clockpicker" data-placement="left" data-align="top"
-                                    data-autobtn-close="true"> --}}
-                        <input type="hidden" class="form-control" name="start_time"
-                            value="{{ old('start_time', date('H:i', strtotime($memberRegistration->start_date))) }}"
-                            autocomplete="off">
-                        {{-- <span class="input-group-text"><i class="far fa-clock"></i></span>
-                                </div>
+                                <label class="form-label">Expired Date</label>
+                                <input type="text" name="expired_date" id="input2"
+                                    value="{{ old('expired_date', DateFormat($memberRegistrations->expired_date, 'DD MMMM YYYY')) }}"
+                                    class="form-control mdate-custom" required autocomplete="off">
                             </div>
-                        </div> --}}
+                        </div>
+                        <input type="hidden" id="expired_time" class="form-control editTime" name="expired_time"
+                            autocomplete="off">
                         <div class="col-xl-6">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Method Payment</label>
-                                <select name="method_payment_id" class="form-control" id="single-select5" disabled>
+                                <select name="method_payment_id" class="form-control" id="single-select5">
                                     <option value="{{ $memberRegistration->method_payment_id }}" selected>
                                         {{ old('method_payment_id', $memberRegistration->methodPayment->name) }}
                                     </option>
                                     @foreach ($methodPayment as $item)
                                         <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label">Fitness Consultant</label>
+                                <select id="single-select3" name="fc_id" class="form-control">
+                                    <option value="{{ $memberRegistration->fc_id }}" selected>
+                                        {{ old('fc_id', $memberRegistration->fitnessConsultant->full_name) }}
+                                    </option>
+                                    @foreach ($fitnessConsultant as $item)
+                                        <option value="{{ $item->id }}">{{ $item->full_name }} |
+                                            {{ $item->phone_number }}</option>
                                     @endforeach
                                 </select>
                             </div>

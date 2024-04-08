@@ -16,12 +16,14 @@ class Member extends Model
         'full_name',
         'nickname',
         'member_code',
+        'card_number',
         'gender',
         'born',
         'phone_number',
         'email',
         'ig',
         'emergency_contact',
+        'ec_name',
         'address',
         'status',
         'description',
@@ -43,4 +45,14 @@ class Member extends Model
     {
         return $this->hasMany(MemberRegistration::class);
     }
+
+    public function members()
+    {
+        return $this->hasMany(Member::class);
+    }
+
+    // public function methodPayment()
+    // {
+    //     return $this->hasMany(Member::class);
+    // }
 }

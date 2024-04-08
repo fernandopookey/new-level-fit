@@ -14,21 +14,16 @@ class TrainerPackage extends Model
 
     protected $fillable = [
         'package_name',
-        'package_type_id',
         'number_of_session',
         'days',
         'package_price',
         'admin_price',
         'description',
-        'user_id'
+        'user_id',
+        'status'
     ];
 
     protected $hidden = [];
-
-    public function trainerPackageType()
-    {
-        return $this->belongsTo(TrainerPackageType::class, 'package_type_id', 'id');
-    }
 
     public function users()
     {

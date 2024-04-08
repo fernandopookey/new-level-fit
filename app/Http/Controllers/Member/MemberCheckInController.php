@@ -15,100 +15,50 @@ class MemberCheckInController extends Controller
 {
     public function store(Request $request)
     {
-        // $data = $request->validate([
-        //     'member_code' => 'required|exists:members,member_code',
-        // ]);
-
         $validator = Validator::make($request->all(), [
-            'member_code' => 'required|exists:members,member_code',
+            'card_number' => 'required|exists:members,card_number',
         ], [
-            'member_code.exists' => 'CARD NOT FOUND',
+            'card_number.exists' => 'CARD NOT FOUND',
         ]);
 
         if ($validator->fails()) {
-            $errorMessage = $validator->errors()->first('member_code');
+            $errorMessage = $validator->errors()->first('card_number');
             echo "<script>alert('$errorMessage');</script>";
             echo "<script>window.location.href = '" . route('member-active.index') . "';</script>";
             return;
         }
 
-        $memberRegistration = DB::table('member_registrations as a')
-            ->select(
-                'a.id',
-                'a.start_date',
-                'a.description',
-                'a.days as number_of_days',
-                'b.full_name as member_name',
-                'b.nickname',
-                'b.member_code',
-                'b.phone_number',
-                'b.born',
-                'b.email',
-                'b.ig',
-                'b.emergency_contact',
-                'b.address',
-                'b.photos',
-                'b.gender',
-                'c.package_name',
-                'c.days',
-                'c.package_price',
-                'e.name as method_payment_name',
-                'f.full_name as staff_name',
-                'g.full_name as fc_name',
-                'g.phone_number as fc_phone_number',
-                'h.id as current_check_in_members_id',
-                'h.check_out_time',
-                'h.check_in_time',
-            )
-            ->addSelect(
-                DB::raw('DATE_ADD(a.start_date, INTERVAL a.days DAY) as expired_date'),
-                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.days DAY) THEN "Over" ELSE "Running" END as status'),
-            )
-            ->join('members as b', 'a.member_id', '=', 'b.id')
-            ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
-            ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
-            ->join(
-                'users as f',
-                'a.user_id',
-                '=',
-                'f.id'
-            )
-            ->join('fitness_consultants as g', 'a.fc_id', '=', 'g.id')
-            // ->leftJoin('check_in_members as h', 'a.id', '=', 'h.member_registration_id')
-            //->leftJoin(DB::raw('(SELECT  check_in_time, MAX(check_out_time) as check_out_time FROM check_in_members GROUP BY member_registration_id) as h'), 'a.id', '=', 'h.member_registration_id')
-            //->leftJoin(DB::raw('(SELECT * FROM check_in_members  order by check_in_time desc limit 1) as h'), 'h.member_registration_id', '=', 'a.id')
-            //edited by angling
-            ->leftJoin(DB::raw("(select a.* from check_in_members a inner join (SELECT max(id) as id FROM check_in_members group by member_registration_id) as b on a.id=b.id) as h"), 'h.member_registration_id', '=', 'a.id')
-            ->where('b.member_code', $request->input('member_code'))
-            ->whereRaw('NOW() < DATE_ADD(a.start_date, INTERVAL a.days DAY)')
-            ->first();
-
-        $memberPhoto    = $memberRegistration->photos;
-        $memberName     = $memberRegistration->member_name;
-        $nickName       = $memberRegistration->nickname;
-        $phoneNumber    = $memberRegistration->phone_number;
-        $memberCode     = $memberRegistration->member_code;
-        $gender         = $memberRegistration->gender;
-        $born           = $memberRegistration->born;
-        $email          = $memberRegistration->email;
-        $ig             = $memberRegistration->ig;
-        $eContact       = $memberRegistration->emergency_contact;
-        $address        = $memberRegistration->address;
-        $memberPackage  = $memberRegistration->package_name;
-        $days           = $memberRegistration->number_of_days;
-        $startDate      = $memberRegistration->start_date;
-        $expiredDate    = $memberRegistration->expired_date;
-
-        if (!$memberRegistration) {
-            return redirect()->back()->with('error', 'Member active not found or has ended');
+        $memberRegistration = MemberRegistration::getActiveList($request->card_number);
+        if ($memberRegistration[0]->leave_day_status == "Freeze") {
+            return redirect()->back()->with('errorr', $memberRegistration[0]->member_name . ' sedang cuti!!');
         }
+
+        // if (!$memberRegistration) {
+        //     return redirect()->back()->with('error', 'Member active not found or has ended');
+        // }
+
+        $memberPhoto    = $memberRegistration[0]->photos;
+        $memberName     = $memberRegistration[0]->member_name;
+        $nickName       = $memberRegistration[0]->nickname;
+        $phoneNumber    = $memberRegistration[0]->phone_number;
+        $memberCode     = $memberRegistration[0]->member_code;
+        $gender         = $memberRegistration[0]->gender;
+        $born           = $memberRegistration[0]->born;
+        $email          = $memberRegistration[0]->email;
+        $ig             = $memberRegistration[0]->ig;
+        $eContact       = $memberRegistration[0]->emergency_contact;
+        $address        = $memberRegistration[0]->address;
+        $memberPackage  = $memberRegistration[0]->package_name;
+        $days           = $memberRegistration[0]->days;
+        $startDate      = $memberRegistration[0]->start_date;
+        $expiredDate    = $memberRegistration[0]->expired_date;
 
 
         $message = "";
-        if ($memberRegistration->current_check_in_members_id && !$memberRegistration->check_out_time) {
+        if ($memberRegistration[0]->current_check_in_members_id && !$memberRegistration[0]->check_out_time) {
             // $checkInMember = CheckInMember::where([["member_registration_id", $memberRegistration->current_check_in_members_id], ["check_in_time", $memberRegistration->check_in_time]]);
             //edited by angling
-            $checkInMember = CheckInMember::find($memberRegistration->current_check_in_members_id);
+            $checkInMember = CheckInMember::find($memberRegistration[0]->current_check_in_members_id);
 
             $checkInMember->update([
                 'check_out_time' => now()->tz('Asia/Jakarta'),
@@ -127,7 +77,7 @@ class MemberCheckInController extends Controller
             // }
 
             $data = [
-                'member_registration_id' => $memberRegistration->id,
+                'member_registration_id' => $memberRegistration[0]->id,
                 'check_in_time' => now()->tz('Asia/Jakarta'),
                 'user_id' => Auth::user()->id,
             ];
@@ -165,6 +115,7 @@ class MemberCheckInController extends Controller
                 'a.start_date',
                 'a.description',
                 'a.days as number_of_days',
+                'a.member_id',
                 'b.full_name as member_name',
                 'b.nickname',
                 'b.member_code',
@@ -218,6 +169,12 @@ class MemberCheckInController extends Controller
         $startDate      = $memberRegistration->start_date;
         $expiredDate    = $memberRegistration->expired_date;
 
+        $member = Member::find($memberRegistration->member_id);
+
+        // $member->update([
+        //     "id_code_count" => $member->id_code_count++
+        // ]);
+
         if (!$memberRegistration) {
             return redirect()->back()->with('error', 'Member active not found or has ended');
         }
@@ -227,6 +184,9 @@ class MemberCheckInController extends Controller
             $checkInMember = CheckInMember::find($memberRegistration->current_check_in_members_id);
             $checkInMember->update([
                 'check_out_time' => now()->tz('Asia/Jakarta'),
+            ]);
+            $member->update([
+                "id_code_count" => $member->id_code_count++
             ]);
             $message = 'Member Checked Out Successfully';
         } else {

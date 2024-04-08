@@ -65,9 +65,18 @@
                         </div>
                         <div class="col-xl-6" id="member_code">
                             <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label">Member Code</label>
+                                <label for="exampleFormControlInput1" class="form-label">Member Number</label>
                                 <div class="d-flex">
                                     <input type="text" name="member_code" value="{{ old('member_code') }}"
+                                        class="form-control" id="exampleFormControlInput1" autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-6" id="card_number">
+                            <div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label">Card Number</label>
+                                <div class="d-flex">
+                                    <input type="text" name="card_number" value="{{ old('card_number') }}"
                                         class="form-control" id="exampleFormControlInput1" autocomplete="off">
                                 </div>
                             </div>
@@ -82,14 +91,23 @@
                         <div class="col-xl-6" id="ig">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Instagram</label>
-                                <input type="text" name="ig" value="{{ old('ig') }}" class="form-control"
-                                    id="exampleFormControlInput1" autocomplete="off">
+                                <input type="text" name="ig" value="{{ old('ig') }}"
+                                    class="form-control" id="exampleFormControlInput1" autocomplete="off">
                             </div>
                         </div>
                         <div class="col-xl-6" id="emergency_contact">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Emergency Contact</label>
-                                <input type="text" name="emergency_contact" value="{{ old('emergency_contact') }}"
+                                <input type="text" name="emergency_contact"
+                                    value="{{ old('emergency_contact') }}" class="form-control"
+                                    id="exampleFormControlInput1" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="col-xl-6" id="ec_name">
+                            <div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label">Emergency Contact
+                                    Name</label>
+                                <input type="text" name="ec_name" value="{{ old('ec_name') }}"
                                     class="form-control" id="exampleFormControlInput1" autocomplete="off">
                             </div>
                         </div>
@@ -149,7 +167,6 @@
                                 class="form-control editDate mdate-custom3" placeholder="Choose start date">
                         </div>
                     </div>
-                    <input type="hidden" class="form-control editTime" name="start_time" autocomplete="off">
                     <div class="col-xl-6" id="method_payment">
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Method Payment</label>

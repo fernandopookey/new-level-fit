@@ -53,22 +53,9 @@
                                         class="form-control" disabled>
                                 </div>
                             </div>
-                            {{-- <div class="col-xl-3">
-                                <div class="mb-3">
-                                    <label class="form-label">Start Date</label> --}}
                             <input type="hidden" name="start_date"
                                 value="{{ DateFormat($item->start_date, 'YYYY-MM-DD') }}"
                                 class="form-control mdate-custom" required autocomplete="off" readonly>
-                            {{-- </div>
-                            </div> --}}
-                            {{-- <div class="col-xl-12">
-                                <div class="mb-3">
-                                    <label class="form-label">Expired Date</label>
-                                    <input type="date" name="expired_date"
-                                        value="{{ old('expired_date', $item->expired_date) }}"
-                                        class="form-control mdate-custom2" required autocomplete="off">
-                                </div>
-                            </div> --}}
                             <div class="col-xl-6">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Periode Cuti</label>
@@ -78,6 +65,14 @@
                                         <option value="60">2 Month</option>
                                         <option value="90">3 Month</option>
                                     </select>
+                                </div>
+                            </div>
+                            <div class="col-xl-6">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Cuti Price</label>
+                                    <input type="text" name="price" value="{{ old('price') }}"
+                                        class="form-control rupiah" id="exampleFormControlInput1" autocomplete="off"
+                                        required>
                                 </div>
                             </div>
                         </div>
