@@ -144,7 +144,7 @@
                                             );
                                             $sumDaysLeft = $daysLeft + 1;
                                         @endphp
-                                        @if ($item->expired_date_status == 'Running')
+                                        @if ($item->expired_date_status == 'Running' || $item->remaining_sessions > 0)
                                             @if ($sumDaysLeft > 3 && $sumDaysLeft < 6)
                                                 <span class="badge badge-warning badge-sm d-inline-block" tabindex="0"
                                                     data-bs-toggle="popover" data-bs-trigger="hover focus"
@@ -199,7 +199,7 @@
                                         <h6>Remaining Session : {{ $item->remaining_sessions }}</h6>
                                     </td>
                                     <td>
-                                        @if ($item->expired_date_status == 'Running')
+                                        @if (($item->expired_date_status == 'Running') & ($item->remaining_sessions != 0))
                                             @if ($item->leave_day_status == 'Freeze')
                                                 <span class="badge badge-secondary badge-lg">Freeze</span>
                                             @else
@@ -210,6 +210,7 @@
                                                 @endif
                                             @endif
                                         @else
+                                            {{-- if ($item->remaining_sessions === 0) --}}
                                             <span class="badge badge-danger badge-lg">Expired</span>
                                         @endif
                                     </td>

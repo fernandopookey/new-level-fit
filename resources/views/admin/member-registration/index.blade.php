@@ -191,7 +191,6 @@
                                     </td>
                                     <td>
                                         @if ($item->leave_day_status == 'Freeze')
-                                            {{-- <span class="badge badge-secondary badge-lg">Freeze</span><br /> --}}
                                             <span class="badge badge-secondary d-inline-block" tabindex="0"
                                                 data-bs-toggle="popover" data-bs-trigger="hover focus"
                                                 data-bs-content="Leave until {{ DateFormat($item->expired_leave_days, 'DD MMMM YYYY') }}">

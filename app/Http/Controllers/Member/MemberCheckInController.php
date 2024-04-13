@@ -226,22 +226,9 @@ class MemberCheckInController extends Controller
         try {
             $checkInMember = CheckInMember::find($id);
             $checkInMember->delete();
-            return redirect()->back()->with('message', 'Check In Date Deleted Successfully');
+            return redirect()->back()->with('success', 'Check In Date Deleted Successfully');
         } catch (\Throwable $th) {
-            return redirect()->back()->with('error', 'Deleted Failed, please check other page where using this check in');
-        }
-    }
-
-    public function bulkDelete(Request $request)
-    {
-        $selectedItems = $request->input('selectedItems');
-
-        if (!empty($selectedItems)) {
-            // Use the IDs in $selectedItems to delete the selected rows
-            CheckInMember::whereIn('id', $selectedItems)->delete();
-            return redirect()->back()->with('message', 'Selected Check In Dates Deleted Successfully');
-        } else {
-            return redirect()->back()->with('error', 'No items selected for deletion');
+            return redirect()->back()->with('errorr', 'Deleted Failed, please check other page where using this check in');
         }
     }
 }

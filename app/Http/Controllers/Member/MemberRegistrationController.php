@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Member;
 
 use App\Exports\MemberActiveExport;
 use App\Exports\MemberPendingExport;
+use App\Exports\OneVisitExport;
 use App\Http\Controllers\Controller;
 use App\Models\Member\LeaveDay;
 use App\Models\Member\Member;
@@ -108,6 +109,14 @@ class MemberRegistrationController extends Controller
 
     public function oneDayVisit()
     {
+        $fromDate   = Request()->input('fromDate');
+        $toDate     = Request()->input('toDate');
+
+        $excel = Request()->input('excel');
+        if ($excel && $excel == "1") {
+            return Excel::download(new OneVisitExport(), 'One Day Visit, ' . $fromDate . ' to ' . $toDate . '.xlsx');
+        }
+
         $memberRegistrations = DB::table('member_registrations as a')
             ->select(
                 'a.id',
@@ -138,13 +147,7 @@ class MemberRegistrationController extends Controller
             ->join('members as b', 'a.member_id', '=', 'b.id')
             ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
             ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
-            ->join(
-                'users as f',
-                'a.user_id',
-                '=',
-                'f.id'
-            )
-            // ->whereRaw('NOW() BETWEEN a.start_date AND DATE_ADD(a.start_date, INTERVAL a.days DAY)')
+            ->join('users as f', 'a.user_id', '=', 'f.id')
             ->where('b.status', 'one_day_visit')
             ->orderBy('a.created_at', 'desc')
             ->get();
