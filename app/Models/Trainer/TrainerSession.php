@@ -73,7 +73,7 @@ class TrainerSession extends Model
     public static function getActivePTList($card_number = "")
     {
         $sql = "SELECT mbr.full_name AS member_name, mbr.nickname, mbr.phone_number, mbr.gender, mbr.born, mbr.member_code, mbr.email, mbr.ig, mbr.emergency_contact, mbr.ec_name,
-        mbr.card_number, mbr.id_code_count, mbr.photos, mbr.status, mbr.address,
+        mbr.card_number, mbr.id_code_count, mbr.photos, mbr.status, mbr.address, mbr.id AS member_id,
         train_sess.id, train_sess.start_date, train_sess.number_of_session AS ts_number_of_session, train_sess.days,
         train_pack.package_name,
         pers_train.full_name AS trainer_name,
@@ -138,9 +138,9 @@ class TrainerSession extends Model
 
     public static function getActivePTListById($id = "")
     {
-        $sql = "SELECT mbr.full_name AS member_name, mbr.nickname, mbr.phone_number, mbr.gender, mbr.born, mbr.member_code, mbr.email, mbr.ig, mbr.emergency_contact, mbr.ec_name,
+        $sql = "SELECT mbr.full_name AS member_name, mbr.id AS member_id, mbr.nickname, mbr.phone_number, mbr.gender, mbr.born, mbr.member_code, mbr.email, mbr.ig, mbr.emergency_contact, mbr.ec_name,
         mbr.card_number, mbr.id_code_count, mbr.photos, mbr.status, mbr.address,
-        train_sess.id, train_sess.start_date, train_sess.number_of_session AS ts_number_of_session, train_sess.days,
+        train_sess.id, train_sess.start_date, train_sess.number_of_session AS ts_number_of_session, train_sess.days AS number_of_days,
         train_pack.package_name, pers_train.full_name AS trainer_name, fit_cons.full_name AS fc_name, met_pay.name AS method_payment_name,
         cits_view.current_check_in_trainer_sessions_id, cits_view.check_in_time, cits_view.check_out_time, cits_view.updated_at_check_in,
         leave_days_view.submission_date_continue, leave_days_view.total_price_continue,
@@ -205,7 +205,7 @@ class TrainerSession extends Model
     public static function getActiveLGTList($card_number = "")
     {
         $sql = "SELECT mbr.full_name AS member_name, mbr.nickname, mbr.phone_number, mbr.gender, mbr.born, mbr.member_code, mbr.email, mbr.ig, mbr.emergency_contact, mbr.ec_name,
-        mbr.card_number, mbr.id_code_count, mbr.photos, mbr.status, mbr.address,
+        mbr.card_number, mbr.id_code_count, mbr.photos, mbr.status, mbr.address, mbr.id AS member_id,
         train_sess.id, train_sess.start_date, train_sess.number_of_session AS ts_number_of_session, train_sess.days,
         train_pack.package_name,
         pers_train.full_name AS trainer_name,
@@ -221,12 +221,7 @@ class TrainerSession extends Model
         CASE WHEN NOW() > DATE_ADD(train_sess.start_date, INTERVAL train_sess.days DAY) THEN 'Over'
         WHEN NOW() BETWEEN train_sess.start_date AND DATE_ADD(train_sess.start_date, INTERVAL train_sess.days DAY) THEN 'Running'
         ELSE 'Not Started'
-        END as STATUS,
-
-        CASE WHEN NOW() > DATE_ADD(train_sess.start_date, INTERVAL train_sess.days DAY) THEN 'Over'
-        WHEN NOW() BETWEEN train_sess.start_date AND DATE_ADD(train_sess.start_date, INTERVAL train_sess.days DAY) THEN 'Running'
-        ELSE 'Not Started'
-        END as expired_date_status
+        END as STATUS
     
         FROM members AS mbr
         
@@ -264,7 +259,8 @@ class TrainerSession extends Model
         AS leave_days_view ON mbr.id = leave_days_view.mbr_reg_member_id
         
         WHERE
-            IFNULL(train_sess.number_of_session - count_check_in_view.check_in_count, train_sess.number_of_session) > 0"
+            IFNULL(train_sess.number_of_session - count_check_in_view.check_in_count, train_sess.number_of_session) > 0
+        AND NOW() BETWEEN train_sess.start_date AND DATE_ADD(train_sess.start_date, INTERVAL (train_sess.days + IFNULL(leave_days_view.total_days_continue,0)) DAY)"
             . ($card_number ? " and mbr.card_number='$card_number' " : '') . "
             order by cits_view.updated_at_check_in desc, train_sess.updated_at";
         $activeTrainerSessions = DB::select($sql);
@@ -339,6 +335,38 @@ class TrainerSession extends Model
             order by cits_view.updated_at_check_in desc, train_sess.updated_at";
         $activeTrainerSessions = DB::select($sql);
 
+        return $activeTrainerSessions;
+    }
+
+    public static function getExpiredPT()
+    {
+        $sql = "SELECT mbr.id, mbr.full_name AS member_name, mbr.photos, mbr.member_code,
+                train_sess.start_date, train_sess.id AS ts_id, train_sess.days AS ts_days, train_sess.member_id AS registered_member_id,
+                pers_train.full_name AS trainer_full_name,
+                train_pack.package_name,
+
+                DATE_ADD(train_sess.start_date, INTERVAL train_sess.days DAY) AS expired_date,
+                DATE_ADD(train_sess.start_date, INTERVAL train_sess.days DAY) AS max_end_date
+
+                FROM trainer_sessions AS train_sess
+
+                INNER JOIN (SELECT MAX(id) AS max_train_sess_id FROM trainer_sessions AS train_sess GROUP BY member_id)
+                AS max_train_sess_view ON train_sess.id = max_train_sess_view.max_train_sess_id
+
+                INNER JOIN trainer_packages AS train_pack ON train_pack.id = train_sess.trainer_package_id
+                INNER JOIN members AS mbr ON mbr.id = train_sess.member_id
+                INNER JOIN personal_trainers AS pers_train ON pers_train.id = train_sess.trainer_id
+
+                LEFT JOIN (SELECT trainer_session_id, COUNT(id) AS check_in_count FROM check_in_trainer_sessions WHERE check_out_time 
+                IS NOT NULL GROUP BY trainer_session_id)
+                AS count_check_in_view ON train_sess.id = count_check_in_view.trainer_session_id
+
+                WHERE train_pack.status IS NULL AND NOW() > DATE_ADD(train_sess.start_date, INTERVAL train_sess.days DAY)
+                OR
+                train_pack.status IS NULL AND IFNULL(train_sess.number_of_session - count_check_in_view.check_in_count, train_sess.number_of_session) = 0
+                ORDER BY max_end_date";
+
+        $activeTrainerSessions = DB::select($sql);
         return $activeTrainerSessions;
     }
 }

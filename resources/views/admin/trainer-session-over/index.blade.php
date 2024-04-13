@@ -51,7 +51,7 @@
                                         <span class="badge badge-danger badge-lg">Expired</span>
                                     </td>
                                     <td>
-                                        <h6>{{ DateFormat($item->start_date, 'DD MMMM YYYY') }}-{{ DateFormat($item->expired_date_date, 'DD MMMM YYYY') }}
+                                        <h6>{{ DateFormat($item->start_date, 'DD MMMM YYYY') }}-{{ DateFormat($item->expired_date, 'DD MMMM YYYY') }}
                                         </h6>
                                     </td>
                                     <td>

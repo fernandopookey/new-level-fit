@@ -86,10 +86,10 @@ class LGT extends Model
 
         IFNULL(train_sess.number_of_session - count_check_in_view.check_in_count, train_sess.number_of_session) AS remaining_sessions,
         
-        CASE WHEN NOW() > DATE_ADD(train_sess.start_date, INTERVAL train_sess.days DAY) THEN 'Over'
-        WHEN NOW() BETWEEN train_sess.start_date AND DATE_ADD(train_sess.start_date, INTERVAL train_sess.days DAY) THEN 'Running'
-        ELSE 'Not Started'
-        END as STATUS,
+        -- CASE WHEN NOW() > DATE_ADD(train_sess.start_date, INTERVAL train_sess.days DAY) THEN 'Over'
+        -- WHEN NOW() BETWEEN train_sess.start_date AND DATE_ADD(train_sess.start_date, INTERVAL train_sess.days DAY) THEN 'Running'
+        -- ELSE 'Not Started'
+        -- END as STATUS,
 
         CASE WHEN NOW() > DATE_ADD(train_sess.start_date, INTERVAL train_sess.days DAY) THEN 'Over'
         WHEN NOW() BETWEEN train_sess.start_date AND DATE_ADD(train_sess.start_date, INTERVAL train_sess.days DAY) THEN 'Running'
@@ -129,10 +129,7 @@ class LGT extends Model
         WHERE NOW() BETWEEN ld.submission_date AND DATE_ADD(ld.submission_date, INTERVAL (ifnull(total_days,0)) DAY))
         AS ld_continue_view
         INNER JOIN member_registrations AS mbr_reg ON mbr_reg.id = ld_continue_view.member_registration_id_continue)
-        AS leave_days_view ON mbr.id = leave_days_view.mbr_reg_member_id
-        
-        WHERE
-            IFNULL(train_sess.number_of_session - count_check_in_view.check_in_count, train_sess.number_of_session) > 0"
+        AS leave_days_view ON mbr.id = leave_days_view.mbr_reg_member_id"
             . ($card_number ? " and mbr.card_number='$card_number' " : '') . "
             order by cits_view.updated_at_check_in desc, train_sess.updated_at";
         $activeTrainerSessions = DB::select($sql);

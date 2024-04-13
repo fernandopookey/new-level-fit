@@ -32,6 +32,14 @@ class MemberController extends Controller
 {
     public function index()
     {
+        $fromDate   = Request()->input('fromDate');
+        $toDate     = Request()->input('toDate');
+
+        $excel = Request()->input('excel');
+        if ($excel && $excel == "1") {
+            return Excel::download(new MemberExport(), 'Members, ' . $fromDate . ' to ' . $toDate . '.xlsx');
+        }
+
         $sell = DB::table('members as a')
             ->select(
                 'a.id',
@@ -133,12 +141,7 @@ class MemberController extends Controller
             ->join('members as b', 'a.member_id', '=', 'b.id')
             ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
             ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
-            ->join(
-                'users as f',
-                'a.user_id',
-                '=',
-                'f.id'
-            )
+            ->join('users as f', 'a.user_id', '=', 'f.id')
             ->whereRaw('NOW() BETWEEN a.start_date AND DATE_ADD(a.start_date, INTERVAL a.days DAY)')
             //         ->where('a.status', '=', 'one_day_visit')
             //         ->orderBy('created_at', 'desc')
@@ -370,35 +373,9 @@ class MemberController extends Controller
 
             Storage::delete($member->photos);
             $member->delete();
-            return redirect()->back()->with('message', 'Member Deleted Successfully');
+            return redirect()->back()->with('success', 'Member Deleted Successfully');
         } catch (\Throwable $e) {
-            return redirect()->back()->with('error', 'Member Deleted Failed, please check other session where using this member');
-        }
-    }
-
-    public function bulkDelete(Request $request)
-    {
-        $selectedItems = $request->input('selected_members');
-
-        try {
-            foreach ($selectedItems as $itemId) {
-                $member = Member::find($itemId);
-
-                if (!empty($member)) {
-                    if ($member->photos != null) {
-                        $realLocation = "storage/" . $member->photos;
-                        if (file_exists($realLocation) && !is_dir($realLocation)) {
-                            unlink($realLocation);
-                        }
-                    }
-
-                    $member->delete();
-                }
-            }
-
-            return redirect()->back()->with('message', 'Members Deleted Successfully');
-        } catch (\Throwable $th) {
-            return redirect()->back()->with('error', 'Members Deleted Failed, Please check other pages that are using this member');
+            return redirect()->back()->with('errorr', 'Member Deleted Failed, please check other session where using this member');
         }
     }
 
@@ -416,11 +393,8 @@ class MemberController extends Controller
 
     public function resetCheckIn(Request $request, string $id)
     {
-        // dd($id);
         $item = Member::find($id);
         $name = $item->full_name;
-        // dd($name);
-        // $data['id_code_count'] = 0;
         $item->id_code_count = 0;
         $item->save();
 

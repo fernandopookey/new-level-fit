@@ -56,8 +56,7 @@
     </div>
 </div>
 
-@foreach ($memberRegistration as $memberRegistration)
-    <div class="col-xl-12">
+{{-- <div class="col-xl-12">
         <div class="card">
             <div class="card-body">
                 <div class="teacher-deatails">
@@ -67,7 +66,6 @@
                             <tr>
                                 <th><b>Package Name</b></th>
                                 <th>{{ $memberRegistration->package_name }}</th>
-                                {{-- {{ $memberRegistration->total_leave_days }} --}}
                             </tr>
                             <tr>
                                 <th><b>Number Of Days</th>
@@ -113,8 +111,150 @@
                     Agrement</a>
             </div>
         </div>
+    </div> --}}
+<div class="col-xl-12">
+    <div class="card">
+        <div class="card-body">
+            @foreach ($memberRegistration as $memberRegistration)
+                <div class="accordion accordion-flush" id="accordionFlushExample{{ $loop->iteration }}">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#flush-collapseOne{{ $loop->iteration }}" aria-expanded="false"
+                                aria-controls="flush-collapseOne{{ $loop->iteration }}">
+                                Package Info: {{ $loop->iteration }}
+                            </button>
+                        </h2>
+                        <div id="flush-collapseOne{{ $loop->iteration }}" class="accordion-collapse collapse"
+                            data-bs-parent="#accordionFlushExample{{ $loop->iteration }}">
+                            <div class="accordion-body">
+                                <table class="table">
+                                    <tbody style="color: rgb(85, 85, 85);">
+                                        <tr>
+                                            <th><b>Package Name</b></th>
+                                            <th>{{ $memberRegistration->package_name }}</th>
+                                        </tr>
+                                        <tr>
+                                            <th><b>Number Of Days</th>
+                                            <th>{{ $memberRegistration->member_registration_days }} Days</th>
+                                        </tr>
+                                        <tr>
+                                            <th><b>Package Price</b></th>
+                                            <th>{{ formatRupiah($memberRegistration->mr_package_price) }}</th>
+                                        </tr>
+                                        <tr>
+                                            <th><b>Admin Price</b></th>
+                                            <th>{{ formatRupiah($memberRegistration->mr_admin_price) }}</th>
+                                        </tr>
+                                        <tr>
+                                            <th><b>Start Date</th>
+                                            <th>{{ DateFormat($memberRegistration->start_date, 'DD MMMM YYYY') }}</th>
+                                        </tr>
+                                        <tr>
+                                            <th><b>Expired Date</th>
+                                            <th>{{ DateFormat($memberRegistration->expired_date, 'DD MMMM YYYY') }}
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th><b>Method Payment</b></th>
+                                            <th>{{ $memberRegistration->method_payment_name }}</th>
+                                        </tr>
+                                        <tr>
+                                            <th><b>Description</b></th>
+                                            <th>{{ $memberRegistration->description }}</th>
+                                        </tr>
+                                        <tr>
+                                            <th><b>Leave Days</b></th>
+                                            @if ($memberRegistration->leave_day_status == 'Freeze')
+                                                <th>{{ $memberRegistration->total_leave_days }}</th>
+                                            @else
+                                                <th>No Leave Days</th>
+                                            @endif
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <a href="{{ route('membership-agreement', $memberRegistration->id) }}"
+                                    class="btn btn-primary btn-sm" target="_blank">Download
+                                    Agrement</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
     </div>
-@endforeach
+</div>
+
+<div class="col-xl-12">
+    <div class="card">
+        <div class="card-body">
+            <div class="accordion accordion-flush" id="accordionFlushExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                            Check In & Checkout History
+                        </button>
+                    </h2>
+                    <div id="flush-collapseOne" class="accordion-collapse collapse"
+                        data-bs-parent="#accordionFlushExample">
+                        <div class="accordion-body">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Check In Time</th>
+                                        <th>Check Out Time</th>
+                                        <th>Duration</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                @foreach ($memberRegistrationCheckIn as $item)
+                                    <tbody style="color: rgb(85, 85, 85);">
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ DateFormat($item->check_in_time, 'DD MMMM YYYY, HH:mm') }}</td>
+                                            <td>{{ $item->check_out_time ? DateFormat($item->check_out_time, 'DD MMMM YYYY, HH:mm') : 'Not Yet' }}
+                                            </td>
+                                            @php
+                                                $checkInTime = \Carbon\Carbon::parse($item->check_in_time);
+                                                $checkOutTime = \Carbon\Carbon::parse($item->check_out_time);
+
+                                                $totalDuration = $checkInTime->diffInSeconds($checkOutTime);
+                                                $hours = floor($totalDuration / 3600);
+                                                $minutes = floor(($totalDuration % 3600) / 60);
+                                                $seconds = $totalDuration % 60;
+
+                                                $formattedDuration = sprintf(
+                                                    '%02d:%02d:%02d',
+                                                    $hours,
+                                                    $minutes,
+                                                    $seconds,
+                                                );
+                                            @endphp
+                                            <td>{{ $item->check_out_time ? $formattedDuration : 'Not Yet' }}</td>
+                                            <td>
+                                                @if (Auth::user()->role == 'ADMIN')
+                                                    <form action="{{ route('member-check-in.destroy', $item->id) }}"
+                                                        onclick="return confirm('Delete Data ?')" method="POST">
+                                                        @method('delete')
+                                                        @csrf
+                                                        <button type="submit"
+                                                            class="btn light btn-danger btn-xs mb-1 btn-block">Delete</button>
+                                                    </form>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                @endforeach
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 @if ($memberRegistration->status == 'Running')
     <div class="col-xl-12">

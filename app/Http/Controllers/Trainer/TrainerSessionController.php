@@ -5,13 +5,10 @@ namespace App\Http\Controllers\Trainer;
 use App\Exports\TrainerSessionActiveExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TrainerSessionStoreRequest;
-use App\Http\Requests\TrainerSessionUpdateRequest;
 use App\Models\Member\Member;
-use App\Models\Member\MemberPackage;
 use App\Models\MethodPayment;
 use App\Models\Staff\FitnessConsultant;
 use App\Models\Staff\PersonalTrainer;
-use App\Models\Trainer\CheckInTrainerSession;
 use App\Models\Trainer\PtLeaveDay;
 use App\Models\Trainer\TrainerPackage;
 use App\Models\Trainer\TrainerSession;
@@ -132,6 +129,7 @@ class TrainerSessionController extends Controller
                 'c.number_of_session',
                 'c.days',
                 'c.package_price',
+                'c.status as train_pack_status',
                 'd.full_name as trainer_name',
                 'd.phone_number as trainer_phone',
                 'g.full_name as staff_name',
