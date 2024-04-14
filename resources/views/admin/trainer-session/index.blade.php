@@ -244,13 +244,6 @@
                                             <a href="{{ route('cutiTrainerSession', $item->id) }}" target="_blank"
                                                 class="btn light btn-secondary btn-xs mb-1 btn-block">Cuti</a>
                                         @endif
-                                        {{-- @if ($item->leave_day_status == 'Freeze')
-                                            <button type="button" class="btn light btn-secondary btn-xs mb-1 btn-block"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#leaveDayListModal{{ $item->id }}">
-                                                Leave Day List
-                                            </button>
-                                        @endif --}}
                                         <a href="{{ route('trainer-session.show', $item->id) }}"
                                             class="btn light btn-info btn-xs mb-1 btn-block">Detail</a>
                                         <button type="button" class="btn light btn-dark btn-xs mb-1 btn-block"

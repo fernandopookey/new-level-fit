@@ -119,9 +119,9 @@
                 <div class="accordion accordion-flush" id="accordionFlushExample{{ $loop->iteration }}">
                     <div class="accordion-item">
                         <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#flush-collapseOne{{ $loop->iteration }}" aria-expanded="false"
-                                aria-controls="flush-collapseOne{{ $loop->iteration }}">
+                            <button class="accordion-button collapsed bg-info text-white" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#flush-collapseOne{{ $loop->iteration }}"
+                                aria-expanded="false" aria-controls="flush-collapseOne{{ $loop->iteration }}">
                                 Package Info: {{ $loop->iteration }}
                             </button>
                         </h2>
@@ -191,8 +191,9 @@
             <div class="accordion accordion-flush" id="accordionFlushExample">
                 <div class="accordion-item">
                     <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                        <button class="accordion-button collapsed bg-info text-white" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false"
+                            aria-controls="flush-collapseOne">
                             Check In & Checkout History
                         </button>
                     </h2>
