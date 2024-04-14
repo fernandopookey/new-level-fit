@@ -144,7 +144,7 @@
                                             );
                                             $sumDaysLeft = $daysLeft + 1;
                                         @endphp
-                                        @if ($item->expired_date_status == 'Running' || $item->remaining_sessions > 0)
+                                        @if ($item->expired_date_status == 'Running' && $item->remaining_sessions != 0)
                                             @if ($sumDaysLeft > 3 && $sumDaysLeft < 6)
                                                 <span class="badge badge-warning badge-sm d-inline-block" tabindex="0"
                                                     data-bs-toggle="popover" data-bs-trigger="hover focus"
@@ -199,7 +199,7 @@
                                         <h6>Remaining Session : {{ $item->remaining_sessions }}</h6>
                                     </td>
                                     <td>
-                                        @if (($item->expired_date_status == 'Running') & ($item->remaining_sessions != 0))
+                                        @if ($item->expired_date_status == 'Running' && $item->remaining_sessions != 0)
                                             @if ($item->leave_day_status == 'Freeze')
                                                 <span class="badge badge-secondary badge-lg">Freeze</span>
                                             @else
@@ -210,7 +210,6 @@
                                                 @endif
                                             @endif
                                         @else
-                                            {{-- if ($item->remaining_sessions === 0) --}}
                                             <span class="badge badge-danger badge-lg">Expired</span>
                                         @endif
                                     </td>
@@ -222,7 +221,7 @@
                                             $now = \Carbon\Carbon::now()->tz('asia/jakarta');
                                         @endphp
 
-                                        @if ($now <= $item->expired_date)
+                                        @if ($item->expired_date_status == 'Running' && $item->remaining_sessions != 0)
                                             @if ($idCodeMaxCount - $item->id_code_count == 0)
                                                 <a href="{{ route('resetCheckIn', $item->member_id) }}"
                                                     class="btn light btn-warning btn-xs mb-1 btn-block">Reset Check In
@@ -234,12 +233,12 @@
                                                     @if ($now > $item->expired_leave_days)
                                                         @if ($item->start_date < $now)
                                                             @if ((!$item->check_in_time && !$item->check_out_time) || ($item->check_in_time && $item->check_out_time))
-                                                                <a href="{{ route('PTSecondCheckIn', $item->id) }}"
+                                                                <a href="{{ route('LGTSecondCheckIn', $item->id) }}"
                                                                     class="btn light btn-info btn-xs mb-1 btn-block">Check
                                                                     In
                                                                     ({{ $idCodeMaxCount - $item->id_code_count }})</a>
                                                             @elseif ($item->check_in_time && !$item->check_out_time)
-                                                                <a href="{{ route('PTSecondCheckIn', $item->id) }}"
+                                                                <a href="{{ route('LGTSecondCheckIn', $item->id) }}"
                                                                     class="btn light btn-info btn-xs mb-1 btn-block">Check
                                                                     Out
                                                                     ({{ $idCodeMaxCount - $item->id_code_count }})</a>
@@ -261,9 +260,9 @@
                                         @endif
                                         <a href="{{ route('trainer-session.show', $item->id) }}"
                                             class="btn light btn-info btn-xs mb-1 btn-block">Detail</a>
-                                        <button type="button" class="btn light btn-dark btn-xs mb-1 btn-block"
+                                        {{-- <button type="button" class="btn light btn-dark btn-xs mb-1 btn-block"
                                             data-bs-toggle="modal" data-bs-target=".freeze{{ $item->id }}"
-                                            id="checkInButton">Freeze</button>
+                                            id="checkInButton">Freeze</button> --}}
                                         @if (Auth::user()->role == 'ADMIN')
                                             <form action="{{ route('trainer-session.destroy', $item->id) }}"
                                                 onclick="return confirm('Delete Data ?')" method="POST">

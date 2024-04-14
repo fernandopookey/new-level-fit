@@ -102,12 +102,17 @@ class TrainerSessionCheckInController extends Controller
         ]);
     }
 
-    public function secondStore(Request $request)
+    public function secondStore($id)
     {
-        $trainerSession = TrainerSession::getActivePTListById($request->id);
+        $trainerSession = TrainerSession::getActivePTList("", $id);
+        // dd($trainerSession);
+        $expiredMemberRegistration = MemberRegistration::getActiveList("", $trainerSession[0]->member_id);
 
-        $expiredMemberRegistration = MemberRegistration::getActiveListById($request->member_id);
-        // dd($expiredMemberRegistration[0]);
+        if (!$expiredMemberRegistration || sizeof($expiredMemberRegistration) == 0) {
+            return redirect()->back()->with('errorr', 'Paket member ' . $trainerSession[0]->member_name . ' telah expired atau belum dimulai!!');
+        }
+
+        $expiredMemberRegistration = MemberRegistration::getActiveList("", $trainerSession[0]->member_id);
         if (!$expiredMemberRegistration || sizeof($expiredMemberRegistration) == 0) {
             return redirect()->back()->with('errorr', 'Paket member ' . $trainerSession[0]->member_name . ' telah expired atau belum dimulai!!');
         }
@@ -136,7 +141,7 @@ class TrainerSessionCheckInController extends Controller
         $eContact       = $trainerSession[0]->emergency_contact;
         $address        = $trainerSession[0]->address;
         $memberPackage  = $trainerSession[0]->package_name;
-        $days           = $trainerSession[0]->number_of_days;
+        $days           = $trainerSession[0]->days;
         $startDate      = $trainerSession[0]->start_date;
         $expiredDate    = $trainerSession[0]->expired_date;
 
@@ -197,7 +202,7 @@ class TrainerSessionCheckInController extends Controller
             return;
         }
 
-        $trainerSession = TrainerSession::getActiveLGTList($request->card_number);
+        $trainerSession = TrainerSession::lgtActive($request->card_number);
 
         if (!empty($trainerSession) && isset($trainerSession[0])) {
             if ($trainerSession[0]->leave_day_status == "Freeze") {
@@ -273,6 +278,90 @@ class TrainerSessionCheckInController extends Controller
             'days'              => $days,
             'startDate'         => $startDate,
             'expiredDate'       => $expiredDate
+        ]);
+    }
+
+    public function lgtSecondStore($id)
+    {
+        $trainerSession = TrainerSession::lgtActive("", $id);
+        $expiredMemberRegistration = MemberRegistration::getActiveList("", $trainerSession[0]->member_id);
+
+        if (!$expiredMemberRegistration || sizeof($expiredMemberRegistration) == 0) {
+            return redirect()->back()->with('errorr', 'Paket member ' . $trainerSession[0]->member_name . ' telah expired atau belum dimulai!!');
+        }
+
+        $expiredMemberRegistration = MemberRegistration::getActiveList("", $trainerSession[0]->member_id);
+        if (!$expiredMemberRegistration || sizeof($expiredMemberRegistration) == 0) {
+            return redirect()->back()->with('errorr', 'Paket member ' . $trainerSession[0]->member_name . ' telah expired atau belum dimulai!!');
+        }
+
+        if (!empty($trainerSession) && isset($trainerSession[0])) {
+            if ($trainerSession[0]->leave_day_status == "Freeze") {
+                return redirect()->back()->with('errorr', $trainerSession[0]->member_name . ' sedang cuti!!');
+            }
+        }
+
+        $member = Member::find($trainerSession[0]->member_id);
+
+        if (!$trainerSession) {
+            return redirect()->back()->with('error', 'PT Session not found or has ended');
+        }
+
+        $memberPhoto    = $trainerSession[0]->photos;
+        $memberName     = $trainerSession[0]->member_name;
+        $nickName       = $trainerSession[0]->nickname;
+        $phoneNumber    = $trainerSession[0]->phone_number;
+        $memberCode     = $trainerSession[0]->member_code;
+        $gender         = $trainerSession[0]->gender;
+        $born           = $trainerSession[0]->born;
+        $email          = $trainerSession[0]->email;
+        $ig             = $trainerSession[0]->ig;
+        $eContact       = $trainerSession[0]->emergency_contact;
+        $address        = $trainerSession[0]->address;
+        $memberPackage  = $trainerSession[0]->package_name;
+        $days           = $trainerSession[0]->days;
+        $startDate      = $trainerSession[0]->start_date;
+        $expiredDate    = $trainerSession[0]->expired_date;
+
+
+        $message = "";
+        if ($trainerSession[0]->current_check_in_trainer_sessions_id && !$trainerSession[0]->check_out_time) {
+            $checkInPT = CheckInTrainerSession::find($trainerSession[0]->current_check_in_trainer_sessions_id);
+            $checkInPT->update([
+                'check_out_time' => now()->tz('Asia/Jakarta'),
+            ]);
+            $member->update([
+                "id_code_count" => $member->id_code_count++
+            ]);
+            $message = 'PT Checked Out Successfully';
+        } else {
+            $data = [
+                'trainer_session_id'    => $trainerSession[0]->id,
+                'check_in_time'         => now()->tz('Asia/Jakarta'),
+                'user_id'               => Auth::user()->id,
+            ];
+
+            CheckInTrainerSession::create($data);
+            $message = 'PT Checked In Successfully';
+        }
+
+        return view('admin.lgt.member_details')->with([
+            'message'       => $message,
+            'memberPhoto'   => $memberPhoto,
+            'memberName'    => $memberName,
+            'nickName'      => $nickName,
+            'memberCode'    => $memberCode,
+            'phoneNumber'   => $phoneNumber,
+            'born'          => $born,
+            'gender'        => $gender,
+            'email'         => $email,
+            'ig'            => $ig,
+            'eContact'      => $eContact,
+            'address'       => $address,
+            'memberPackage' => $memberPackage,
+            'days'          => $days,
+            'startDate'     => $startDate,
+            'expiredDate'   => $expiredDate
         ]);
     }
 

@@ -24,7 +24,7 @@ class LGTController extends Controller
             return Excel::download(new LGTExport(), 'LGT, ' . $fromDate . ' to ' . $toDate . '.xlsx');
         }
 
-        $trainerSessions = LGT::getActivePTList();
+        $trainerSessions = TrainerSession::lgtActive();
 
         $birthdayMessages = [
             0 => [],
