@@ -246,9 +246,6 @@
                                         @endif
                                         <a href="{{ route('trainer-session.show', $item->id) }}"
                                             class="btn light btn-info btn-xs mb-1 btn-block">Detail</a>
-                                        <button type="button" class="btn light btn-dark btn-xs mb-1 btn-block"
-                                            data-bs-toggle="modal" data-bs-target=".freeze{{ $item->id }}"
-                                            id="checkInButton">Freeze</button>
                                         @if (Auth::user()->role == 'ADMIN')
                                             <form action="{{ route('trainer-session.destroy', $item->id) }}"
                                                 onclick="return confirm('Delete Data ?')" method="POST">
@@ -271,29 +268,6 @@
 </div>
 
 @include('admin.trainer-session.check-in-2')
-{{-- @include('admin.trainer-session.check-in') --}}
-
-{{-- MODAL LIST CUTI --}}
-{{-- @foreach ($trainerSessions as $item)
-    <div class="modal fade" id="leaveDayListModal{{ $item->id }}" tabindex="-1"
-        aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Leave Day List</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    {{ $item->expired_leave_days }}
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
-@endforeach --}}
 
 {{-- MODAL --}}
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

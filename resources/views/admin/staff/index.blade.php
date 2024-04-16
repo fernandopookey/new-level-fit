@@ -37,7 +37,6 @@
                     @include('admin.staff.administrator.index')
                     @include('admin.staff.class-instructor.index')
                     @include('admin.staff.customer-service.index')
-                    @include('admin.staff.customer-service-pos.index')
                     @include('admin.staff.fitness-consultant.index')
                     @include('admin.staff.personal-trainer.index')
                 </div>

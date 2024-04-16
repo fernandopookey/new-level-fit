@@ -30,7 +30,7 @@ class AdministratorController extends Controller
         $data['password'] = bcrypt($request->password);
 
         User::create($data);
-        return redirect()->route('staff.index')->with('message', 'Administrator Added Successfully');
+        return redirect()->route('staff.index')->with('success', 'Administrator Berhasil Ditambahkan');
     }
 
     public function edit(string $id)
@@ -42,7 +42,7 @@ class AdministratorController extends Controller
     {
         $item = User::find($id);
         $data = $request->validate([
-            'full_name' => 'required|string|max:200',
+            'full_name' => 'string|max:200',
             'email'     => 'email',
             'gender'    => 'required',
             'role'      => '',
@@ -51,12 +51,16 @@ class AdministratorController extends Controller
         $data['password'] = bcrypt($request->password);
 
         $item->update($data);
-        return redirect()->route('staff.index')->with('message', 'Administrator Updated Successfully');
+        return redirect()->route('staff.index')->with('success', 'Administrator Berhasil Diubah');
     }
 
     public function destroy(User $administrator)
     {
-        $administrator->delete();
-        return redirect()->back()->with('message', 'Administrator Deleted Successfully');
+        try {
+            $administrator->delete();
+            return redirect()->back()->with('errorr', 'Administrator Berhasil Dihapus');
+        } catch (\Throwable $er) {
+            return redirect()->back()->with('errorr', 'Gagal menghapus administrator');
+        }
     }
 }

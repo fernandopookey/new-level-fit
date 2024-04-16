@@ -210,7 +210,7 @@
                         </span>
                         <div class="media-body text-white text-end">
 
-                            <p class="mb-1 text-white">Total Member Register</p>
+                            <p class="mb-1 text-white">Total Register Member Package</p>
                             <h3 class="text-white">{{ $totalMemberRegister }}</h3>
                         </div>
                     </div>

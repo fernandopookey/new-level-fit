@@ -37,7 +37,7 @@
     <table>
         <tbody>
             <tr>
-                <td style="width: 150px;">No Agreement: </td>
+                <td style="width: 150px;">No Agreement: {{ $memberRegistration->member_code }}</td>
                 <td style="width: 150px;">Club: Semarang</td>
                 <td style="width: 150px;">Nama FC: {{ $memberRegistration->fc_name }}</td>
             </tr>

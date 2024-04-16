@@ -31,7 +31,7 @@ class FitnessConsultantController extends Controller
         $data['user_id'] = Auth::user()->id;
 
         FitnessConsultant::create($data);
-        return redirect()->route('staff.index')->with('message', 'Fitness Consultant Added Successfully');
+        return redirect()->route('staff.index')->with('success', 'Fitness Consultant Berhasil Ditambahkan');
     }
 
     public function edit(string $id)
@@ -52,12 +52,16 @@ class FitnessConsultantController extends Controller
         $data['user_id'] = Auth::user()->id;
 
         $item->update($data);
-        return redirect()->route('staff.index')->with('message', 'Fitness Consultant Updated Successfully');
+        return redirect()->route('staff.index')->with('success', 'Fitness Consultant Berhasil Diubah');
     }
 
     public function destroy(FitnessConsultant $fitnessConsultant)
     {
-        $fitnessConsultant->delete();
-        return redirect()->back()->with('message', 'Fitness Consultant Deleted Successfully');
+        try {
+            $fitnessConsultant->delete();
+            return redirect()->back()->with('success', 'Fitness Consultant Berhasil Dihapus');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('errorr', 'Gagal menghapus fitness consultant ' . $fitnessConsultant->full_name . ', fitness consultant ini sedang dipakai member');
+        }
     }
 }

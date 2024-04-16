@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Member;
 
 use App\Exports\MemberExport;
-use App\Exports\TrainnerExport;
 use App\Http\Controllers\Controller;
 use App\Models\Member\Member;
 use App\Models\Member\MemberPackage;
@@ -18,10 +17,6 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-// use Maatwebsite\Excel\Concerns\ToModel;
-// use Maatwebsite\Excel\Concerns\WithBatchInserts;
-// use Maatwebsite\Excel\Concerns\WithChunkReading;
-// use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 
 HeadingRowFormatter::default('none');

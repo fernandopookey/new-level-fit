@@ -38,7 +38,7 @@ class MemberPackageController extends Controller
         $data = $request->all();
         $data['user_id'] = Auth::user()->id;
         MemberPackage::create($data);
-        return redirect()->route('member-package.index')->with('message', 'Member Package Added Successfully');
+        return redirect()->route('member-package.index')->with('success', 'Member Package Added Successfully');
     }
 
     public function edit(string $id)
@@ -52,16 +52,16 @@ class MemberPackageController extends Controller
         $data = $request->all();
         $data['user_id'] = Auth::user()->id;
         $item->update($data);
-        return redirect()->route('member-package.index')->with('message', 'Member Package Updated Successfully');
+        return redirect()->route('member-package.index')->with('success', 'Member Package Updated Successfully');
     }
 
     public function destroy(MemberPackage $memberPackage)
     {
         try {
             $memberPackage->delete();
-            return redirect()->back()->with('message', 'Member Package Deleted Successfully');
+            return redirect()->back()->with('success', 'Member Package Deleted Successfully');
         } catch (\Throwable $th) {
-            return redirect()->back()->with('error', 'Deleted Failed, please check other page where using this member package');
+            return redirect()->back()->with('errorr', 'Gagal menghapus paket ' . $memberPackage->package_name . ', paket member ini sedang dipakai member');
         }
     }
 }
