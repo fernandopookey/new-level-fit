@@ -80,20 +80,22 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-xl-6">
-                            <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label">Fitness Consultant</label>
-                                <select id="single-select3" name="fc_id" class="form-control">
-                                    <option value="{{ $memberRegistration->fc_id }}" selected>
-                                        {{ old('fc_id', $memberRegistration->fitnessConsultant->full_name) }}
-                                    </option>
-                                    @foreach ($fitnessConsultant as $item)
-                                        <option value="{{ $item->id }}">{{ $item->full_name }} |
-                                            {{ $item->phone_number }}</option>
-                                    @endforeach
-                                </select>
+                        @if ($memberRegistration->fc_id)
+                            <div class="col-xl-6">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Fitness Consultant</label>
+                                    <select id="single-select3" name="fc_id" class="form-control">
+                                        <option value="{{ $memberRegistration->fc_id }}" selected>
+                                            {{ old('fc_id', $memberRegistration->fitnessConsultant->full_name) }}
+                                        </option>
+                                        @foreach ($fitnessConsultant as $item)
+                                            <option value="{{ $item->id }}">{{ $item->full_name }} |
+                                                {{ $item->phone_number }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
-                        </div>
+                        @endif
                         <div class="col-xl-6">
                             <div class="mb-3">
                                 <label for="exampleFormControlTextarea1" class="form-label text-primary">
@@ -107,7 +109,11 @@
                 </div>
                 <div class="d-flex justify-content-between">
                     <button type="submit" class="btn btn-primary">Update</button>
-                    <a href="{{ route('member-active.index') }}" class="btn btn-info text-right">Back</a>
+                    @if ($memberRegistration->members->status == 'sell')
+                        <a href="{{ route('member-active.index') }}" class="btn btn-info text-right">Back</a>
+                    @else
+                        <a href="{{ route('oneDayVisit') }}" class="btn btn-info text-right">Back</a>
+                    @endif
                 </div>
             </form>
         </div>

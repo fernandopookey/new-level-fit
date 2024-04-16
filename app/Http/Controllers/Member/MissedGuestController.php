@@ -2,16 +2,23 @@
 
 namespace App\Http\Controllers\Member;
 
+use App\Exports\MissedGuestExport;
 use App\Http\Controllers\Controller;
-use App\Models\Member\Member;
-use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MissedGuestController extends Controller
 {
     public function index()
     {
+        $fromDate   = Request()->input('fromDate');
+        $toDate     = Request()->input('toDate');
+
+        $excel = Request()->input('excel');
+        if ($excel && $excel == "1") {
+            return Excel::download(new MissedGuestExport(), 'Missed Guest, ' . $fromDate . ' to ' . $toDate . '.xlsx');
+        }
+
         $members = DB::table('members as a')
             ->select(
                 'a.id',

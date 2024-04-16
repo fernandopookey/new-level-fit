@@ -130,7 +130,7 @@
                                     <label for="exampleFormControlInput1" class="form-label">Password</label>
                                     <input type="text" name="password" class="form-control"
                                         id="exampleFormControlInput1" autocomplete="off">
-                                    <small>Leave blank if you don't want to change</small>
+                                    <small>Biarkan kosong jika tidak ingin mengubah password</small>
                                 </div>
                             </div>
                         </div>
@@ -205,7 +205,8 @@
                                                         Edit
                                                     </button>
                                                     <form action="{{ route('customer-service.destroy', $item->id) }}"
-                                                        onclick="return confirm('Delete Data ? ')" method="POST">
+                                                        onclick="return confirm('Hapus customer service {{ $item->full_name }}? ')"
+                                                        method="POST">
                                                         @method('delete')
                                                         @csrf
                                                         <button type="submit"

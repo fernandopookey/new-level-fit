@@ -31,7 +31,7 @@ class CustomerServiceController extends Controller
         $data['password'] = bcrypt($request->password);
 
         User::create($data);
-        return redirect()->route('staff.index')->with('message', 'Customer Service Added Successfully');
+        return redirect()->route('staff.index')->with('success', 'Customer Service Berhasil Ditambahkan');
     }
 
     public function edit(string $id)
@@ -52,12 +52,16 @@ class CustomerServiceController extends Controller
         $data['password'] = bcrypt($request->password);
 
         $item->update($data);
-        return redirect()->route('staff.index')->with('message', 'Customer Service Updated Successfully');
+        return redirect()->route('staff.index')->with('success', 'Customer Service Berhasil Diubah');
     }
 
     public function destroy(CustomerService $customerService)
     {
-        $customerService->delete();
-        return redirect()->back()->with('message', 'Customer Service Deleted Successfully');
+        try {
+            $customerService->delete();
+            return redirect()->back()->with('message', 'Customer Service Berhasil Dihapus');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('errorr', 'Gagal menghapus customer service ' . $customerService->full_name);
+        }
     }
 }

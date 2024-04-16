@@ -150,7 +150,7 @@ class MemberCheckInController extends Controller
             ->whereRaw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END = ?', ['Running'])
             ->leftJoin(DB::raw("(select a.* from check_in_members a inner join (SELECT max(id) as id FROM check_in_members group by member_registration_id) as b on a.id=b.id) as h"), 'h.member_registration_id', '=', 'a.id')
             ->where('a.id', $id)
-            ->whereRaw('NOW() < DATE_ADD(a.start_date, INTERVAL a.days DAY)')
+            ->whereRaw('NOW() <= DATE_ADD(a.start_date, INTERVAL a.days DAY)')
             ->first();
 
         $memberPhoto    = $memberRegistration->photos;

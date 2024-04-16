@@ -27,7 +27,7 @@
                                     class="form-control" id="exampleFormControlInput1" autocomplete="off" required>
                             </div>
                         </div>
-                        <div class="col-xl-3">
+                        <div class="col-xl-6">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Gender</label>
                                 <select name="gender" class="form-control" aria-label="Default select example" required
@@ -40,29 +40,31 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-xl-3">
+                        <div class="col-xl-6">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Phone Number</label>
                                 <input type="text" name="phone_number" value="{{ old('phone_number') }}"
                                     class="form-control" id="exampleFormControlInput1" autocomplete="off" required>
                             </div>
                         </div>
-                        <div class="col-xl-6">
-                            <div class="mb-3">
-                                <label for="exampleFormControlTextarea1" class="form-label text-primary">
-                                    Address
-                                </label>
-                                <textarea class="form-control" name="address" id="exampleFormControlTextarea1" rows="6"
-                                    placeholder="Enter Address">{{ old('address') }}</textarea>
+                        <div class="row">
+                            <div class="col-xl-6">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlTextarea1" class="form-label text-primary">
+                                        Address
+                                    </label>
+                                    <textarea class="form-control" name="address" id="exampleFormControlTextarea1" rows="6"
+                                        placeholder="Enter Address">{{ old('address') }}</textarea>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-xl-6">
-                            <div class="mb-3">
-                                <label for="exampleFormControlTextarea1" class="form-label text-primary">
-                                    Description
-                                </label>
-                                <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="6"
-                                    placeholder="Enter Description">{{ old('description') }}</textarea>
+                            <div class="col-xl-6">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlTextarea1" class="form-label text-primary">
+                                        Description
+                                    </label>
+                                    <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="6"
+                                        placeholder="Enter Description">{{ old('description') }}</textarea>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -78,9 +80,9 @@
 
 <!-- Modal Edit -->
 @foreach ($personalTrainer as $item)
-    <div class="modal fade" id="modalEditPersonalTrainer{{ $item->id }}" tabindex="-1"
+    <div class="modal fade bd-example-modal-lg" id="modalEditPersonalTrainer{{ $item->id }}" tabindex="-1"
         aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-center">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <form action="{{ route('personal-trainer.update', $item->id) }}" method="POST"
                     enctype="multipart/form-data">
@@ -109,7 +111,7 @@
                                         id="exampleFormControlInput1" required autocomplete="off">
                                 </div>
                             </div>
-                            <div class="col-xl-3">
+                            <div class="col-xl-6">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Gender</label>
                                     <select name="gender" class="form-control" aria-label="Default select example">
@@ -121,7 +123,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-xl-3">
+                            <div class="col-xl-6">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Phone Number</label>
                                     <input type="text" name="phone_number"
@@ -129,22 +131,24 @@
                                         id="exampleFormControlInput1" autocomplete="off" required>
                                 </div>
                             </div>
-                            <div class="col-xl-6">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlTextarea1" class="form-label text-primary">
-                                        Address
-                                    </label>
-                                    <textarea class="form-control" name="address" id="exampleFormControlTextarea1" rows="6"
-                                        placeholder="Enter Address">{{ old('address', $item->address) }}</textarea>
+                            <div class="row">
+                                <div class="col-xl-6">
+                                    <div class="mb-3">
+                                        <label for="exampleFormControlTextarea1" class="form-label text-primary">
+                                            Address
+                                        </label>
+                                        <textarea class="form-control" name="address" id="exampleFormControlTextarea1" rows="6"
+                                            placeholder="Enter Address">{{ old('address', $item->address) }}</textarea>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-xl-6">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlTextarea1" class="form-label text-primary">
-                                        Description
-                                    </label>
-                                    <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="6"
-                                        placeholder="Enter Description">{{ old('description', $item->description) }}</textarea>
+                                <div class="col-xl-6">
+                                    <div class="mb-3">
+                                        <label for="exampleFormControlTextarea1" class="form-label text-primary">
+                                            Description
+                                        </label>
+                                        <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="6"
+                                            placeholder="Enter Description">{{ old('description', $item->description) }}</textarea>
+                                    </div>
                                 </div>
                             </div>
                         </div>

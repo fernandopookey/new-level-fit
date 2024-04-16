@@ -48,40 +48,6 @@ class MemberRegistrationOverController extends Controller
             ->where('b.days', '>', '1')
             ->get();
 
-        // $memberRegistrationsOver = Member::select(
-        //     'b.id as mr_id',
-        //     'a.id',
-        //     'a.full_name as member_name',
-        //     'a.member_code',
-        //     'a.photos',
-        //     'b.start_date',
-        //     'max_end_date',
-        //     'total_package_price',
-        //     'total_admin_price',
-        //     'c.registered_member_id',
-        //     'b.expired_date_date',
-        //     'b.mr_days'
-        // )
-        //     ->from('members as a')
-        //     ->join(DB::raw('(select a.id as id_max, b.id, b.start_date, b.days as mr_days, b.member_package_id, max(DATE_ADD(b.start_date, INTERVAL b.days DAY))
-        //         as max_end_date, sum(package_price) as total_package_price,
-        //         DATE_ADD(b.start_date, INTERVAL b.days DAY) as expired_date_date,
-        //         sum(admin_price) as total_admin_price from members a
-        //         inner join member_packages b on a.id=b.member_id
-        //         where DATE_ADD(b.start_date, INTERVAL b.days DAY) < now() group by a.id, b.id, b.days, b.start_date, b.member_package_id) as b'), function ($join) {
-        //         $join->on('a.id', '=', 'b.id_max');
-        //     })
-        //     ->leftJoin(DB::raw('(select distinct member_id as registered_member_id from member_packages where DATE_ADD(start_date, INTERVAL days DAY) >= now()) as c'), function ($join) {
-        //         $join->on('a.id', '=', 'c.registered_member_id');
-        //     })
-        //     ->leftJoin('member_packages as d', function ($join) {
-        //         $join->on('b.member_package_id', '=', 'd.id')
-        //             ->whereNull('d.status');
-        //     })
-        //     ->whereNull('d.status')
-        //     ->whereNull('c.registered_member_id')
-        //     ->get();
-
         $data = [
             'title'                     => 'Member Expired List',
             'memberRegistrationsOver'   => $memberRegistrationsOver,
@@ -112,14 +78,6 @@ class MemberRegistrationOverController extends Controller
             ->leftJoin(DB::raw('(select distinct member_id as registered_member_id from member_registrations where DATE_ADD(start_date, INTERVAL days DAY) >= now()) as c'), function ($join) {
                 $join->on('a.id', '=', 'c.registered_member_id');
             })
-            // ->join(DB::raw('(select a.id as id_max, b.id, max(DATE_ADD(b.start_date, INTERVAL b.days DAY)) as max_end_date, sum(package_price) as total_package_price,
-            //                 sum(admin_price) as total_admin_price from members a inner join member_registrations b on a.id=b.member_id
-            //                 where DATE_ADD(b.start_date, INTERVAL b.days DAY) < now() group by a.id, b.id) as b'), function ($join) {
-            //     $join->on('a.id', '=', 'b.id_max');
-            // })
-            // ->leftJoin(DB::raw('(select distinct member_id as registered_member_id from member_registrations where DATE_ADD(start_date, INTERVAL days DAY) >= now()) as c'), function ($join) {
-            //     $join->on('a.id', '=', 'c.registered_member_id');
-            // })
             ->whereNull('c.registered_member_id')
             ->where('status', 'one_day_visit')
             ->get();
