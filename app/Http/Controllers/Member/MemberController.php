@@ -9,6 +9,7 @@ use App\Models\Member\MemberPackage;
 use App\Models\Member\MemberRegistration;
 use App\Models\MethodPayment;
 use App\Models\Staff\FitnessConsultant;
+use App\Models\Staff\PersonalTrainer;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -35,6 +36,11 @@ class MemberController extends Controller
             return Excel::download(new MemberExport(), 'Members, ' . $fromDate . ' to ' . $toDate . '.xlsx');
         }
 
+        // -- LO
+        //     CASE WHEN NOW() < DATE_ADD(mbr.created_at, INTERVAL mbr.lo_days DAY) THEN 'Running'
+        //         ELSE 'Over'
+        //         END as lo_status,
+
         $sell = DB::table('members as a')
             ->select(
                 'a.id',
@@ -52,7 +58,12 @@ class MemberController extends Controller
                 'a.address',
                 'a.status',
                 'a.photos',
-                'a.created_at'
+                'lo_is_used',
+                'lo_start_date',
+                'lo_days',
+                'lo_pt_by',
+                'a.created_at',
+                DB::raw("CASE WHEN NOW() < DATE_ADD(a.created_at, INTERVAL a.lo_days DAY) THEN 'Running' ELSE 'Over' END as lo_status")
             )
             ->where('a.status', '=', 'sell')
             ->orderBy('created_at', 'desc')
@@ -68,41 +79,6 @@ class MemberController extends Controller
 
         return view('admin.layouts.wrapper', $data);
     }
-
-    // public function dayVisit()
-    // {
-    //     $sell = DB::table('members as a')
-    //         ->select(
-    //             'a.id',
-    //             'a.full_name',
-    //             'a.nickname',
-    //             'a.member_code',
-    //             'a.card_number',
-    //             'a.gender',
-    //             'a.born',
-    //             'a.phone_number',
-    //             'a.email',
-    //             'a.ig',
-    //             'a.emergency_contact',
-    //             'a.ec_name',
-    //             'a.address',
-    //             'a.status',
-    //             'a.photos',
-    //             'a.created_at'
-    //         )
-    //         ->where('a.status', '=', 'one_day_visit')
-    //         ->orderBy('created_at', 'desc')
-    //         ->get();
-
-    //     $data = [
-    //         'title'             => 'Member List',
-    //         'members'           => $sell,
-    //         // 'users'             => User::get(),
-    //         'content'           => 'admin/one-visit/index'
-    //     ];
-
-    //     return view('admin.layouts.wrapper', $data);
-    // }
 
     public function dayVisit()
     {
@@ -165,7 +141,6 @@ class MemberController extends Controller
     {
         $data = [
             'title'                 => 'Edit Missed Guest',
-            // 'memberRegistration'    => MemberRegistration::find($id),
             'members'               => Member::find($id),
             'memberLastCode'        => Member::latest('id')->first(),
             'memberPackage'         => MemberPackage::get(),
@@ -382,7 +357,7 @@ class MemberController extends Controller
         $pdf = Pdf::loadView('admin/members/member-report', [
             'members'   => $members,
             'users'     => $users,
-        ])->setPaper('a4', 'landscape');
+        ]);
         return $pdf->stream('member-report.pdf');
     }
 
@@ -394,5 +369,35 @@ class MemberController extends Controller
         $item->save();
 
         return redirect()->route('member-active.index')->with('success', 'Member ' . $name . ' Reset Check In Successfully');
+    }
+
+    public function layoutOrientation($id)
+    {
+        $data = [
+            'title'                 => 'Layout Orientation',
+            'members'               => Member::find($id),
+            'memberLastCode'        => Member::latest('id')->first(),
+            'memberPackage'         => MemberPackage::get(),
+            'methodPayment'         => MethodPayment::get(),
+            'fitnessConsultant'     => FitnessConsultant::get(),
+            'personalTrainer'       => PersonalTrainer::get(),
+            'content'               => 'admin/members/lo',
+        ];
+
+        return view('admin.layouts.wrapper', $data);
+    }
+
+    public function updateLO(Request $request, string $id)
+    {
+        $item = Member::find($id);
+        $data = $request->validate([
+            'lo_pt_by'  => 'required|exists:personal_trainers,id',
+        ]);
+
+        $data['lo_is_used'] = 1;
+        $data['lo_start_date'] = Carbon::now()->tz('Asia/Jakarta');
+
+        $item->update($data);
+        return redirect()->route('members.index')->with('success', 'Berhasil');
     }
 }

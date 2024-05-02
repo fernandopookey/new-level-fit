@@ -42,7 +42,7 @@
                     </div>
                     <div class="col-xl-6" id="born">
                         <div class="mb-3">
-                            <label class="form-label">Born</label>
+                            <label class="form-label">Date of Birth</label>
                             <input type="text" name="born" value="{{ old('born', $members->born) }}"
                                 class="form-control" placeholder="Choose born date" id="mdate">
                         </div>

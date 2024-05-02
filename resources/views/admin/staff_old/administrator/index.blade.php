@@ -4,7 +4,6 @@
         <div class="modal-content">
             <form action="{{ route('administrator.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <input type="hidden" name="page" value="admin">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Create Administrator</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -86,7 +85,6 @@
                     enctype="multipart/form-data">
                     @method('PUT')
                     @csrf
-                    <input type="hidden" name="page" value="admin">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Administrator</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -152,7 +150,7 @@
 
 
 
-<div class="tab-pane fade {{ $page == 'admin' ? 'show active' : '' }}" id="administrator" role="tabpanel">
+<div class="tab-pane fade" id="administrator" role="tabpanel">
     <div class="card">
         <div class="card-body">
             <div class="col-xl-12">
@@ -210,7 +208,6 @@
                                                     onclick="return confirm('Delete Data ? ')" method="POST">
                                                     @method('delete')
                                                     @csrf
-                                                    <input type="hidden" name="page" value="admin">
                                                     <button type="submit"
                                                         class="btn light btn-danger btn-xs btn-block">Delete</button>
                                                 </form>

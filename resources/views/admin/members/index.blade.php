@@ -62,6 +62,17 @@
                                                 Member</a>
                                             <a href="{{ route('members.show', $item->id) }}"
                                                 class="btn light btn-info btn-xs btn-block mb-1">Detail Member</a>
+                                            @if ($item->lo_status == 'Running' && $item->lo_is_used == 0)
+                                                <a href="{{ route('useLayoutOrientation', $item->id) }}"
+                                                    class="btn btn-dark btn-xs mb-1 btn-block">LO</a>
+                                            @else
+                                                <button type="button" class="btn btn-dark btn-xs mb-1 btn-block"
+                                                    data-bs-toggle="popover" data-bs-title="Check In tanpa kartu"
+                                                    data-bs-content="Member ini sudah menggunakan Layout Orientation">
+                                                    <span class="text-danger">X</span> LO <span
+                                                        class="text-danger">X</span>
+                                                </button>
+                                            @endif
                                             @if (Auth::user()->role == 'ADMIN')
                                                 <form action="{{ route('member.destroy', $item->id) }}"
                                                     onclick="return confirm('Delete Data ?')" method="POST">
@@ -77,10 +88,6 @@
                             @endforeach
                         </tbody>
                     </table>
-                    @if (Auth::user()->role == 'ADMIN')
-                        <button type="submit" class="btn btn-danger mb-2"
-                            onclick="return confirm('Delete selected members?')">Delete Selected</button>
-                    @endif
                 </div>
             </div>
             <!--/column-->

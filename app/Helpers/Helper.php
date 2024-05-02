@@ -6,7 +6,7 @@ function formatRupiah($nominal, $prefix = null)
     return $prefix . number_format($nominal, 0, ',', '.');
 }
 
-function DateFormat($date, $format)
+function DateFormat($date, $format = 'Y-MM-DD')
 {
     return \Carbon\Carbon::parse($date)->isoFormat($format);
 }
@@ -46,4 +46,9 @@ function BirthdayDiff($bornDate)
     $daysUntilNextBirthday = $nowDate->diff($birthday);
 
     return $daysUntilNextBirthday->invert == 0 ? $daysUntilNextBirthday->days : -1;
+}
+
+function NowDate($format = 'Y-MM-DD')
+{
+    return  $nowDate = \Carbon\Carbon::now()->tz('Asia/Jakarta')->isoFormat($format);
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models\Member;
 
+use App\Models\Staff\PersonalTrainer;
 use App\Models\Trainer\TrainerSession;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -28,7 +29,11 @@ class Member extends Model
         'status',
         'description',
         'photos',
-        'status'
+        'status',
+        'lo_is_used',
+        'lo_start_date',
+        'lo_days',
+        'lo_pt_by'
     ];
 
     public function users()
@@ -51,8 +56,8 @@ class Member extends Model
         return $this->hasMany(Member::class);
     }
 
-    // public function methodPayment()
-    // {
-    //     return $this->hasMany(Member::class);
-    // }
+    public function personalTrainer()
+    {
+        return $this->hasMany(PersonalTrainer::class);
+    }
 }

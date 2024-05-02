@@ -30,7 +30,7 @@ class AdministratorController extends Controller
         $data['password'] = bcrypt($request->password);
 
         User::create($data);
-        return redirect()->route('staff.index')->with('success', 'Administrator Berhasil Ditambahkan');
+        return redirect('/staff?page=' . Request()->input('page'))->with('success', 'Administrator Berhasil Ditambahkan');
     }
 
     public function edit(string $id)
@@ -51,16 +51,16 @@ class AdministratorController extends Controller
         $data['password'] = bcrypt($request->password);
 
         $item->update($data);
-        return redirect()->route('staff.index')->with('success', 'Administrator Berhasil Diubah');
+        return redirect('/staff?page=' . Request()->input('page'))->with('success', 'Administrator Berhasil Diubah');
     }
 
     public function destroy(User $administrator)
     {
         try {
             $administrator->delete();
-            return redirect()->back()->with('errorr', 'Administrator Berhasil Dihapus');
+            return redirect('/staff?page=' . Request()->input('page'))->with('success', 'Administrator Berhasil Dihapus');
         } catch (\Throwable $er) {
-            return redirect()->back()->with('errorr', 'Gagal menghapus administrator');
+            return redirect('/staff?page=' . Request()->input('page'))->with('errorr', 'Gagal menghapus administrator ' . $administrator->full_name);
         }
     }
 }

@@ -23,9 +23,9 @@
                                 <label for="exampleFormControlInput1" class="form-label">Full Name</label>
                                 <select id="single-select4" name="member_id" class="form-control" required disabled>
                                     <option value="{{ $memberRegistration->member_id }}" selected>
-                                        {{ old('member_id', $memberRegistration->members->full_name) }} |
-                                        {{ old('member_id', $memberRegistration->members->member_code) }} |
-                                        {{ old('member_id', $memberRegistration->members->phone_number) }}
+                                        {{ old('member_id', $memberRegistrations->member_name) }} |
+                                        {{ old('member_id', $memberRegistrations->member_code) }} |
+                                        {{ old('member_id', $memberRegistrations->phone_number) }}
                                     </option>
                                 </select>
                             </div>
@@ -34,12 +34,12 @@
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Member Package</label>
                                 <select name="member_package_id" class="form-control" id="single-select">
-                                    <option value="{{ $memberRegistration->member_package_id }}" selected>
-                                        {{ old('member_package_id', $memberRegistration->memberPackage->package_name) }}
+                                    <option value="{{ $memberRegistrations->member_package_id }}" selected>
+                                        {{ old('member_package_id', $memberRegistrations->package_name) }}
                                         |
-                                        {{ old('member_package_id', FormatRupiah($memberRegistration->package_price)) }}
+                                        {{ old('member_package_id', FormatRupiah($memberRegistrations->mr_package_price)) }}
                                         |
-                                        {{ old('member_package_id', FormatRupiah($memberRegistration->admin_price)) }}
+                                        {{ old('member_package_id', FormatRupiah($memberRegistrations->mr_admin_price)) }}
                                     </option>
                                     @foreach ($memberPackage as $item)
                                         <option value="{{ $item->id }}">{{ $item->package_name }} |
@@ -53,7 +53,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Start Date</label>
                                 <input type="text" name="start_date" id="input1"
-                                    value="{{ old('start_date', DateFormat($memberRegistration->start_date, 'DD MMMM YYYY')) }}"
+                                    value="{{ old('start_date', DateFormat($memberRegistrations->start_date, 'DD MMMM YYYY')) }}"
                                     class="form-control mdate-custom" required autocomplete="off">
                             </div>
                         </div>
@@ -71,8 +71,8 @@
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Method Payment</label>
                                 <select name="method_payment_id" class="form-control" id="single-select5">
-                                    <option value="{{ $memberRegistration->method_payment_id }}" selected>
-                                        {{ old('method_payment_id', $memberRegistration->methodPayment->name) }}
+                                    <option value="{{ $memberRegistrations->method_payment_id }}" selected>
+                                        {{ old('method_payment_id', $memberRegistrations->method_payment_name) }}
                                     </option>
                                     @foreach ($methodPayment as $item)
                                         <option value="{{ $item->id }}">{{ $item->name }}</option>
@@ -85,12 +85,11 @@
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Fitness Consultant</label>
                                     <select id="single-select3" name="fc_id" class="form-control">
-                                        <option value="{{ $memberRegistration->fc_id }}" selected>
-                                            {{ old('fc_id', $memberRegistration->fitnessConsultant->full_name) }}
+                                        <option value="{{ $memberRegistrations->fc_id }}" selected>
+                                            {{ old('fc_id', $memberRegistrations->staff_name) }}
                                         </option>
-                                        @foreach ($fitnessConsultant as $item)
-                                            <option value="{{ $item->id }}">{{ $item->full_name }} |
-                                                {{ $item->phone_number }}</option>
+                                        @foreach ($users as $item)
+                                            <option value="{{ $item->id }}">{{ $item->full_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>

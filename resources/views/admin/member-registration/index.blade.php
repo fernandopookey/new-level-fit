@@ -125,7 +125,7 @@
                                         <div class="trans-list">
                                             @if ($item->photos)
                                                 <img src="{{ Storage::url($item->photos) }}" class="lazyload"
-                                                    width="100" alt="image">
+                                                    style="width: 100px; height: 100px; object-fit: cover;" alt="image">
                                             @else
                                                 <img src="{{ asset('default.png') }}" class="lazyload" width="100"
                                                     alt="default image">
@@ -135,7 +135,6 @@
                                     <td>
                                         <h6>{{ $item->member_name }},</h6>
                                         <h6>{{ $item->member_code }}</h6>
-                                        {{-- <h6>{{ $item->sum_days }}</h6> --}}
                                     </td>
                                     <td>
                                         @php
@@ -206,13 +205,22 @@
                                     <td>
                                         <h6>{{ $item->staff_name }}</h6>
                                     </td>
-                                    <td>
+                                    <td style="width: 30px">
                                         @php
                                             $now = \Carbon\Carbon::now()->tz('asia/jakarta');
                                         @endphp
-                                        @if ($idCodeMaxCount - $item->id_code_count == 0)
-                                            <a href="{{ route('resetCheckIn', $item->member_id) }}"
-                                                class="btn light btn-warning btn-xs mb-1 btn-block">Reset Check In ?</a>
+                                        {{-- @if ($idCodeMaxCount - $item->id_code_count == 0)
+                                            @if (Auth::user()->role == 'ADMIN')
+                                                <a href="{{ route('resetCheckIn', $item->member_id) }}"
+                                                    class="btn light btn-warning btn-xs mb-1 btn-block">Reset Check In
+                                                    ?</a>
+                                            @else
+                                                <button type="button"
+                                                    class="btn light btn-warning btn-xs mb-1 btn-block"
+                                                    data-bs-toggle="popover" data-bs-title="Check In tanpa kartu"
+                                                    data-bs-content="Member ini sudah check in tanpa kartu sebanyak 3 kali, untuk reset check in tanpa kartu silahkan hubungi admin">Klik
+                                                    Disini</button>
+                                            @endif
                                         @else
                                             @if ($item->leave_day_status == 'Freeze')
                                                 <a class="btn light btn-info btn-xs mb-1 btn-block">Freeze</a>
@@ -231,23 +239,130 @@
                                                     @endif
                                                 @endif
                                             @endif
-                                        @endif
-                                        @if (Auth::user()->role == 'ADMIN')
-                                            <a href="{{ route('member-active.edit', $item->id) }}"
-                                                class="btn light btn-warning btn-xs mb-1 btn-block">Edit</a>
-                                        @endif
-                                        <a href="{{ route('member-active.show', $item->id) }}"
-                                            class="btn light btn-info btn-xs mb-1 btn-block">Detail</a>
-                                        @if ($item->leave_day_status == 'Freeze')
+                                        @endif --}}
+                                        {{-- <a href="{{ route('member-active.show', $item->id) }}"
+                                            class="btn light btn-info btn-xs mb-1 btn-block">Detail</a> --}}
+                                        {{-- @if ($item->leave_day_status == 'Freeze')
                                             <a href="{{ route('cuti', $item->id) }}" target="_blank"
-                                                class="btn light btn-secondary btn-xs mb-1 btn-block">Cuti</a>
-                                        @endif
-                                        <button type="button" class="btn light btn-light btn-xs mb-1 btn-block"
+                                                class="btn light btn-secondary btn-xs mb-1 btn-block">Agreement Cuti</a>
+
+                                            <form action="{{ route('stopLeaveDays') }}" method="POST">
+                                                @method('put')
+                                                @csrf
+                                                <input type="hidden" name="member_registration_id"
+                                                    value="{{ $item->id }}">
+                                                <input type="hidden" name="total_days"
+                                                    value="{{ $item->total_days }}">
+                                                <button type="submit"
+                                                    class="btn light btn-outline-secondary btn-xs btn-block mb-1">Hentikan
+                                                    Cuti</button>
+                                            </form>
+                                        @endif --}}
+                                        {{-- Dropdown --}}
+                                        <div class="btn-group dropstart" role="group">
+                                            <button type="button" class="btn btn-primary btn-xs dropdown-toggle"
+                                                style="width: 100px" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Aksi
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    @if ($idCodeMaxCount - $item->id_code_count == 0)
+                                                        @if (Auth::user()->role == 'ADMIN')
+                                                            <a href="{{ route('resetCheckIn', $item->member_id) }}"
+                                                                class="btn light btn-warning btn-xs mb-1 btn-block">Reset
+                                                                Check In
+                                                                ?</a>
+                                                        @else
+                                                            <button type="button"
+                                                                class="btn light btn-warning btn-xs mb-1 btn-block"
+                                                                data-bs-toggle="popover"
+                                                                data-bs-title="Check In tanpa kartu"
+                                                                data-bs-content="Member ini sudah check in tanpa kartu sebanyak 3 kali, untuk reset check in tanpa kartu silahkan hubungi admin">Klik
+                                                                Disini</button>
+                                                        @endif
+                                                    @else
+                                                        @if ($item->leave_day_status == 'Freeze')
+                                                            <a
+                                                                class="btn light btn-info btn-xs mb-1 btn-block">Freeze</a>
+                                                        @else
+                                                            @if ($now > $item->expired_leave_days)
+                                                                @if ($item->start_date < $now)
+                                                                    @if ((!$item->check_in_time && !$item->check_out_time) || ($item->check_in_time && $item->check_out_time))
+                                                                        <a href="{{ route('secondCheckIn', $item->id) }}"
+                                                                            class="btn light btn-info btn-xs mb-1 btn-block">Check
+                                                                            In
+                                                                            ({{ $idCodeMaxCount - $item->id_code_count }})</a>
+                                                                    @elseif ($item->check_in_time && !$item->check_out_time)
+                                                                        <a href="{{ route('secondCheckIn', $item->id) }}"
+                                                                            class="btn light btn-info btn-xs mb-1 btn-block">Check
+                                                                            Out
+                                                                            ({{ $idCodeMaxCount - $item->id_code_count }})</a>
+                                                                    @endif
+                                                                @endif
+                                                            @endif
+                                                        @endif
+                                                    @endif
+                                                </li>
+                                                <li>
+                                                    @if (Auth::user()->role == 'ADMIN')
+                                                        <a href="{{ route('member-active.edit', $item->id) }}"
+                                                            class="btn light btn-warning btn-xs mb-1 btn-block">Edit</a>
+                                                    @endif
+                                                </li>
+                                                <li>
+                                                    <a href="{{ route('member-active.show', $item->id) }}"
+                                                        class="btn light btn-info btn-xs mb-1 btn-block">Detail</a>
+                                                </li>
+                                                <li>
+                                                    @if ($item->leave_day_status == 'Freeze')
+                                                        <a href="{{ route('cuti', $item->id) }}" target="_blank"
+                                                            class="btn light btn-secondary btn-xs mb-1 btn-block">Agreement
+                                                            Cuti</a>
+
+                                                        <form action="{{ route('stopLeaveDays') }}" method="POST">
+                                                            @method('put')
+                                                            @csrf
+                                                            <input type="hidden" name="member_registration_id"
+                                                                value="{{ $item->id }}">
+                                                            <input type="hidden" name="total_days"
+                                                                value="{{ $item->total_days }}">
+                                                            <button type="submit"
+                                                                class="btn light btn-outline-secondary btn-xs btn-block mb-1">Hentikan
+                                                                Cuti</button>
+                                                        </form>
+                                                    @endif
+                                                </li>
+                                                <li>
+                                                    <button type="button"
+                                                        class="btn light btn-light btn-xs mb-1 btn-block"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target=".freeze{{ $item->id }}"
+                                                        id="checkInButton">Freeze</button>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ route('renewal', $item->id) }}"
+                                                        class="btn light btn-dark btn-xs mb-1 btn-block">Renewal</a>
+                                                </li>
+                                                <li>
+                                                    @if (Auth::user()->role == 'ADMIN')
+                                                        <form action="{{ route('member-active.destroy', $item->id) }}"
+                                                            method="POST">
+                                                            @method('delete')
+                                                            @csrf
+                                                            <button type="submit"
+                                                                class="btn light btn-danger btn-xs btn-block mb-1"
+                                                                onclick="return confirm('Delete {{ $item->member_name }} member package ?')">Delete</button>
+                                                        </form>
+                                                    @endif
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        {{-- <button type="button" class="btn light btn-light btn-xs mb-1 btn-block"
                                             data-bs-toggle="modal" data-bs-target=".freeze{{ $item->id }}"
-                                            id="checkInButton">Freeze</button>
-                                        <a href="{{ route('renewal', $item->id) }}"
-                                            class="btn light btn-dark btn-xs mb-1 btn-block">Renewal</a>
-                                        @if (Auth::user()->role == 'ADMIN')
+                                            id="checkInButton">Freeze</button> --}}
+                                        {{-- <a href="{{ route('renewal', $item->id) }}"
+                                            class="btn light btn-dark btn-xs mb-1 btn-block">Renewal</a> --}}
+                                        {{-- @if (Auth::user()->role == 'ADMIN')
                                             <form action="{{ route('member-active.destroy', $item->id) }}"
                                                 method="POST">
                                                 @method('delete')
@@ -256,7 +371,7 @@
                                                     class="btn light btn-danger btn-xs btn-block mb-1"
                                                     onclick="return confirm('Delete {{ $item->member_name }} member package ?')">Delete</button>
                                             </form>
-                                        @endif
+                                        @endif --}}
                                     </td>
                                 </tr>
                             @endforeach
@@ -308,7 +423,6 @@
 
 <script>
     function reloadPage() {
-        // alert("Berhasil");
         var fromDate = document.getElementById("fromDate").value;
         var toDate = document.getElementById("toDate").value;
 

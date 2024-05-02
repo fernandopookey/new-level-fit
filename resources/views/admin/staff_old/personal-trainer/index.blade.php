@@ -1,12 +1,12 @@
 <!-- Modal Add -->
-<div class="modal fade" id="modalAddCustomerService" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-center">
+<div class="modal fade bd-example-modal-lg" id="modalAddPersonalTrainer" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form action="{{ route('customer-service.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('personal-trainer.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <input type="hidden" name="page" value="cs">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Create Customer Service</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Create Personal Trainer</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -29,24 +29,9 @@
                         </div>
                         <div class="col-xl-6">
                             <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label">Email</label>
-                                <input type="email" name="email" value="{{ old('email') }}" class="form-control"
-                                    id="exampleFormControlInput1" autocomplete="off" required>
-                            </div>
-                        </div>
-                        <div class="col-xl-6">
-                            <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label">Role</label>
-                                <select name="role" class="form-control" aria-label="Default select example">
-                                    <option value="CS">Customer Service</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-xl-6">
-                            <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Gender</label>
-                                <select name="gender" class="form-control" aria-label="Default select example"
-                                    required>
+                                <select name="gender" class="form-control" aria-label="Default select example" required
+                                    autocomplete="off">
                                     <option disabled selected value>
                                         <- Choose ->
                                     </option>
@@ -57,9 +42,29 @@
                         </div>
                         <div class="col-xl-6">
                             <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label">Password</label>
-                                <input type="text" name="password" value="{{ old('password') }}" class="form-control"
-                                    id="exampleFormControlInput1" autocomplete="off" required>
+                                <label for="exampleFormControlInput1" class="form-label">Phone Number</label>
+                                <input type="text" name="phone_number" value="{{ old('phone_number') }}"
+                                    class="form-control" id="exampleFormControlInput1" autocomplete="off" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-6">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlTextarea1" class="form-label text-primary">
+                                        Address
+                                    </label>
+                                    <textarea class="form-control" name="address" id="exampleFormControlTextarea1" rows="6"
+                                        placeholder="Enter Address">{{ old('address') }}</textarea>
+                                </div>
+                            </div>
+                            <div class="col-xl-6">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlTextarea1" class="form-label text-primary">
+                                        Description
+                                    </label>
+                                    <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="6"
+                                        placeholder="Enter Description">{{ old('description') }}</textarea>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -74,18 +79,17 @@
 </div>
 
 <!-- Modal Edit -->
-@foreach ($customerService as $item)
-    <div class="modal fade" id="modalEditCustomerService{{ $item->id }}" tabindex="-1"
+@foreach ($personalTrainer as $item)
+    <div class="modal fade bd-example-modal-lg" id="modalEditPersonalTrainer{{ $item->id }}" tabindex="-1"
         aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-center">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <form action="{{ route('customer-service.update', $item->id) }}" method="POST"
+                <form action="{{ route('personal-trainer.update', $item->id) }}" method="POST"
                     enctype="multipart/form-data">
                     @method('PUT')
                     @csrf
-                    <input type="hidden" name="page" value="cs">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Customer Service</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Personal Trainer</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -99,20 +103,12 @@
                             </div>
                         @endif
                         <div class="row">
-                            <div class="col-xl-12">
+                            <div class="col-xl-6">
                                 <div class="mb-3">
                                     <label for="exampleFormControlInput1" class="form-label">Full Name</label>
                                     <input type="text" name="full_name"
                                         value="{{ old('full_name', $item->full_name) }}" class="form-control"
-                                        id="exampleFormControlInput1" autocomplete="off" required>
-                                </div>
-                            </div>
-                            <div class="col-xl-12">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Email</label>
-                                    <input type="email" name="email" value="{{ old('email', $item->email) }}"
-                                        class="form-control" id="exampleFormControlInput1" autocomplete="off"
-                                        required>
+                                        id="exampleFormControlInput1" required autocomplete="off">
                                 </div>
                             </div>
                             <div class="col-xl-6">
@@ -127,12 +123,32 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-xl-12">
+                            <div class="col-xl-6">
                                 <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Password</label>
-                                    <input type="text" name="password" class="form-control"
-                                        id="exampleFormControlInput1" autocomplete="off">
-                                    <small>Biarkan kosong jika tidak ingin mengubah password</small>
+                                    <label for="exampleFormControlInput1" class="form-label">Phone Number</label>
+                                    <input type="text" name="phone_number"
+                                        value="{{ old('phone_number', $item->phone_number) }}" class="form-control"
+                                        id="exampleFormControlInput1" autocomplete="off" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-6">
+                                    <div class="mb-3">
+                                        <label for="exampleFormControlTextarea1" class="form-label text-primary">
+                                            Address
+                                        </label>
+                                        <textarea class="form-control" name="address" id="exampleFormControlTextarea1" rows="6"
+                                            placeholder="Enter Address">{{ old('address', $item->address) }}</textarea>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6">
+                                    <div class="mb-3">
+                                        <label for="exampleFormControlTextarea1" class="form-label text-primary">
+                                            Description
+                                        </label>
+                                        <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="6"
+                                            placeholder="Enter Description">{{ old('description', $item->description) }}</textarea>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -149,11 +165,11 @@
 
 
 
-<div class="tab-pane fade {{ $page == 'cs' ? 'show active' : '' }}" id="customerService" role="tabpanel">
+<div class="tab-pane fade" id="personalTrainer" role="tabpanel">
     <div class="card">
         <div class="card-body">
             <div class="col-xl-12">
-                <h4>Customer Service List</h4>
+                <h4>Personal Trainer List</h4>
             </div>
         </div>
     </div>
@@ -164,8 +180,8 @@
                     <div class="page-title flex-wrap">
                         <div>
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#modalAddCustomerService">
-                                + New Customer Service
+                                data-bs-target="#modalAddPersonalTrainer">
+                                + New Personal Trainer
                             </button>
                         </div>
                     </div>
@@ -174,28 +190,48 @@
                 <div class="col-xl-12 wow fadeInUp" data-wow-delay="1.5s">
                     <div class="table-responsive full-data">
                         <table class="table-responsive-lg table display dataTablesCard student-tab dataTable no-footer"
-                            id="#">
+                            id="myTable">
                             <thead>
                                 <tr>
+                                    <th>No</th>
                                     <th>Full Name</th>
-                                    <th>Email</th>
+                                    <th>Phone Number</th>
                                     <th>Gender</th>
+                                    <th>Role</th>
+                                    <th>Address</th>
+                                    <th>Description</th>
+                                    <th>Staff</th>
                                     @if (Auth::user()->role == 'ADMIN')
                                         <th>Action</th>
                                     @endif
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($customerService as $item)
+                                @foreach ($personalTrainer as $item)
                                     <tr>
+                                        <td>
+                                            <h6>{{ $loop->iteration }}</h6>
+                                        </td>
                                         <td>
                                             <h6>{{ $item->full_name }}</h6>
                                         </td>
                                         <td>
-                                            <h6>{{ $item->email }}</h6>
+                                            <h6>{{ $item->phone_number }}</h6>
                                         </td>
                                         <td>
                                             <h6>{{ $item->gender }}</h6>
+                                        </td>
+                                        <td>
+                                            <h6>{{ $item->role }}</h6>
+                                        </td>
+                                        <td>
+                                            <h6>{{ $item->address }}</h6>
+                                        </td>
+                                        <td>
+                                            <h6>{{ $item->description }}</h6>
+                                        </td>
+                                        <td>
+                                            <h6>{{ $item->users->full_name }}</h6>
                                         </td>
                                         @if (Auth::user()->role == 'ADMIN')
                                             <td>
@@ -203,15 +239,13 @@
                                                     <button type="button"
                                                         class="btn light btn-warning btn-xs mb-1 btn-block"
                                                         data-bs-toggle="modal"
-                                                        data-bs-target="#modalEditCustomerService{{ $item->id }}">
+                                                        data-bs-target="#modalEditPersonalTrainer{{ $item->id }}">
                                                         Edit
                                                     </button>
-                                                    <form action="{{ route('customer-service.destroy', $item->id) }}"
-                                                        onclick="return confirm('Hapus customer service {{ $item->full_name }}? ')"
-                                                        method="POST">
+                                                    <form action="{{ route('personal-trainer.destroy', $item->id) }}"
+                                                        onclick="return confirm('Delete Data ? ')" method="POST">
                                                         @method('delete')
                                                         @csrf
-                                                        <input type="hidden" name="page" value="cs">
                                                         <button type="submit"
                                                             class="btn light btn-danger btn-xs btn-block">Delete</button>
                                                     </form>

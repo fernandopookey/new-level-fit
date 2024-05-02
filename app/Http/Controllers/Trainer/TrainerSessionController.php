@@ -9,6 +9,7 @@ use App\Models\Member\Member;
 use App\Models\MethodPayment;
 use App\Models\Staff\FitnessConsultant;
 use App\Models\Staff\PersonalTrainer;
+use App\Models\Trainer\LOTrainerSession;
 use App\Models\Trainer\PtLeaveDay;
 use App\Models\Trainer\TrainerPackage;
 use App\Models\Trainer\TrainerSession;
@@ -33,6 +34,45 @@ class TrainerSessionController extends Controller
         }
 
         $trainerSessions = TrainerSession::getActivePTList();
+        // dd($trainerSessions);
+
+        $birthdayMessages = [
+            0 => [],
+            1 => [],
+            2 => [],
+        ];
+
+        foreach ($trainerSessions as $memberRegistration) {
+            $diff = BirthdayDiff($memberRegistration->born);
+            if ($diff >= 0 && $diff <= 2) {
+                $birthdayMessages[$diff][$memberRegistration->member_id] = $memberRegistration->member_name;
+            }
+        }
+
+        $idCodeMaxCount = env("ID_CODE_MAX_COUNT", 3);
+
+        $data = [
+            'title'             => 'Trainer Session List',
+            'trainerSessions'   => $trainerSessions,
+            'content'           => 'admin/trainer-session/index',
+            'idCodeMaxCount'    =>  $idCodeMaxCount,
+            'birthdayMessages'  => $birthdayMessages,
+        ];
+
+        return view('admin.layouts.wrapper', $data);
+    }
+
+    public function pending()
+    {
+        $fromDate   = Request()->input('fromDate');
+        $toDate     = Request()->input('toDate');
+
+        $excel = Request()->input('excel');
+        if ($excel && $excel == "1") {
+            return Excel::download(new TrainerSessionActiveExport(), 'trainer-session-active, ' . $fromDate . ' to ' . $toDate . '.xlsx');
+        }
+
+        $trainerSessions = TrainerSession::getPendingPTList();
 
         $birthdayMessages = [
             0 => [],
@@ -70,16 +110,41 @@ class TrainerSessionController extends Controller
             'trainerPackages'   => TrainerPackage::get(),
             'methodPayment'     => MethodPayment::get(),
             'users'             => User::get(),
-            'fitnessConsultant' => FitnessConsultant::get(),
+            'fitnessConsultant' => User::where('role', 'FC')->get(),
             'content'           => 'admin/trainer-session/create',
         ];
 
         return view('admin.layouts.wrapper', $data);
     }
 
-    public function store(TrainerSessionStoreRequest $request)
+    public function store(Request $request)
     {
-        $data = $request->all();
+        $fc = Auth::user();
+        if ($fc->role == 'FC') {
+            $data = $request->validate([
+                'member_id'             => 'required|exists:members,id',
+                'trainer_id'            => 'required|exists:personal_trainers,id',
+                'start_date'            => 'required',
+                'days'                  => 'nullable',
+                'trainer_package_id'    => 'required|exists:trainer_packages,id',
+                'method_payment_id'     => 'required|exists:method_payments,id',
+                'user_id'               => 'nullable',
+                'description'           => 'nullable'
+            ]);
+            $data['fc_id']      = $fc->id;
+        } else {
+            $data = $request->validate([
+                'member_id'             => 'required|exists:members,id',
+                'trainer_id'            => 'required|exists:personal_trainers,id',
+                'start_date'            => 'required',
+                'days'                  => 'nullable',
+                'trainer_package_id'    => 'required|exists:trainer_packages,id',
+                'method_payment_id'     => 'required|exists:method_payments,id',
+                'fc_id'                 => 'required|exists:users,id',
+                'user_id'               => 'nullable',
+                'description'           => 'nullable'
+            ]);
+        }
 
         $package = TrainerPackage::findOrFail($data['trainer_package_id']);
 
@@ -155,8 +220,6 @@ class TrainerSessionController extends Controller
                 $query->select('member_id')->from('trainer_sessions')->where('id', $id);
             })
             ->get();
-
-        // dd($query);
 
         $trainerSessions = TrainerSession::find($id);
 

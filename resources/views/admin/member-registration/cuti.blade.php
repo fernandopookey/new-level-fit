@@ -88,6 +88,7 @@
                 <td>{{ DateFormat($memberRegistration->submission_date, 'DD MMMM YYYY, HH:mm') }}</td>
                 <td>Biaya Administrasi</td>
                 <td>{{ formatRupiah($memberRegistration->total_price_continue) }}</td>
+                {{-- <td>#</td> --}}
             </tr>
             <tr>
                 <td>Periode Cuti</td>

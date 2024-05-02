@@ -38,7 +38,7 @@
                                 <h6>Date of Birth</h6>
                             </td>
                             <td style="border-right: 2px solid rgb(212, 212, 212);">
-                                <h6>: {{ DateFormat($members->first()->born, 'DD MMMM YYYY') }}</h6>
+                                <h6>: {{ DateFormat($members->born, 'DD MMMM YYYY') }}</h6>
                             </td>
                             <td>
                                 <h6>Phone Number
@@ -91,9 +91,19 @@
                                 <h6>: {{ $members->ec_name }}</h6>
                             </td>
                         </tr>
+                        <tr>
+                            <td>
+                                <h6>Photo :</h6>
+                                <img src="{{ Storage::url($members->photos) }}" class="lazyload mt-2"
+                                    style="width: 200px;" alt="image">
+                            </td>
+                        </tr>
                     </thead>
                 </table>
             </div>
         </div>
+    </div>
+    <div class="d-flex justify-content-between">
+        <a href="{{ route('members.index') }}" class="btn btn-info text-right">Back</a>
     </div>
 </div>

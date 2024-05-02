@@ -31,7 +31,7 @@ class PersonalTrainerController extends Controller
         $data['user_id'] = Auth::user()->id;
 
         PersonalTrainer::create($data);
-        return redirect()->route('staff.index')->with('success', 'Personal Trainer Berhasil Ditambahkan');
+        return redirect('/staff?page=' . Request()->input('page'))->with('success', 'Personal Trainer Berhasil Ditambahkan');
     }
 
     public function edit(string $id)
@@ -52,16 +52,16 @@ class PersonalTrainerController extends Controller
         $data['user_id'] = Auth::user()->id;
 
         $item->update($data);
-        return redirect()->route('staff.index')->with('success', 'Personal Trainer Berhasil Diubah');
+        return redirect('/staff?page=' . Request()->input('page'))->with('success', 'Personal Trainer Berhasil Diubah');
     }
 
     public function destroy(PersonalTrainer $personalTrainer)
     {
         try {
             $personalTrainer->delete();
-            return redirect()->back()->with('success', 'Personal Trainer Berhasil Dihapus');
+            return redirect('/staff?page=' . Request()->input('page'))->with('success', 'Personal Trainer Berhasil Dihapus');
         } catch (\Throwable $er) {
-            return redirect()->back()->with('errorr', 'Gagal menghapus personal trainer, trainer ini sedang dipakai member');
+            return redirect()->back()->with('errorr', 'Gagal menghapus personal trainer ' . $personalTrainer->full_name . ', personal trainer ini sedang dipakai member');
         }
     }
 }

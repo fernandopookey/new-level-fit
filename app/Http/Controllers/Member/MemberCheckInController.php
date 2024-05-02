@@ -132,8 +132,6 @@ class MemberCheckInController extends Controller
                 'c.package_price',
                 'e.name as method_payment_name',
                 'f.full_name as staff_name',
-                'g.full_name as fc_name',
-                'g.phone_number as fc_phone_number',
                 'h.id as current_check_in_members_id',
                 'h.check_out_time',
                 'h.check_in_time',
@@ -146,7 +144,6 @@ class MemberCheckInController extends Controller
             ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
             ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
             ->join('users as f', 'a.user_id', '=', 'f.id')
-            ->join('fitness_consultants as g', 'a.fc_id', '=', 'g.id')
             ->whereRaw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL c.days DAY) THEN "Over" ELSE "Running" END = ?', ['Running'])
             ->leftJoin(DB::raw("(select a.* from check_in_members a inner join (SELECT max(id) as id FROM check_in_members group by member_registration_id) as b on a.id=b.id) as h"), 'h.member_registration_id', '=', 'a.id')
             ->where('a.id', $id)

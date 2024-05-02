@@ -15,6 +15,7 @@ class CheckInTrainerSession extends Model
         'check_in_time',
         'check_out_time',
         'duration',
+        'pt_id',
         'user_id'
     ];
 

@@ -164,6 +164,7 @@
                                         <th>Check In Time</th>
                                         <th>Check Out Time</th>
                                         <th>Duration</th>
+                                        <th>PT by</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -191,6 +192,7 @@
                                                 );
                                             @endphp
                                             <td>{{ $item->check_out_time ? $formattedDuration : 'Not Yet' }}</td>
+                                            <td>{{ $item->trainerSession->personalTrainers->full_name }}</td>
                                             <td>
                                                 @if (Auth::user()->role == 'ADMIN')
                                                     <form
