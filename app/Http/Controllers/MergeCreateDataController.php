@@ -28,7 +28,7 @@ class MergeCreateDataController extends Controller
             'memberRegistration'    => MemberRegistration::get(),
             'memberPackage'         => MemberPackage::get(),
             'methodPayment'         => MethodPayment::get(),
-            'fitnessConsultant'     => FitnessConsultant::get(),
+            'fitnessConsultant'     => User::where('role', 'FC')->get(),
 
             // Create Trainer Session
             'trainerSession'    => TrainerSession::all(),

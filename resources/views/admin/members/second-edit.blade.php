@@ -41,7 +41,7 @@
                     </div>
                     <div class="col-xl-6" id="born">
                         <div class="mb-3">
-                            <label class="form-label">Born</label>
+                            <label class="form-label">Date of Birth</label>
                             <input type="text" name="born"
                                 value="{{ old('born', DateFormat($members->born, 'DD MMMM YYYY')) }}"
                                 class="form-control mdate-custom" placeholder="Choose born date" id="mdate">
@@ -92,8 +92,8 @@
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Emergency Contact
                                 Name</label>
-                            <input type="text" name="ec_name" value="{{ old('ec_name') }}" class="form-control"
-                                id="exampleFormControlInput1" autocomplete="off">
+                            <input type="text" name="ec_name" value="{{ old('ec_name', $members->ec_name) }}"
+                                class="form-control" id="exampleFormControlInput1" autocomplete="off">
                         </div>
                     </div>
                     <div class="col-xl-6">

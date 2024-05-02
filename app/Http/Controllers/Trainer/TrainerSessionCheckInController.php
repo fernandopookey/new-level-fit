@@ -31,6 +31,7 @@ class TrainerSessionCheckInController extends Controller
         }
 
         $trainerSession = TrainerSession::getActivePTList($request->card_number);
+        // dd($trainerSession[0]->trainer_id);
 
         if (!empty($trainerSession) && isset($trainerSession[0])) {
             if ($trainerSession[0]->leave_day_status == "Freeze") {
@@ -65,6 +66,8 @@ class TrainerSessionCheckInController extends Controller
         $expiredDate    = $trainerSession[0]->expired_date;
 
         $message = "";
+        // $package = TrainerSession::findOrFail('trainer_session_id');
+        // dd($package);
         if ($trainerSession[0]->current_check_in_trainer_sessions_id && !$trainerSession[0]->check_out_time) {
             $checkInTrainerSession = CheckInTrainerSession::find($trainerSession[0]->current_check_in_trainer_sessions_id);
             $checkInTrainerSession->update([
@@ -73,10 +76,13 @@ class TrainerSessionCheckInController extends Controller
             $message = 'Trainer Session Checked Out Successfully';
         } else {
             $data = [
-                'trainer_session_id' => $trainerSession[0]->id,
-                'check_in_time' => now()->tz('Asia/Jakarta'),
-                'user_id' => Auth::user()->id,
+                'trainer_session_id'    => $trainerSession[0]->id,
+                'check_in_time'         => now()->tz('Asia/Jakarta'),
+                // 'pt_id'                 => $trainerSession[0]->trainer_id,
+                'user_id'               => Auth::user()->id,
             ];
+
+            $data['pt_id']  = $trainerSession[0]->trainer_id;
 
             CheckInTrainerSession::create($data);
             $message = 'Trainer Session Checked In Successfully';

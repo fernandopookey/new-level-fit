@@ -21,7 +21,7 @@
                         <input type="hidden" name="card_number">
                         <div class="col-xl-12">
                             <div class="mb-0">
-                                <p>Member Code</p>
+                                <p>Card Number</p>
                                 <input type="text" name="card_number" id="card_number" class="form-control"
                                     autofocus>
                             </div>

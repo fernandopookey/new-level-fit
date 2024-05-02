@@ -58,7 +58,7 @@
                         </div>
                         <div class="col-xl-6" id="born">
                             <div class="mb-3">
-                                <label class="form-label">Born</label>
+                                <label class="form-label">Date of Birth</label>
                                 <input type="text" name="born" value="{{ old('born') }}"
                                     class="form-control mdate-custom" placeholder="Choose born date">
                             </div>
@@ -180,20 +180,21 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-xl-6" id="fitness_consultant">
-                        <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">Fitness Consultant</label>
-                            <select id="single-select4" name="fc_id" class="form-control">
-                                <option>
-                                    <- Choose ->
-                                </option>
-                                @foreach ($fitnessConsultant as $item)
-                                    <option value="{{ $item->id }}">{{ $item->full_name }} |
-                                        {{ $item->phone_number }}</option>
-                                @endforeach
-                            </select>
+                    @if (Auth::user()->role == 'CS' || Auth::user()->role == 'ADMIN')
+                        <div class="col-xl-6" id="fitness_consultant">
+                            <div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label">Fitness Consultant</label>
+                                <select id="single-select4" name="fc_id" class="form-control">
+                                    <option>
+                                        <- Choose ->
+                                    </option>
+                                    @foreach ($fitnessConsultant as $item)
+                                        <option value="{{ $item->id }}">{{ $item->full_name }}
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
-                    </div>
+                    @endif
                     <div class="col-xl-6" id="description">
                         <div class="mb-3">
                             <label for="exampleFormControlTextarea1" class="form-label text-primary">

@@ -11,8 +11,8 @@ use App\Models\Member\Member;
 use App\Models\Member\MemberPackage;
 use App\Models\Member\MemberRegistration;
 use App\Models\MethodPayment;
-use App\Models\SourceCode;
 use App\Models\Staff\FitnessConsultant;
+use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Http\Request;
@@ -53,7 +53,7 @@ class MemberRegistrationController extends Controller
             'title'                 => 'Member Active List',
             'memberRegistrations'   => $memberRegistrations,
             'content'               => 'admin/member-registration/index',
-            'idCodeMaxCount'        =>  $idCodeMaxCount,
+            'idCodeMaxCount'        => $idCodeMaxCount,
             'birthdayMessages'      => $birthdayMessages,
         ];
 
@@ -70,33 +70,35 @@ class MemberRegistrationController extends Controller
             return Excel::download(new MemberPendingExport(), 'member-pending, ' . $fromDate . ' to ' . $toDate . '.xlsx');
         }
 
-        $memberRegistrations = DB::table('member_registrations as a')
-            ->select(
-                'a.id',
-                'a.start_date',
-                'a.description',
-                'a.days as member_registration_days',
-                'a.old_days',
-                'a.package_price as mr_package_price',
-                'a.admin_price as mr_admin_price',
-                'b.id as member_id',
-                'b.full_name as member_name',
-                'b.member_code',
-                'b.phone_number',
-                'b.born',
-                'b.photos',
-                'b.gender',
-            )
-            ->addSelect(
-                DB::raw('DATE_ADD(a.start_date, INTERVAL COALESCE(ld.days, 0) + a.days DAY) as expired_date'),
-                DB::raw('DATE_ADD(ld.submission_date, INTERVAL ld.days DAY) as expired_leave_days'),
-            )
-            ->join('members as b', 'a.member_id', '=', 'b.id')
-            ->join('fitness_consultants as g', 'a.fc_id', '=', 'g.id')
-            ->leftJoin('leave_days as ld', 'a.id', '=', 'ld.member_registration_id')
-            ->whereRaw('NOW() < a.start_date')
-            ->distinct()
-            ->get();
+        $memberRegistrations = MemberRegistration::getPendingList();
+
+        // $memberRegistrations = DB::table('member_registrations as a')
+        //     ->select(
+        //         'a.id',
+        //         'a.start_date',
+        //         'a.description',
+        //         'a.days as member_registration_days',
+        //         'a.old_days',
+        //         'a.package_price as mr_package_price',
+        //         'a.admin_price as mr_admin_price',
+        //         'b.id as member_id',
+        //         'b.full_name as member_name',
+        //         'b.member_code',
+        //         'b.phone_number',
+        //         'b.born',
+        //         'b.photos',
+        //         'b.gender',
+        //     )
+        //     ->addSelect(
+        //         DB::raw('DATE_ADD(a.start_date, INTERVAL COALESCE(ld.days, 0) + a.days DAY) as expired_date'),
+        //         DB::raw('DATE_ADD(ld.submission_date, INTERVAL ld.days DAY) as expired_leave_days'),
+        //     )
+        //     ->join('members as b', 'a.member_id', '=', 'b.id')
+        //     ->join('fitness_consultants as g', 'a.fc_id', '=', 'g.id')
+        //     ->leftJoin('leave_days as ld', 'a.id', '=', 'ld.member_registration_id')
+        //     ->whereRaw('NOW() < a.start_date')
+        //     ->distinct()
+        //     ->get();
 
         $data = [
             'title'                 => 'Member Pending',
@@ -167,7 +169,6 @@ class MemberRegistrationController extends Controller
             'title'                 => 'Create Member Registration',
             'memberRegistration'    => MemberRegistration::get(),
             'members'               => Member::get(),
-            'sourceCode'            => SourceCode::get(),
             'memberPackage'         => MemberPackage::get(),
             'methodPayment'         => MethodPayment::get(),
             'fitnessConsultant'     => FitnessConsultant::get(),
@@ -179,7 +180,6 @@ class MemberRegistrationController extends Controller
 
     public function memberSecondStore(Request $request)
     {
-        // dd($request);
         DB::beginTransaction();
         try {
             $data = $request->validate([
@@ -195,6 +195,10 @@ class MemberRegistrationController extends Controller
                 'gender'                => 'nullable',
                 'address'               => 'nullable',
                 'photos'                => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'lo_is_used'            => 'nullable',
+                'lo_start_date'         => 'nullable',
+                'lo_days'               => 'nullable',
+                'lo_pt_by'              => 'nullable',
                 // 'member_package_id'     => 'required_if:status,sell|exists:member_packages,id',
                 'start_date'            => 'required_if:status,sell',
                 // 'method_payment_id'     => 'required_if:status,sell|exists:method_payments,id',
@@ -225,12 +229,31 @@ class MemberRegistrationController extends Controller
             ]);
 
             if ($request->status == 'sell') {
-                $data += $request->validate([
-                    'member_package_id'     => 'required|exists:member_packages,id',
-                    'start_date'            => 'required',
-                    'method_payment_id'     => 'required|exists:method_payments,id',
-                    'fc_id'                 => 'required|exists:fitness_consultants,id',
-                ]);
+
+                $fc = Auth::user()->id;
+                if (Auth::user()->role == 'FC'){
+                    $data += $request->validate([
+                        'member_package_id'     => 'required|exists:member_packages,id',
+                        'start_date'            => 'required',
+                        'method_payment_id'     => 'required|exists:method_payments,id',
+                        // 'fc_id'                 => Auth::user()->id,
+                    ]);
+                    $data['fc_id'] = $fc;
+                } else {
+                    $data += $request->validate([
+                        'member_package_id'     => 'required|exists:member_packages,id',
+                        'start_date'            => 'required',
+                        'method_payment_id'     => 'required|exists:method_payments,id',
+                        'fc_id'                 => 'required|exists:users,id',
+                    ]);
+                }
+
+                // $data += $request->validate([
+                //     'member_package_id'     => 'required|exists:member_packages,id',
+                //     'start_date'            => 'required',
+                //     'method_payment_id'     => 'required|exists:method_payments,id',
+                //     'fc_id'                 => 'required|exists:users,id',
+                // ]);
 
                 if ($request->hasFile('photos')) {
                     if ($request->photos != null) {
@@ -271,7 +294,7 @@ class MemberRegistrationController extends Controller
 
                 $data['member_id'] = $newMember->id;
 
-                MemberRegistration::create(array_intersect_key($data, array_flip([
+                $createMemberRegistration = MemberRegistration::create(array_intersect_key($data, array_flip([
                     'member_id', 'member_package_id', 'start_date',
                     'method_payment_id', 'fc_id', 'user_id', 'description', 'package_price', 'admin_price', 'days'
                 ])));
@@ -446,61 +469,65 @@ class MemberRegistrationController extends Controller
                 ->where('a.id', $id)
                 ->get();
         } else {
-            $memberActive = DB::table('member_registrations as a')
-                ->select(
-                    'a.id',
-                    'a.start_date',
-                    'a.description',
-                    'a.days as member_registration_days',
-                    'a.old_days',
-                    'a.package_price as mr_package_price',
-                    'a.admin_price as mr_admin_price',
-                    'b.full_name as member_name',
-                    'b.address',
-                    'b.member_code',
-                    'b.phone_number',
-                    'b.photos',
-                    'b.gender',
-                    'b.nickname',
-                    'b.ig',
-                    'b.emergency_contact',
-                    'b.email',
-                    'b.born',
-                    'c.id as member_package_id',
-                    'c.package_name',
-                    'c.days',
-                    'c.package_price',
-                    'c.admin_price',
-                    'e.id as method_payment_id',
-                    'e.name as method_payment_name',
-                    'f.full_name as staff_name',
-                    'g.id as fc_id',
-                    'g.full_name as fc_name',
-                    'g.phone_number as fc_phone_number',
-                    'h.check_in_time',
-                    'h.check_out_time'
-                )
-                ->addSelect(
-                    DB::raw('DATE_ADD(a.start_date, INTERVAL a.days DAY) as expired_date'),
-                    DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.days DAY) THEN "Over" ELSE "Running" END as status')
-                )
-                ->join('members as b', 'a.member_id', '=', 'b.id')
-                ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
-                ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
-                ->join('users as f', 'a.user_id', '=', 'f.id')
-                ->join('fitness_consultants as g', 'a.fc_id', '=', 'g.id')
-                ->leftJoin(DB::raw('(select * from (select a.* from (select * from check_in_members) as a inner join (SELECT max(id) as id FROM check_in_members group by member_registration_id) as b on a.id=b.id) as tableH) as h'), 'a.id', '=', 'h.member_registration_id')
-                ->where('a.id', $id)
-                ->get();
+            // $memberActive = DB::table('member_registrations as a')
+            //     ->select(
+            //         'a.id',
+            //         'a.start_date',
+            //         'a.description',
+            //         'a.days as member_registration_days',
+            //         'a.old_days',
+            //         'a.package_price as mr_package_price',
+            //         'a.admin_price as mr_admin_price',
+            //         'b.full_name as member_name',
+            //         'b.address',
+            //         'b.member_code',
+            //         'b.phone_number',
+            //         'b.photos',
+            //         'b.gender',
+            //         'b.nickname',
+            //         'b.ig',
+            //         'b.emergency_contact',
+            //         'b.email',
+            //         'b.born',
+            //         'c.id as member_package_id',
+            //         'c.package_name',
+            //         'c.days',
+            //         'c.package_price',
+            //         'c.admin_price',
+            //         'e.id as method_payment_id',
+            //         'e.name as method_payment_name',
+            //         'f.full_name as staff_name',
+            //         'g.id as fc_id',
+            //         'g.full_name as fc_name',
+            //         'g.phone_number as fc_phone_number',
+            //         'h.check_in_time',
+            //         'h.check_out_time'
+            //     )
+            //     ->addSelect(
+            //         DB::raw('DATE_ADD(a.start_date, INTERVAL a.days DAY) as expired_date'),
+            //         DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.days DAY) THEN "Over" ELSE "Running" END as status')
+            //     )
+            //     ->join('members as b', 'a.member_id', '=', 'b.id')
+            //     ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
+            //     ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
+            //     ->join('users as f', 'a.user_id', '=', 'f.id')
+            //     // ->join('fitness_consultants as g', 'a.fc_id', '=', 'g.id')
+            //     ->leftJoin(DB::raw('(select * from (select a.* from (select * from check_in_members) as a inner join (SELECT max(id) as id FROM check_in_members group by member_registration_id) as b on a.id=b.id) as tableH) as h'), 'a.id', '=', 'h.member_registration_id')
+            //     ->where('a.id', $id)
+            //     ->get();
+
+            $memberActive = MemberRegistration::getActiveListById("", $id);
+            // dd($memberActive);
         }
 
         $data = [
             'title'                 => 'Edit Member Active',
             'memberRegistration'    => MemberRegistration::find($id),
-            'memberRegistrations'   => $memberActive->first(),
+            // 'memberRegistrations'   => $memberActive->first(),
+            'memberRegistrations'   => $memberActive[0],
             'memberPackage'         => MemberPackage::get(),
             'methodPayment'         => MethodPayment::get(),
-            'fitnessConsultant'     => FitnessConsultant::get(),
+            'users'                 => User::where('role', 'FC')->get(),
             'content'               => 'admin/member-registration/edit-page',
         ];
 
@@ -587,44 +614,143 @@ class MemberRegistrationController extends Controller
 
     public function renewMemberRegistration(Request $request, $id)
     {
-        DB::beginTransaction();
-        try {
-            $memberRegistration = MemberRegistration::findOrFail($id);
+        $statusMember = MemberRegistration::find($id);
 
-            $data = $request->validate([
-                'member_package_id' => 'required|exists:member_packages,id',
-                'start_date'        => 'required',
-                'method_payment_id' => 'required|exists:method_payments,id',
-                'fc_id'             => 'required|exists:fitness_consultants,id',
-                'description'       => 'nullable',
-            ]);
+        if ($statusMember->members->status == "one_day_visit") {
+            DB::beginTransaction();
+            try {
+                $memberRegistration = MemberRegistration::findOrFail($id);
+                $memberId = $memberRegistration->members->id;
 
-            $package = MemberPackage::findOrFail($data['member_package_id']);
-            $data['package_price'] = $package->package_price;
+                $data = $request->validate([
+                    'member_package_id' => 'required|exists:member_packages,id',
+                    'start_date'        => 'required',
+                    'method_payment_id' => 'required|exists:method_payments,id',
+                    'fc_id'             => 'required|exists:users,id',
+                    'description'       => 'nullable',
 
-            $data['user_id'] = Auth::user()->id;
+                    // Member
+                    'full_name'         => 'nullable',
+                    'phone_number'      => 'nullable',
+                    'status'            => 'nullable',
+                    'nickname'          => 'nullable',
+                    'born'              => 'nullable',
+                    'email'             => 'nullable',
+                    'ig'                => 'nullable',
+                    'emergency_contact' => 'nullable',
+                    'ec_name'           => 'nullable',
+                    'gender'            => 'nullable',
+                    'address'           => 'nullable',
+                    'photos'            => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                    'member_code' => [
+                        'required',
+                        function ($attribute, $value, $fail) use ($id) {
+                            if ($value) {
+                                $exists = Member::where('member_code', $value)->where('id', '!=', $id)->exists();
+                                if ($exists) {
+                                    $fail('Nomor member sudah digunakan, harap menggunakan nomor yang lain');
+                                }
+                            }
+                        }
+                    ],
+                    'card_number' => [
+                        'required',
+                        function ($attribute, $value, $fail) use ($id) {
+                            if ($value) {
+                                $exists = Member::where('card_number', $value)->where('id', '!=', $id)->exists();
+                                if ($exists) {
+                                    $fail('Nomor kartu sudah digunakan, harap menggunakan kartu yang lain');
+                                }
+                            }
+                        }
+                    ],
+                ]);
 
-            $startTime = date('H:i:s', strtotime('00:00:00'));
+                $package = MemberPackage::findOrFail($data['member_package_id']);
+                $data['package_price'] = $package->package_price;
+                $data['user_id'] = Auth::user()->id;
+                $startTime = date('H:i:s', strtotime('00:00:00'));
 
-            $data['start_date'] =  $data['start_date'] . ' ' .  $startTime;
-            $dateTime = new \DateTime($data['start_date']);
-            $data['start_date'] = $dateTime->format('Y-m-d H:i:s');
-            unset($startTime);
+                $data['start_date'] =  $data['start_date'] . ' ' .  $startTime;
+                $dateTime = new \DateTime($data['start_date']);
+                $data['start_date'] = $dateTime->format('Y-m-d H:i:s');
+                unset($startTime);
 
-            $data['admin_price'] = $package->admin_price;
-            $data['days'] = $package->days;
+                $data['admin_price'] = $package->admin_price;
+                $data['days'] = $package->days;
+                $data['member_id'] = $memberRegistration->member_id;
+
+                // MEMBER DATA UPDATE
+                if ($request->hasFile('photos')) {
+
+                    if ($request->photos != null) {
+                        $realLocation = "storage/" . $request->photos;
+                        if (file_exists($realLocation) && !is_dir($realLocation)) {
+                            unlink($realLocation);
+                        }
+                    }
+
+                    $photos = $request->file('photos');
+                    $file_name = time() . '-' . $photos->getClientOriginalName();
+
+                    $data['photos'] = $request->file('photos')->store('assets/member', 'public');
+                } else {
+                    $data['photos'] = $request->photos;
+                }
+                $data['born'] = Carbon::parse($data['born'])->format('Y-m-d');
+                Member::findOrFail($memberRegistration->member_id)->update(array_intersect_key($data, array_flip([
+                    'full_name', 'phone_number', 'status', 'nickname',
+                    'born', 'member_code', 'card_number', 'email', 'ig', 'emergency_contact', 'ec_name', 'gender', 'address', 'photos'
+                ])));
+
+                MemberRegistration::create($data);
+                DB::commit();
+
+                return redirect()->route('member-active.index')->with('success', 'Renewal Successfully');
+            } catch (Exception $e) {
+                DB::rollback();
+                throw $e;
+            }
+        } else {
+            DB::beginTransaction();
+            try {
+                $memberRegistration = MemberRegistration::findOrFail($id);
+
+                $data = $request->validate([
+                    'member_package_id' => 'required|exists:member_packages,id',
+                    'start_date'        => 'required',
+                    'method_payment_id' => 'required|exists:method_payments,id',
+                    'fc_id'             => 'required|exists:users,id',
+                    'description'       => 'nullable',
+                ]);
+
+                $package = MemberPackage::findOrFail($data['member_package_id']);
+                $data['package_price'] = $package->package_price;
+
+                $data['user_id'] = Auth::user()->id;
+
+                $startTime = date('H:i:s', strtotime('00:00:00'));
+
+                $data['start_date'] =  $data['start_date'] . ' ' .  $startTime;
+                $dateTime = new \DateTime($data['start_date']);
+                $data['start_date'] = $dateTime->format('Y-m-d H:i:s');
+                unset($startTime);
+
+                $data['admin_price'] = $package->admin_price;
+                $data['days'] = $package->days;
 
 
-            $data['member_id'] = $memberRegistration->member_id;
+                $data['member_id'] = $memberRegistration->member_id;
 
-            MemberRegistration::create($data);
+                MemberRegistration::create($data);
 
-            DB::commit();
+                DB::commit();
 
-            return redirect()->route('member-active.index')->with('success', 'Renewal Successfully');
-        } catch (Exception $e) {
-            DB::rollback();
-            throw $e;
+                return redirect()->route('member-active.index')->with('success', 'Renewal Successfully');
+            } catch (Exception $e) {
+                DB::rollback();
+                throw $e;
+            }
         }
     }
 
@@ -648,12 +774,11 @@ class MemberRegistrationController extends Controller
         ];
 
         if ($lastLeaveDay) {
-
             $submissionDateStr = new \DateTime($lastLeaveDay->submission_date);
 
             $expiredDate = $submissionDateStr->modify("+{$lastLeaveDay->days} days");
             if ($now <= $expiredDate) {
-                $inputData['leave_day_continue_id'] = $lastLeaveDay->leave_day_continue_id;
+                $inputData['leave_day_continue_id'] = $lastLeaveDay->leave_day_continue_id ? $lastLeaveDay->leave_day_continue_id : $lastLeaveDay->id;
                 $inputData['submission_date'] = $expiredDate;
             }
         }
@@ -671,7 +796,7 @@ class MemberRegistrationController extends Controller
 
         try {
             $memberRegistration->delete();
-            return redirect()->back()->with('success', $memberRegistration->members->full_name . 'member package delete successfully');
+            return redirect()->back()->with('success', $memberRegistration->members->full_name . ' member package delete successfully');
         } catch (\Throwable $e) {
             return redirect()->back()->with('errorr', 'Deleted Failed, Delete Member Check In First');
         }
@@ -689,7 +814,7 @@ class MemberRegistrationController extends Controller
                 'a.days as member_registration_days',
                 'c.package_name',
                 'c.days',
-                'b.full_name as member_name', // alias for members table name column
+                'b.full_name as member_name',
                 'b.ec_name',
                 'b.member_code',
                 'b.nickname',
@@ -706,13 +831,11 @@ class MemberRegistrationController extends Controller
                 'c.days',
                 'e.name as method_payment_name',
                 'f.full_name as staff_name',
-                'g.full_name as fc_name',
-                'g.phone_number as fc_phone_number',
+                'fc.full_name as fc_name',
                 'ld.submission_date',
                 'ld.days as number_of_leave_days'
             )
             ->addSelect(
-                // DB::raw('DATE_ADD(a.start_date, INTERVAL a.days DAY) as expired_date'),
                 DB::raw('DATE_ADD(a.start_date, INTERVAL COALESCE(ld.days, 0) + a.days DAY) as expired_date'),
                 DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.days DAY) THEN "Over" ELSE "Running" END as status'),
                 DB::raw('CONCAT(YEAR(CURDATE()), "-", MONTH(b.born), "-", DAY(b.born)) as member_birthday')
@@ -721,8 +844,8 @@ class MemberRegistrationController extends Controller
             ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
             ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
             ->join('users as f', 'a.user_id', '=', 'f.id')
+            ->join('users as fc', 'a.fc_id', '=', 'fc.id')
             ->leftJoin('leave_days as ld', 'a.id', '=', 'ld.member_registration_id')
-            ->join('fitness_consultants as g', 'a.fc_id', '=', 'g.id')
             ->where('a.id', $id)
             ->first();
 
@@ -737,7 +860,8 @@ class MemberRegistrationController extends Controller
 
     public function cuti($id)
     {
-        $memberRegistration = MemberRegistration::getActiveListById($id);
+        $memberRegistration = MemberRegistration::getCutiAgreement("", $id);
+        // dd($memberRegistration);
 
         $fileName1 = $memberRegistration[0]->member_name;
         $fileName2 = $memberRegistration[0]->start_date;
@@ -813,7 +937,7 @@ class MemberRegistrationController extends Controller
                 '=',
                 'f.id'
             )
-            ->join('fitness_consultants as g', 'a.fc_id', '=', 'g.id')
+            // ->join('fitness_consultants as g', 'a.fc_id', '=', 'g.id')
             ->leftJoin('leave_days as ld', 'a.id', '=', 'ld.member_registration_id')
             ->leftJoin(DB::raw('(select * from (select a.* from (select * from check_in_members) as a inner join (SELECT max(id) as id FROM check_in_members group by member_registration_id)
                                 as b on a.id=b.id) as tableH) as h'), 'a.id', '=', 'h.member_registration_id')
@@ -838,8 +962,37 @@ class MemberRegistrationController extends Controller
         return view('admin.layouts.wrapper', $data);
     }
 
-    public function excel()
+    public function stopLeaveDays()
     {
-        return Excel::download(new MemberActiveExport(), 'member-active.xlsx');
+        try {
+            //code...
+            $member_registration_id = Request()->input("member_registration_id");
+            $now = (DateFormat(Carbon::now()->tz('Asia/Jakarta'), "YYYY-MM-DD HH:mm:ss"));
+            DB::beginTransaction();
+            $currentLeaveDay = LeaveDay::where([
+                ["member_registration_id", $member_registration_id],
+                ["submission_date", "<=", $now],
+                [DB::raw("DATE_ADD(submission_date, INTERVAL days DAY)"), ">=", $now],
+            ])->first();
+            $lessLeaveDays = LeaveDay::where([["id", ">", $currentLeaveDay->id], ["member_registration_id", $member_registration_id]]);
+            //  hitung total uang lalu tampilkan
+            $newDay = DateDiff($currentLeaveDay->submission_date, $now);
+            if ($newDay == 0) {
+                DB::rollback();
+                return redirect()->route('member-active.index')->with('errorr', "Cuti yang baru saja dibuat, tidak bisa dihentikan (hapus data)!");
+            }
+
+            $currentLeaveDay->update([
+                'days' => $newDay - 1
+            ]);
+
+            if (sizeof($lessLeaveDays->get()) > 0)
+                $lessLeaveDays->delete();
+            DB::commit();
+            return redirect()->route('member-active.index')->with('success', 'Kembalikan uang brp');
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return redirect()->route('member-active.index')->with('error', $th->getMessage());
+        }
     }
 }

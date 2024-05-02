@@ -99,9 +99,8 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     Route::resource('trainer-session-FO', '\App\Http\Controllers\Trainer\TrainerSessionFOController');
     Route::get('cetak-trainer-session-pdf', [TrainerSessionController::class, 'cetak_pdf'])->name('cetak-trainer-session-pdf');
     Route::get('print-trainer-session-detail-pdf', [TrainerSessionController::class, 'print_trainer_session_detail_pdf'])->name('print-trainer-session-detail-pdf');
-    Route::post('/delete-selected-trainer-sessions', [TrainerSessionController::class, 'deleteSelectedTrainerSessions'])->name('delete-selected-trainer-sessions');
-    Route::post('/delete-selected-trainer-sessions-over', [TrainerSessionOverController::class, 'deleteSelectedTrainerSessionsOver'])->name('delete-selected-trainer-sessions-over');
     Route::get('pt-agreement/{id}', [TrainerSessionController::class, 'agreement'])->name('pt-agreement');
+    Route::get('session-pending', [TrainerSessionController::class, 'pending'])->name('trainer-session-pending');
 
     Route::resource('buddy-referral', '\App\Http\Controllers\Admin\BuddyReferralController');
     Route::resource('appointment', '\App\Http\Controllers\Admin\AppointmentController');
@@ -135,6 +134,7 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     Route::put('member-registration-freeze/{id}/freeze', [MemberRegistrationController::class, 'freeze'])->name('member-registration-freeze');
     Route::get('member-report', [MemberController::class, 'cetak_pdf'])->name('member-report');
     Route::get('cuti/{id}', [MemberRegistrationController::class, 'cuti'])->name('cuti');
+    Route::put('stopLeaveDays', [MemberRegistrationController::class, 'stopLeaveDays'])->name('stopLeaveDays');
     Route::get('renewal/{id}', [MemberRegistrationController::class, 'renewal'])->name('renewal');
     // Route::put('renewal/{id}', [MemberRegistrationController::class, 'renewMember'])->name('memberRenewal');
     // Route::post('renewal/store', [MemberRegistrationController::class, 'renewMemberRegistration'])->name('renewMemberRegistration');
@@ -168,7 +168,22 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     Route::get('reset-check-in/{id}', [MemberController::class, 'resetCheckIn'])->name('resetCheckIn');
     Route::get('pt/excel', [StaffController::class, 'excel'])->name('ptReportExcel');
 
-    // Route::get('pt-report-excel', [StaffController::class, 'tes'])->name('pt-report-excel');
+    Route::get('layout-orientation/{id}', [MemberController::class, 'layoutOrientation'])->name('useLayoutOrientation');
+    Route::put('process-layout-orientation/{id}', [MemberController::class, 'updateLO'])->name('prosesLayoutOrientation');
+
+    // REPORT
+    Route::get('pt-total-report', [StaffController::class, 'ptTotalReport'])->name('pt-total-report');
+    Route::get('pt-detail-report', [StaffController::class, 'ptDetailReport'])->name('pt-detail-report');
+
+    Route::get('cs-total-report-member-checkin', [StaffController::class, 'csTotalReportMemberCheckIn'])->name('cs-total-report-member-checkin');
+    Route::get('cs-detail-report-member-checkin', [StaffController::class, 'csDetailReportMemberCheckIn'])->name('cs-detail-report-member-checkin');
+    Route::get('cs-total-report-pt', [StaffController::class, 'csTotalReportPT'])->name('cs-total-report-pt');
+    Route::get('cs-detail-report-pt', [StaffController::class, 'csDetailReportPT'])->name('cs-detail-report-pt');
+
+    Route::get('fc-total-report-member-checkin', [StaffController::class, 'fcTotalReportMemberCheckIn'])->name('fc-total-report-member-checkin');
+    Route::get('fc-detail-report-member-checkin', [StaffController::class, 'fcDetailReportMemberCheckIn'])->name('fc-detail-report-member-checkin');
+    Route::get('fc-total-report-pt', [StaffController::class, 'fcTotalReportPT'])->name('fc-total-report-pt');
+    Route::get('fc-detail-report-pt', [StaffController::class, 'fcDetailReportPT'])->name('fc-detail-report-pt');
 
     Route::get('/tes', function () {
         return view('admin.member-registration.tes');

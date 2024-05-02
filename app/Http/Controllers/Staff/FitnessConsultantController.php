@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
 use App\Models\Staff\FitnessConsultant;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,16 +23,16 @@ class FitnessConsultantController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'full_name'     => 'required|string|max:200',
-            'phone_number'  => 'nullable',
-            'gender'        => 'required',
-            'address'       => 'nullable',
-            'description'   => 'nullable',
+            'full_name' => 'required|string|max:200',
+            'email'     => 'required|email',
+            'gender'    => 'required',
+            'role'      => '',
         ]);
-        $data['user_id'] = Auth::user()->id;
 
-        FitnessConsultant::create($data);
-        return redirect()->route('staff.index')->with('success', 'Fitness Consultant Berhasil Ditambahkan');
+        $data['password'] = bcrypt($request->password);
+
+        User::create($data);
+        return redirect('/staff?page=' . Request()->input('page'))->with('success', 'Fitness Consultant Berhasil Ditambahkan');
     }
 
     public function edit(string $id)
@@ -41,25 +42,25 @@ class FitnessConsultantController extends Controller
 
     public function update(Request $request, string $id)
     {
-        $item = FitnessConsultant::find($id);
+        $item = User::find($id);
         $data = $request->validate([
-            'full_name'     => 'string|max:200',
-            'phone_number'  => 'nullable',
-            'gender'        => 'nullable',
-            'address'       => 'nullable',
-            'description'   => 'nullable',
+            'full_name' => 'required|string|max:200',
+            'email'     => 'email',
+            'gender'    => 'required',
+            'role'      => '',
         ]);
-        $data['user_id'] = Auth::user()->id;
+
+        $data['password'] = bcrypt($request->password);
 
         $item->update($data);
-        return redirect()->route('staff.index')->with('success', 'Fitness Consultant Berhasil Diubah');
+        return redirect('/staff?page=' . Request()->input('page'))->with('success', 'Fitness Consultant Berhasil Diubah');
     }
 
-    public function destroy(FitnessConsultant $fitnessConsultant)
+    public function destroy(User $fitnessConsultant)
     {
         try {
             $fitnessConsultant->delete();
-            return redirect()->back()->with('success', 'Fitness Consultant Berhasil Dihapus');
+            return redirect('/staff?page=' . Request()->input('page'))->with('success', 'Fitness Consultant Berhasil Dihapus');
         } catch (\Throwable $th) {
             return redirect()->back()->with('errorr', 'Gagal menghapus fitness consultant ' . $fitnessConsultant->full_name . ', fitness consultant ini sedang dipakai member');
         }
