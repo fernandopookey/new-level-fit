@@ -10,13 +10,13 @@
                                 <b>Full Name</b>
                             </th>
                             <th style="border-right: 2px solid rgb(212, 212, 212);">
-                                : {{ $query->first()->member_name }}
+                                : {{ $trainerSession->members->member_name }}
                             </th>
                             <th scope="col">
                                 <b>Nick Name</b>
                             </th>
                             <th style="border-right: 2px solid rgb(212, 212, 212);">
-                                : {{ $query->first()->nickname }}
+                                : {{ $trainerSession->members->nickname }}
                             </th>
                         </tr>
                         <tr>
@@ -24,13 +24,13 @@
                                 <b>Member Number</b>
                             </th>
                             <th style="border-right: 2px solid rgb(212, 212, 212);">
-                                : {{ $query->first()->member_code }}
+                                : {{ $trainerSession->members->member_code }}
                             </th>
                             <th scope="col">
                                 <b>Card Number</b>
                             </th>
                             <th style="border-right: 2px solid rgb(212, 212, 212);">
-                                : {{ $query->first()->card_number }}
+                                : {{ $trainerSession->members->card_number }}
                             </th>
                         </tr>
                         <tr>
@@ -38,13 +38,13 @@
                                 <b>Date of birth</b>
                             </th>
                             <th style="border-right: 2px solid rgb(212, 212, 212);">
-                                : {{ DateFormat($query->first()->born, 'DD MMMM YYYY') }}
+                                : {{ DateFormat($trainerSession->members->born, 'DD MMMM YYYY') }}
                             </th>
                             <th scope="col">
                                 <b>Phone Number</b>
                             </th>
                             <th style="border-right: 2px solid rgb(212, 212, 212);">
-                                : {{ $query->first()->member_phone }}
+                                : {{ $trainerSession->members->member_phone }}
                             </th>
                         </tr>
                         <tr>
@@ -52,28 +52,28 @@
                                 <b>Gender</b>
                             </th>
                             <th style="border-right: 2px solid rgb(212, 212, 212);">
-                                : {{ $query->first()->gender }}
+                                : {{ $trainerSession->members->gender }}
                             </th>
                             <th scope="col">
                                 <b>Address</b>
                             </th>
                             <th style="border-right: 2px solid rgb(212, 212, 212);">
-                                : {{ $query->first()->address }}
+                                : {{ $trainerSession->members->address }}
                             </th>
                         </tr>
                         <tr>
                             <th><b>Email</th>
                             <th style="text-transform: lowercase; border-right: 2px solid rgb(212, 212, 212);">:
-                                {{ $query->first()->email }}</th>
+                                {{ $trainerSession->members->email }}</th>
                             <th><b>Instragram</th>
-                            <th>: {{ $query->first()->ig }}</th>
+                            <th>: {{ $trainerSession->members->ig }}</th>
                         </tr>
                         <tr>
                             <th><b>Emergency Contact</th>
                             <th style="text-transform: lowercase; border-right: 2px solid rgb(212, 212, 212);">:
-                                {{ $query->first()->emergency_contact }}</th>
+                                {{ $trainerSession->members->emergency_contact }}</th>
                             <th><b>Emergency Contact Name</th>
-                            <th>: {{ $query->first()->ec_name }}</th>
+                            <th>: {{ $trainerSession->members->ec_name }}</th>
                         </tr>
                     </tbody>
                 </table>
@@ -85,7 +85,7 @@
 <div class="col-xl-12">
     <div class="card">
         <div class="card-body">
-            @foreach ($query as $query)
+            @foreach ($query as $item)
                 <div class="accordion accordion-flush" id="accordionFlushExample{{ $loop->iteration }}">
                     <div class="accordion-item">
                         <h2 class="accordion-header text-white">
@@ -102,35 +102,35 @@
                                     <tbody style="color: rgb(85, 85, 85);">
                                         <tr>
                                             <th><b>Package Name</b></th>
-                                            <th>{{ $query->package_name }}</th>
+                                            <th>{{ $item->package_name }}</th>
                                         </tr>
                                         <tr>
                                             <th><b>Number Of Days</th>
-                                            <th>{{ $query->ts_number_of_days }} Days</th>
+                                            <th>{{ $item->ts_number_of_days }} Days</th>
                                         </tr>
                                         <tr>
                                             <th><b>Package Price</b></th>
-                                            <th>{{ formatRupiah($query->ts_package_price) }}</th>
+                                            <th>{{ formatRupiah($item->ts_package_price) }}</th>
                                         </tr>
                                         <tr>
                                             <th><b>Start Date</th>
-                                            <th>{{ DateFormat($query->start_date, 'DD MMMM YYYY') }}</th>
+                                            <th>{{ DateFormat($item->start_date, 'DD MMMM YYYY') }}</th>
                                         </tr>
                                         <tr>
                                             <th><b>Expired Date</th>
-                                            <th>{{ DateFormat($query->expired_date, 'DD MMMM YYYY') }}</th>
+                                            <th>{{ DateFormat($item->expired_date, 'DD MMMM YYYY') }}</th>
                                         </tr>
                                         <tr>
                                             <th><b>Method Payment</b></th>
-                                            <th>{{ $query->method_payment_name }}</th>
+                                            <th>{{ $item->method_payment_name }}</th>
                                         </tr>
                                         <tr>
                                             <th><b>Description</b></th>
-                                            <th>{{ $query->description }}</th>
+                                            <th>{{ $item->description }}</th>
                                         </tr>
                                     </tbody>
                                 </table>
-                                <a href="{{ route('pt-agreement', $query->id) }}" class="btn btn-primary btn-sm"
+                                <a href="{{ route('pt-agreement', $item->id) }}" class="btn btn-primary btn-sm"
                                     target="_blank">Download
                                     Agrement {{ $loop->iteration }}</a>
                             </div>
