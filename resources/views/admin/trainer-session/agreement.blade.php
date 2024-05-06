@@ -58,7 +58,7 @@
             </tr>
             <tr>
                 <td>Nomor HP</td>
-                <td>{{ $trainerSession->member_phone }}</td>
+                <td>{{ $trainerSession->phone_number }}</td>
             </tr>
             <tr>
                 <td>Email</td>
@@ -83,13 +83,13 @@
             </tr>
             <tr>
                 <td>Jumlah Paket Session</td>
-                <td>{{ $trainerSession->number_of_session }} Session</td>
+                <td>{{ $trainerSession->ts_number_of_session }} Session</td>
                 <td>Tanggal mulai program ini</td>
                 <td>{{ DateFormat($trainerSession->start_date, 'DD MMMM YYYY') }}</td>
             </tr>
             <tr>
                 <td>Harga</td>
-                <td>{{ formatRupiah($trainerSession->pt_package_price) }}</td>
+                <td>{{ formatRupiah($trainerSession->ts_package_price) }}</td>
                 <td>Tanggal berakhir program ini</td>
                 <td>{{ DateFormat($trainerSession->expired_date, 'DD MMMM YYYY') }}</td>
             </tr>

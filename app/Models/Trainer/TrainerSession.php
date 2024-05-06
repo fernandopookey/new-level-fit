@@ -207,10 +207,10 @@ class TrainerSession extends Model
     {
         $sql = "SELECT mbr.full_name AS member_name, mbr.id AS member_id, mbr.nickname, mbr.phone_number, mbr.gender, mbr.born, mbr.member_code, mbr.email, mbr.ig, mbr.emergency_contact, mbr.ec_name,
         mbr.card_number, mbr.id_code_count, mbr.photos, mbr.status, mbr.address,
-        train_sess.id, train_sess.start_date, train_sess.number_of_session AS ts_number_of_session, train_sess.days AS number_of_days,
+        train_sess.id, train_sess.start_date, train_sess.number_of_session AS ts_number_of_session, train_sess.days AS ts_number_of_days, train_sess.package_price AS ts_package_price, train_sess.description,
         train_pack.package_name, pers_train.full_name AS trainer_name, met_pay.name AS method_payment_name,
         cits_view.current_check_in_trainer_sessions_id, cits_view.check_in_time, cits_view.check_out_time, cits_view.updated_at_check_in,
-        leave_days_view.submission_date_continue, leave_days_view.total_price_continue,
+        leave_days_view.submission_date_continue, leave_days_view.total_price_continue, users.full_name AS fc_name,
 	
         DATE_ADD(train_sess.start_date, INTERVAL COALESCE(leave_days_view.total_days_continue, 0) + train_sess.days DAY) AS expired_date,
         DATE_ADD(leave_days_view.submission_date_continue, INTERVAL leave_days_view.total_days_continue DAY) AS expired_leave_days,

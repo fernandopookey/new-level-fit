@@ -358,6 +358,7 @@ class MemberRegistrationController extends Controller
 
     public function show($id)
     {
+        dd($id);
         $mr = MemberRegistration::find($id);
         $status = $mr->members->status;
 
@@ -605,7 +606,7 @@ class MemberRegistrationController extends Controller
             'memberLastCode'        => Member::latest('id')->first(),
             'memberPackage'         => MemberPackage::get(),
             'methodPayment'         => MethodPayment::get(),
-            'fitnessConsultant'     => FitnessConsultant::get(),
+            'fitnessConsultant'     => User::where('role', 'FC')->get(),
             'content'               => 'admin/member-registration/renewal',
         ];
 
@@ -716,13 +717,33 @@ class MemberRegistrationController extends Controller
             try {
                 $memberRegistration = MemberRegistration::findOrFail($id);
 
-                $data = $request->validate([
-                    'member_package_id' => 'required|exists:member_packages,id',
-                    'start_date'        => 'required',
-                    'method_payment_id' => 'required|exists:method_payments,id',
-                    'fc_id'             => 'required|exists:users,id',
-                    'description'       => 'nullable',
-                ]);
+                $fc = Auth::user()->id;
+                
+                if (Auth::user()->role == 'FC'){
+                    $data = $request->validate([
+                        'member_package_id' => 'required|exists:member_packages,id',
+                        'start_date'        => 'required',
+                        'method_payment_id' => 'required|exists:method_payments,id',
+                        'description'       => 'nullable',
+                    ]);
+                    $data['fc_id'] = $fc;
+                } else {
+                    $data = $request->validate([
+                        'member_package_id' => 'required|exists:member_packages,id',
+                        'start_date'        => 'required',
+                        'method_payment_id' => 'required|exists:method_payments,id',
+                        'fc_id'             => 'required|exists:users,id',
+                        'description'       => 'nullable',
+                    ]);
+                }
+
+                // $data = $request->validate([
+                //     'member_package_id' => 'required|exists:member_packages,id',
+                //     'start_date'        => 'required',
+                //     'method_payment_id' => 'required|exists:method_payments,id',
+                //     'fc_id'             => 'required|exists:users,id',
+                //     'description'       => 'nullable',
+                // ]);
 
                 $package = MemberPackage::findOrFail($data['member_package_id']);
                 $data['package_price'] = $package->package_price;
