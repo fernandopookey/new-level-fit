@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Member;
 
 use App\Exports\MissedGuestExport;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -42,7 +43,7 @@ class MissedGuestController extends Controller
         $data = [
             'title'             => 'Missed Guest',
             'members'           => $members,
-            // 'users'             => User::get(),
+            'fitnessConsultant' => User::where('role', 'FC')->get(),
             'content'           => 'admin/members/missed-guest'
         ];
 

@@ -145,7 +145,7 @@ class MemberController extends Controller
             'memberLastCode'        => Member::latest('id')->first(),
             'memberPackage'         => MemberPackage::get(),
             'methodPayment'         => MethodPayment::get(),
-            'fitnessConsultant'     => FitnessConsultant::get(),
+            'fitnessConsultant'     => User::where('role', 'FC')->get(),
             'content'               => 'admin/members/edit',
         ];
 
@@ -214,53 +214,99 @@ class MemberController extends Controller
 
     public function update(Request $request, string $id)
     {
-        // dd($id);
+        $fc = Auth::user();
+        // dd($fc->role);
         DB::beginTransaction();
         try {
             $member = Member::findOrFail($id);
 
-            $data = $request->validate([
-                'full_name'             => 'required',
-                'phone_number'          => 'required',
-                'status'                => 'required',
-                'nickname'              => 'nullable',
-                'born'                  => 'nullable',
-                'email'                 => 'nullable',
-                'ig'                    => 'nullable',
-                'emergency_contact'     => 'nullable',
-                'ec_name'               => 'nullable',
-                'gender'                => 'nullable',
-                'address'               => 'nullable',
-                'photos'                => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                'member_package_id'     => 'required|exists:member_packages,id',
-                'start_date'            => 'required',
-                'start_time'            => 'required',
-                'method_payment_id'     => 'required|exists:method_payments,id',
-                'fc_id'                 => 'required|exists:fitness_consultants,id',
-                'description'           => 'nullable',
-                'member_code' => [
-                    'nullable',
-                    function ($attribute, $value, $fail) use ($id) {
-                        if ($value) {
-                            $exists = Member::where('member_code', $value)->where('id', '!=', $id)->exists();
-                            if ($exists) {
-                                $fail('The member number has already been taken.');
+            if ($fc->role == 'FC') {
+                $data = $request->validate([
+                    'full_name'             => 'required',
+                    'phone_number'          => 'required',
+                    'status'                => 'required',
+                    'nickname'              => 'nullable',
+                    'born'                  => 'nullable',
+                    'email'                 => 'nullable',
+                    'ig'                    => 'nullable',
+                    'emergency_contact'     => 'nullable',
+                    'ec_name'               => 'nullable',
+                    'gender'                => 'nullable',
+                    'address'               => 'nullable',
+                    'photos'                => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                    'member_package_id'     => 'required|exists:member_packages,id',
+                    'start_date'            => 'required',
+                    'start_time'            => 'required',
+                    'method_payment_id'     => 'required|exists:method_payments,id',
+                    'description'           => 'nullable',
+                    'member_code' => [
+                        'nullable',
+                        function ($attribute, $value, $fail) use ($id) {
+                            if ($value) {
+                                $exists = Member::where('member_code', $value)->where('id', '!=', $id)->exists();
+                                if ($exists) {
+                                    $fail('The member number has already been taken.');
+                                }
                             }
                         }
-                    }
-                ],
-                'card_number' => [
-                    'nullable',
-                    function ($attribute, $value, $fail) use ($id) {
-                        if ($value) {
-                            $exists = Member::where('card_number', $value)->where('id', '!=', $id)->exists();
-                            if ($exists) {
-                                $fail('The card number has already been taken.');
+                    ],
+                    'card_number' => [
+                        'nullable',
+                        function ($attribute, $value, $fail) use ($id) {
+                            if ($value) {
+                                $exists = Member::where('card_number', $value)->where('id', '!=', $id)->exists();
+                                if ($exists) {
+                                    $fail('The card number has already been taken.');
+                                }
                             }
                         }
-                    }
-                ],
-            ]);
+                    ],
+                ]);
+                $data['fc_id']  = Auth::user()->id;
+            } else {
+                $data = $request->validate([
+                    'full_name'             => 'required',
+                    'phone_number'          => 'required',
+                    'status'                => 'required',
+                    'nickname'              => 'nullable',
+                    'born'                  => 'nullable',
+                    'email'                 => 'nullable',
+                    'ig'                    => 'nullable',
+                    'emergency_contact'     => 'nullable',
+                    'ec_name'               => 'nullable',
+                    'gender'                => 'nullable',
+                    'address'               => 'nullable',
+                    'photos'                => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                    'member_package_id'     => 'required|exists:member_packages,id',
+                    'start_date'            => 'required',
+                    'start_time'            => 'required',
+                    'method_payment_id'     => 'required|exists:method_payments,id',
+                    'fc_id'                 => 'exists:users,id',
+                    'description'           => 'nullable',
+                    'member_code' => [
+                        'nullable',
+                        function ($attribute, $value, $fail) use ($id) {
+                            if ($value) {
+                                $exists = Member::where('member_code', $value)->where('id', '!=', $id)->exists();
+                                if ($exists) {
+                                    $fail('The member number has already been taken.');
+                                }
+                            }
+                        }
+                    ],
+                    'card_number' => [
+                        'nullable',
+                        function ($attribute, $value, $fail) use ($id) {
+                            if ($value) {
+                                $exists = Member::where('card_number', $value)->where('id', '!=', $id)->exists();
+                                if ($exists) {
+                                    $fail('The card number has already been taken.');
+                                }
+                            }
+                        }
+                    ],
+                ]);
+            }
 
             if ($request->hasFile('photos')) {
 

@@ -358,7 +358,7 @@ class MemberRegistrationController extends Controller
 
     public function show($id)
     {
-        dd($id);
+        // dd($id);
         $mr = MemberRegistration::find($id);
         $status = $mr->members->status;
 
