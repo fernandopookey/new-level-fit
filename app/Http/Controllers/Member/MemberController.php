@@ -58,10 +58,11 @@ class MemberController extends Controller
                 'a.address',
                 'a.status',
                 'a.photos',
-                'lo_is_used',
-                'lo_start_date',
-                'lo_days',
-                'lo_pt_by',
+                'a.lo_is_used',
+                'a.lo_start_date',
+                'a.lo_days',
+                'a.lo_pt_by',
+                'a.lo_end',
                 'a.created_at',
                 DB::raw("CASE WHEN NOW() < DATE_ADD(a.created_at, INTERVAL a.lo_days DAY) THEN 'Running' ELSE 'Over' END as lo_status")
             )
@@ -444,6 +445,17 @@ class MemberController extends Controller
         $data['lo_start_date'] = Carbon::now()->tz('Asia/Jakarta');
 
         $item->update($data);
-        return redirect()->route('members.index')->with('success', 'Berhasil');
+        return redirect()->route('members.index')->with('success', 'LO berhasil digunakan');
+    }
+
+    public function stopLO(Request $request, string $id)
+    {
+        $item = Member::find($id);
+        // dd($item);
+        
+        $data['lo_end'] = Carbon::now()->tz('Asia/Jakarta');
+
+        $item->update($data);
+        return redirect()->route('members.index')->with('success', 'LO sudah dihentikan');
     }
 }

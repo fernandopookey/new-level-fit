@@ -6,12 +6,10 @@ use App\Http\Controllers\Member\MemberCheckInController;
 use App\Http\Controllers\Member\MemberController;
 use App\Http\Controllers\Member\MemberRegistrationController;
 use App\Http\Controllers\Member\MemberRegistrationOverController;
-use App\Http\Controllers\Member\MemberVisitController;
 use App\Http\Controllers\MergeCreateDataController;
 use App\Http\Controllers\Report\AppointmentListController;
 use App\Http\Controllers\Report\MemberExpiredListController;
 use App\Http\Controllers\Report\MemberListController;
-use App\Http\Controllers\Report\TrainerGoListController;
 use App\Http\Controllers\Staff\StaffController;
 use App\Http\Controllers\Trainer\LGTController;
 use App\Http\Controllers\Trainer\TrainerSessionCheckInController;
@@ -170,12 +168,14 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
 
     Route::get('layout-orientation/{id}', [MemberController::class, 'layoutOrientation'])->name('useLayoutOrientation');
     Route::put('process-layout-orientation/{id}', [MemberController::class, 'updateLO'])->name('prosesLayoutOrientation');
+    Route::post('stop-layout-orientation/{id}', [MemberController::class, 'stopLO'])->name('stopLayoutOrientation');
 
     // REPORT
     Route::get('pt-total-report', [StaffController::class, 'ptTotalReport'])->name('pt-total-report');
     Route::get('pt-detail-report', [StaffController::class, 'ptDetailReport'])->name('pt-detail-report');
 
-    Route::get('cs-total-report-member-checkin', [StaffController::class, 'csTotalReportMemberCheckIn'])->name('cs-total-report-member-checkin');
+    Route::get('report-member-checkin', [StaffController::class, 'reportMemberCheckIn'])->name('report-member-checkin');
+    Route::get('report-member-pt-checkin', [StaffController::class, 'reportMemberPTCheckIn'])->name('report-member-pt-checkin');
     Route::get('cs-detail-report-member-checkin', [StaffController::class, 'csDetailReportMemberCheckIn'])->name('cs-detail-report-member-checkin');
     Route::get('cs-total-report-pt', [StaffController::class, 'csTotalReportPT'])->name('cs-total-report-pt');
     Route::get('cs-detail-report-pt', [StaffController::class, 'csDetailReportPT'])->name('cs-detail-report-pt');

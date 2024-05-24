@@ -257,59 +257,63 @@ class TrainerSessionController extends Controller
 
     public function edit(string $id)
     {
-        $trainerSessionss = DB::table('trainer_sessions as a')
-            ->select(
-                'a.id',
-                'a.start_date',
-                'a.description',
-                'a.days',
-                'b.full_name as member_name',
-                'b.address',
-                'b.member_code',
-                'b.phone_number as member_phone',
-                'b.photos',
-                'b.gender',
-                'b.nickname',
-                'b.ig',
-                'b.emergency_contact',
-                'b.email',
-                'b.born',
-                'c.package_name',
-                'c.number_of_session',
-                'c.days',
-                'c.package_price',
-                'd.full_name as trainer_name',
-                'd.phone_number as trainer_phone',
-                'g.full_name as staff_name',
-                'h.full_name as fc_name',
-                'h.phone_number as fc_phone_number',
-                'i.name as method_payment_name',
-            )
-            ->addSelect(
-                DB::raw('DATE_ADD(a.start_date, INTERVAL a.days DAY) as expired_date'),
-                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.days DAY) THEN "Over" ELSE "Running" END as expired_date_status'),
-                DB::raw('IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) as remaining_sessions'),
-                DB::raw('CASE WHEN IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) > 0 THEN "Running" WHEN IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) < 0 THEN "kelebihan" ELSE "over" END AS session_status')
-            )
-            ->join('members as b', 'a.member_id', '=', 'b.id')
-            ->join('trainer_packages as c', 'a.trainer_package_id', '=', 'c.id')
-            ->join('personal_trainers as d', 'a.trainer_id', '=', 'd.id')
-            ->leftJoin(DB::raw('(SELECT trainer_session_id, COUNT(id) as check_in_count FROM check_in_trainer_sessions where check_out_time is not null GROUP BY trainer_session_id) as e'), 'e.trainer_session_id', '=', 'a.id')
-            ->join('users as g', 'a.user_id', '=', 'g.id')
-            ->join('fitness_consultants as h', 'a.fc_id', '=', 'h.id')
-            ->join('method_payments as i', 'a.method_payment_id', '=', 'i.id')
-            ->whereRaw('CASE WHEN IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) > 0 THEN "Running" WHEN IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) < 0 THEN "kelebihan" ELSE "over" END = "Running"')
-            ->where('a.id', $id)
-            ->get();
+        // $trainerSessionss = DB::table('trainer_sessions as a')
+        //     ->select(
+        //         'a.id',
+        //         'a.start_date',
+        //         'a.description',
+        //         'a.days',
+        //         'b.full_name as member_name',
+        //         'b.address',
+        //         'b.member_code',
+        //         'b.phone_number as member_phone',
+        //         'b.photos',
+        //         'b.gender',
+        //         'b.nickname',
+        //         'b.ig',
+        //         'b.emergency_contact',
+        //         'b.email',
+        //         'b.born',
+        //         'c.package_name',
+        //         'c.number_of_session',
+        //         'c.days',
+        //         'c.package_price',
+        //         'd.full_name as trainer_name',
+        //         'd.phone_number as trainer_phone',
+        //         'g.full_name as staff_name',
+        //         'h.full_name as fc_name',
+        //         'h.phone_number as fc_phone_number',
+        //         'i.name as method_payment_name',
+        //     )
+        //     ->addSelect(
+        //         DB::raw('DATE_ADD(a.start_date, INTERVAL a.days DAY) as expired_date'),
+        //         DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.days DAY) THEN "Over" ELSE "Running" END as expired_date_status'),
+        //         DB::raw('IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) as remaining_sessions'),
+        //         DB::raw('CASE WHEN IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) > 0 THEN "Running" WHEN IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) < 0 THEN "kelebihan" ELSE "over" END AS session_status')
+        //     )
+        //     ->join('members as b', 'a.member_id', '=', 'b.id')
+        //     ->join('trainer_packages as c', 'a.trainer_package_id', '=', 'c.id')
+        //     ->join('personal_trainers as d', 'a.trainer_id', '=', 'd.id')
+        //     ->leftJoin(DB::raw('(SELECT trainer_session_id, COUNT(id) as check_in_count FROM check_in_trainer_sessions where check_out_time is not null GROUP BY trainer_session_id) as e'), 'e.trainer_session_id', '=', 'a.id')
+        //     ->join('users as g', 'a.user_id', '=', 'g.id')
+        //     ->join('fitness_consultants as h', 'a.fc_id', '=', 'h.id')
+        //     ->join('method_payments as i', 'a.method_payment_id', '=', 'i.id')
+        //     ->whereRaw('CASE WHEN IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) > 0 THEN "Running" WHEN IFNULL(c.number_of_session - e.check_in_count, c.number_of_session) < 0 THEN "kelebihan" ELSE "over" END = "Running"')
+        //     ->where('a.id', $id)
+        //     ->get();
+
+        $trainerSessionss = TrainerSession::getActivePTListById($id);
+
+        // dd($trainerSessionss);
 
         $data = [
             'title'                 => 'Edit Trainer Session',
             'trainerSession'        => TrainerSession::find($id),
-            'trainerSessions'       => $trainerSessionss->first(),
+            'trainerSessions'       => $trainerSessionss[0],
             'members'               => Member::get(),
             'personalTrainers'      => PersonalTrainer::get(),
             'trainerPackages'       => TrainerPackage::get(),
-            'fitnessConsultants'    => FitnessConsultant::get(),
+            'fitnessConsultant'     => User::where('role', 'FC')->get(),
             'methodPayment'         => MethodPayment::get(),
             'content'               => 'admin/trainer-session/edit'
         ];
@@ -318,6 +322,8 @@ class TrainerSessionController extends Controller
 
     public function update(Request $request, string $id)
     {
+        $fc = Auth::user()->id;
+        dd($fc);
         $trainerSessions = DB::table('trainer_sessions as a')
             ->select(
                 'a.id',

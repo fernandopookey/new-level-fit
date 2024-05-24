@@ -192,7 +192,7 @@
                                                 );
                                             @endphp
                                             <td>{{ $item->check_out_time ? $formattedDuration : 'Not Yet' }}</td>
-                                            <td>{{ $item->trainerSession->personalTrainers->full_name }}</td>
+                                            <td>{{ $item->personalTrainer->full_name }}</td>
                                             <td>
                                                 @if (Auth::user()->role == 'ADMIN')
                                                     <form

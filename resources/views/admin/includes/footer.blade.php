@@ -425,6 +425,38 @@
     });
 </script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var sellRadio = document.getElementById('sell');
+        var missedGuestRadio = document.getElementById('missed');
+        var cancellationNote = document.getElementById('cancellation-note');
+        var candidateFC = document.getElementById('candidateFC');
+
+        function toggleElement(element, displayStyle) {
+            if (element) {
+                element.style.display = displayStyle;
+            }
+        }
+
+        function handleRadioChange() {
+            if (sellRadio.checked) {
+                toggleElement(cancellationNote, 'block');
+                toggleElement(candidateFC, 'block');
+            } else if (missedGuestRadio.checked) {
+                toggleElement(cancellationNote, 'none');
+                toggleElement(candidateFC, 'none');
+            }
+        }
+
+        sellRadio.addEventListener('change', handleRadioChange);
+        missedGuestRadio.addEventListener('change', handleRadioChange);
+
+        // Initial state
+        toggleElement(cancellationNote, 'block');
+        toggleElement(candidateFC, 'block');
+    });
+</script>
+
 </body>
 
 </html>

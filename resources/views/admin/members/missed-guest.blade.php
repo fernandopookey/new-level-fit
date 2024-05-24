@@ -18,15 +18,11 @@
 
                         <thead>
                             <tr>
-                                @if (Auth::user()->role == 'ADMIN')
-                                    <th></th>
-                                @endif
                                 <th>No</th>
-                                <th>Image</th>
-                                <th>Full Name</th>
+                                <th>Member Name</th>
                                 <th>Phone Number</th>
-                                <th>No Member</th>
-                                <th>Date of Birth</th>
+                                <th>FC Name</th>
+                                <th>Cancellation Note</th>
                                 <th>Created At</th>
                                 <th>Action</th>
                             </tr>
@@ -36,32 +32,17 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>
-                                        <div class="trans-list">
-                                            @if ($item->photos)
-                                                <img src="{{ Storage::url($item->photos) }}" class="lazyload"
-                                                    width="100" alt="image">
-                                            @else
-                                                <img src="{{ asset('default.png') }}" class="img-fluid" width="100"
-                                                    alt="">
-                                            @endif
-                                        </div>
-                                    </td>
-                                    <td>
                                         <h6>{{ $item->full_name }}</h6>
                                     </td>
                                     <td>
                                         <h6>{{ $item->phone_number }}</h6>
                                     </td>
                                     <td>
-                                        <h6>{{ isset($item->member_code) ? $item->member_code : '-' }}
+                                        <h6>{{ isset($item->fitnessConsultant->full_name) ? $item->fitnessConsultant->full_name : '-' }}
                                         </h6>
                                     </td>
                                     <td>
-                                        <h6>{{ isset($item->description) ? $item->description : '-' }}
-                                        </h6>
-                                    </td>
-                                    <td>
-                                        <h6>{{ isset($item->user_full_name) ? $item->user_full_name : '-' }}
+                                        <h6>{{ isset($item->cancellation_note) ? $item->cancellation_note : '-' }}
                                         </h6>
                                     </td>
                                     <td>
