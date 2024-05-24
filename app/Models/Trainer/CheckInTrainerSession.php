@@ -2,6 +2,7 @@
 
 namespace App\Models\Trainer;
 
+use App\Models\Staff\PersonalTrainer;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -24,6 +25,11 @@ class CheckInTrainerSession extends Model
     public function trainerSession()
     {
         return $this->belongsTo(TrainerSession::class, 'trainer_session_id', 'id');
+    }
+
+    public function personalTrainer()
+    {
+        return $this->belongsTo(PersonalTrainer::class, 'pt_id', 'id');
     }
 
     public function users()

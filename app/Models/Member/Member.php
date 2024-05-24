@@ -29,11 +29,14 @@ class Member extends Model
         'status',
         'description',
         'photos',
+        'fc_candidate_id',
+        'cancellation_note',
         'status',
         'lo_is_used',
         'lo_start_date',
         'lo_days',
-        'lo_pt_by'
+        'lo_pt_by',
+        'lo_end'
     ];
 
     public function users()
@@ -59,5 +62,10 @@ class Member extends Model
     public function personalTrainer()
     {
         return $this->hasMany(PersonalTrainer::class);
+    }
+
+    public function fitnessConsultant()
+    {
+        return $this->belongsTo(User::class, 'fc_candidate_id', 'id');
     }
 }

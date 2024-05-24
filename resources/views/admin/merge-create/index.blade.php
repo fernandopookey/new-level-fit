@@ -30,6 +30,30 @@
                                 class="form-control" id="exampleFormControlInput1" autocomplete="off" required>
                         </div>
                     </div>
+                    @if (Auth::user()->role == 'CS' || Auth::user()->role == 'ADMIN')
+                        <div class="col-xl-6" id="candidateFC">
+                            <div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label">Candidate Fitness Consultant</label>
+                                <select id="single-select4" name="fc_candidate_id" class="form-control">
+                                    <option>
+                                        <- Choose ->
+                                    </option>
+                                    @foreach ($fitnessConsultant as $item)
+                                        <option value="{{ $item->id }}">{{ $item->full_name }}
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    @endif
+                    <div class="col-xl-6" id="cancellation-note">
+                        <div class="mb-3">
+                            <label for="exampleFormControlTextarea1" class="form-label text-primary">
+                                Cancellation Note
+                            </label>
+                            <textarea class="form-control" name="cancellation_note" id="exampleFormControlTextarea1" rows="6"
+                                placeholder="Enter Cancellation Note">{{ old('cancellation_note') }}</textarea>
+                        </div>
+                    </div>
                     <div class="col-xl-6">
                         <div class="mb-3">
                             <div class="form-check">

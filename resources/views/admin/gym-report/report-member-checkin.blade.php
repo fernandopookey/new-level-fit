@@ -25,8 +25,9 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>CS Name</th>
-                                <th>Total Input</th>
+                                <th>Member Name</th>
+                                <th>Check In Time</th>
+                                <th>Check Out Time</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -34,11 +35,14 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>
-                                        {{ $item->cs_name }}
+                                        {{ $item->member_name }}
                                     </td>
                                     <td>
-                                       {{ $item->cs_total }}
+                                       {{ $item->check_in_time }}
                                     </td>
+                                    <td>
+                                        {{ $item->check_out_time }}
+                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>

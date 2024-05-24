@@ -42,12 +42,12 @@ class StaffController extends Controller
 
     public function ptTotalReport()
     {
-        $fromDate   = Request()->input('fromDate');
-        $fromDate  = $fromDate ?  DateFormat($fromDate) : NowDate();
+        $fromDate       = Request()->input('fromDate');
+        $fromDate       = $fromDate ?  DateFormat($fromDate) : NowDate();
 
-        $toDate     = Request()->input('toDate');
-        $toDate = $toDate ? DateFormat($toDate) : NowDate();
-        $pdf = Request()->input('pdf');
+        $toDate         = Request()->input('toDate');
+        $toDate         = $toDate ? DateFormat($toDate) : NowDate();
+        $pdf            = Request()->input('pdf');
 
         $results = PersonalTrainer::select('personal_trainers.full_name as trainer_name', DB::raw('COUNT(personal_trainers.id) as pt_total'))
             ->join('check_in_trainer_sessions', 'check_in_trainer_sessions.pt_id', '=', 'personal_trainers.id')
@@ -139,7 +139,7 @@ class StaffController extends Controller
         return view('admin.layouts.wrapper', $data);
     }
 
-    public function csTotalReportMemberCheckIn()
+    public function reportMemberPTCheckIn()
     {
         $fromDate   = Request()->input('fromDate');
         $fromDate  = $fromDate ?  DateFormat($fromDate) : NowDate();
@@ -148,32 +148,82 @@ class StaffController extends Controller
         $toDate = $toDate ? DateFormat($toDate) : NowDate();
         $pdf = Request()->input('pdf');
 
-        $results = User::select('users.full_name as cs_name', DB::raw('COUNT(users.id) as cs_total'))
-            ->join('member_registrations', 'member_registrations.user_id', '=', 'users.id')
-            ->whereDate('member_registrations.created_at', '>=', $fromDate)
-            ->whereDate('member_registrations.created_at', '<=', $toDate)
-            ->where('users.role', '=', 'CS')
-            ->groupBy('users.id', 'users.full_name')
-            ->orderBy('users.full_name', 'asc')
+        $results = DB::table('members')
+            ->select(
+                'cits.id as cits_id',
+                'members.id as member_id',
+                'members.full_name as member_name',
+                'cits.check_in_time',
+                'cits.check_out_time'
+            )
+            ->join('trainer_sessions as ts', 'ts.member_id', '=', 'members.id')
+            ->join('check_in_trainer_sessions as cits', 'cits.trainer_session_id', '=', 'ts.id')
+            ->whereDate('cits.check_in_time', '>=', $fromDate)
+            ->whereDate('cits.check_in_time', '<=', $toDate)
             ->get();
 
         if ($pdf && $pdf == '1') {
-            $pdf = Pdf::loadView('admin/gym-report/cs-total-report-member-checkin', [
+            $pdf = Pdf::loadView('admin/gym-report/report-member-pt-checkin', [
                 'result'   => $results,
             ]);
-            return $pdf->stream('CS-Total-Report-member-checkin, ' . $fromDate . '-' . $toDate . '.pdf');
+            return $pdf->stream('Report-PT-checkin, ' . $fromDate . '-' . $toDate . '.pdf');
         }
 
 
         $data = [
-            'title'                 => 'CS Total Input Member Check In',
+            'title'                 => 'Report Member PT Check In',
             'administrator'         => User::where('role', 'ADMIN')->get(),
             'customerService'       => User::where('role', 'CS')->get(),
             'result'                => $results,
             'fromDate'              => $fromDate,
             'toDate'                => $toDate,
             'users'                 => User::get(),
-            'content'               => 'admin/gym-report/cs-total-report-member-checkin'
+            'content'               => 'admin/gym-report/report-member-pt-checkin'
+        ];
+
+        return view('admin.layouts.wrapper', $data);
+    }
+
+    public function reportPTCheckIn()
+    {
+        $fromDate   = Request()->input('fromDate');
+        $fromDate  = $fromDate ?  DateFormat($fromDate) : NowDate();
+
+        $toDate     = Request()->input('toDate');
+        $toDate = $toDate ? DateFormat($toDate) : NowDate();
+        $pdf = Request()->input('pdf');
+
+        $results = DB::table('members')
+            ->select(
+                'cim.id as cim_id',
+                'members.id as member_id',
+                'members.full_name as member_name',
+                'cim.check_in_time',
+                'cim.check_out_time'
+            )
+            ->join('member_registrations as mr', 'mr.member_id', '=', 'members.id')
+            ->join('check_in_members as cim', 'cim.member_registration_id', '=', 'mr.id')
+            ->whereDate('cim.check_in_time', '>=', $fromDate)
+            ->whereDate('cim.check_in_time', '<=', $toDate)
+            ->get();
+
+        if ($pdf && $pdf == '1') {
+            $pdf = Pdf::loadView('admin/gym-report/report-member-checkin', [
+                'result'   => $results,
+            ]);
+            return $pdf->stream('Report-member-checkin, ' . $fromDate . '-' . $toDate . '.pdf');
+        }
+
+
+        $data = [
+            'title'                 => 'Report Member Check In',
+            'administrator'         => User::where('role', 'ADMIN')->get(),
+            'customerService'       => User::where('role', 'CS')->get(),
+            'result'                => $results,
+            'fromDate'              => $fromDate,
+            'toDate'                => $toDate,
+            'users'                 => User::get(),
+            'content'               => 'admin/gym-report/report-member-checkin'
         ];
 
         return view('admin.layouts.wrapper', $data);

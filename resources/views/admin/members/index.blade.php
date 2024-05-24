@@ -66,12 +66,19 @@
                                                 <a href="{{ route('useLayoutOrientation', $item->id) }}"
                                                     class="btn btn-dark btn-xs mb-1 btn-block">LO</a>
                                             @else
-                                                <button type="button" class="btn btn-dark btn-xs mb-1 btn-block"
-                                                    data-bs-toggle="popover" data-bs-title="Check In tanpa kartu"
-                                                    data-bs-content="Member ini sudah menggunakan Layout Orientation">
-                                                    <span class="text-danger">X</span> LO <span
-                                                        class="text-danger">X</span>
-                                                </button>
+                                                @if (!$item->lo_end)
+                                                    <form action="{{ route("stopLayoutOrientation", $item->id) }}" method="POST">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-dark btn-xs mb-1 btn-block">Stop LO(Running)</button>
+                                                    </form>
+                                                @else
+                                                    <button type="button" class="btn btn-dark btn-xs mb-1 btn-block"
+                                                        data-bs-toggle="popover" data-bs-title="Check In tanpa kartu"
+                                                        data-bs-content="Member ini sudah menggunakan Layout Orientation">
+                                                        <span class="text-danger">X</span> LO is used<span
+                                                            class="text-danger">X</span>
+                                                    </button>
+                                                @endif
                                             @endif
                                             @if (Auth::user()->role == 'ADMIN')
                                                 <form action="{{ route('member.destroy', $item->id) }}"

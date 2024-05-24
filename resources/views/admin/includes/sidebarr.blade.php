@@ -74,8 +74,8 @@
             @endif
 
             <li><a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
-                <i class="material-icons"> app_registration </i>
-                <span class="nav-text">Report</span>
+                    <i class="material-icons"> app_registration </i>
+                    <span class="nav-text">Report</span>
                 </a>
                 <ul aria-expanded="false">
                     <li><a class="has-arrow" href="javascript:void(0);" aria-expanded="false">PT</a>
@@ -84,7 +84,7 @@
                             <li style="margin-left: 10px"><a href="{{ route('pt-detail-report') }}">PT Detail</a></li>
                         </ul>
                     </li>
-                    <li>
+                    {{-- <li>
                         <a class="has-arrow" href="javascript:void(0);" aria-expanded="false">Customer Service</a>
                         <ul aria-expanded="false">
                             <li style="margin-left: 10px">
@@ -102,22 +102,29 @@
                                 </ul>
                             </li>
                         </ul>
-                    </li>
+                    </li> --}}
+                    <li><a href="#">LO</a></li>
+                    <li><a href="{{ route('report-member-checkin') }}">Member Check In</a></li>
+                    <li><a href="{{ route('report-member-pt-checkin') }}">PT Check In</a></li>
                     <li>
-                        <a class="has-arrow" href="javascript:void(0);" aria-expanded="false">Fitness Consultant</a>
+                        <a class="has-arrow" href="javascript:void(0);" aria-expanded="false">Lead</a>
                         <ul aria-expanded="false">
                             <li style="margin-left: 10px">
                                 <a class="has-arrow" href="javascript:void(0);" aria-expanded="false">Member CheckIn</a>
                                 <ul aria-expanded="false">
-                                    <li style="margin-left: 10px"><a href="{{ route('fc-total-report-member-checkin') }}">Total</a></li>
-                                    <li style="margin-left: 10px"><a href="{{ route('fc-detail-report-member-checkin') }}">Detail</a></li>
+                                    <li style="margin-left: 10px"><a
+                                            href="{{ route('fc-total-report-member-checkin') }}">Total</a></li>
+                                    <li style="margin-left: 10px"><a
+                                            href="{{ route('fc-detail-report-member-checkin') }}">Detail</a></li>
                                 </ul>
                             </li>
                             <li style="margin-left: 10px">
-                                <a class="has-arrow" href="javascript:void(0);" aria-expanded="false">PT</a>
+                                <a class="has-arrow" href="javascript:void(0);" aria-expanded="false">POS</a>
                                 <ul aria-expanded="false">
-                                    <li style="margin-left: 10px"><a href="{{ route('fc-total-report-pt') }}">Total</a></li>
-                                    <li style="margin-left: 10px"><a href="{{ route('fc-detail-report-pt') }}">Detail</a></li>
+                                    <li style="margin-left: 10px"><a href="{{ route('fc-total-report-pt') }}">Total</a>
+                                    </li>
+                                    <li style="margin-left: 10px"><a
+                                            href="{{ route('fc-detail-report-pt') }}">Detail</a></li>
                                 </ul>
                             </li>
                         </ul>

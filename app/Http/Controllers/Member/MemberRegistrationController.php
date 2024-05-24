@@ -195,14 +195,13 @@ class MemberRegistrationController extends Controller
                 'gender'                => 'nullable',
                 'address'               => 'nullable',
                 'photos'                => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'fc_candidate_id'       => 'nullable',
+                'cancellation_note'     => 'nullable',
                 'lo_is_used'            => 'nullable',
                 'lo_start_date'         => 'nullable',
                 'lo_days'               => 'nullable',
                 'lo_pt_by'              => 'nullable',
-                // 'member_package_id'     => 'required_if:status,sell|exists:member_packages,id',
                 'start_date'            => 'required_if:status,sell',
-                // 'method_payment_id'     => 'required_if:status,sell|exists:method_payments,id',
-                // 'fc_id'                 => 'required_if:status,sell|exists:fitness_consultants,id',
                 'description'           => 'nullable',
                 'card_number' => [
                     'nullable',
@@ -231,7 +230,7 @@ class MemberRegistrationController extends Controller
             if ($request->status == 'sell') {
 
                 $fc = Auth::user()->id;
-                if (Auth::user()->role == 'FC'){
+                if (Auth::user()->role == 'FC') {
                     $data += $request->validate([
                         'member_package_id'     => 'required|exists:member_packages,id',
                         'start_date'            => 'required',
@@ -340,9 +339,18 @@ class MemberRegistrationController extends Controller
                     ])));
                 }
             } else {
-                $newMember = Member::create(array_intersect_key($data, array_flip([
-                    'full_name', 'phone_number', 'status'
-                ])));
+                $fc = Auth::user()->role;
+                // $user = Auth::user()->id;
+                if($fc == 'FC'){
+                    $data['fc_candidate_id'] = Auth::user()->id;
+                    $newMember = Member::create(array_intersect_key($data, array_flip([
+                        'full_name', 'phone_number', 'status', 'fc_candidate_id', 'cancellation_note'
+                    ])));
+                } else {
+                    $newMember = Member::create(array_intersect_key($data, array_flip([
+                        'full_name', 'phone_number', 'status', 'fc_candidate_id', 'cancellation_note'
+                    ])));
+                }
             }
 
             DB::commit();
@@ -718,8 +726,8 @@ class MemberRegistrationController extends Controller
                 $memberRegistration = MemberRegistration::findOrFail($id);
 
                 $fc = Auth::user()->id;
-                
-                if (Auth::user()->role == 'FC'){
+
+                if (Auth::user()->role == 'FC') {
                     $data = $request->validate([
                         'member_package_id' => 'required|exists:member_packages,id',
                         'start_date'        => 'required',
