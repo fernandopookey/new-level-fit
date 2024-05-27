@@ -478,55 +478,7 @@ class MemberRegistrationController extends Controller
                 ->where('a.id', $id)
                 ->get();
         } else {
-            // $memberActive = DB::table('member_registrations as a')
-            //     ->select(
-            //         'a.id',
-            //         'a.start_date',
-            //         'a.description',
-            //         'a.days as member_registration_days',
-            //         'a.old_days',
-            //         'a.package_price as mr_package_price',
-            //         'a.admin_price as mr_admin_price',
-            //         'b.full_name as member_name',
-            //         'b.address',
-            //         'b.member_code',
-            //         'b.phone_number',
-            //         'b.photos',
-            //         'b.gender',
-            //         'b.nickname',
-            //         'b.ig',
-            //         'b.emergency_contact',
-            //         'b.email',
-            //         'b.born',
-            //         'c.id as member_package_id',
-            //         'c.package_name',
-            //         'c.days',
-            //         'c.package_price',
-            //         'c.admin_price',
-            //         'e.id as method_payment_id',
-            //         'e.name as method_payment_name',
-            //         'f.full_name as staff_name',
-            //         'g.id as fc_id',
-            //         'g.full_name as fc_name',
-            //         'g.phone_number as fc_phone_number',
-            //         'h.check_in_time',
-            //         'h.check_out_time'
-            //     )
-            //     ->addSelect(
-            //         DB::raw('DATE_ADD(a.start_date, INTERVAL a.days DAY) as expired_date'),
-            //         DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.days DAY) THEN "Over" ELSE "Running" END as status')
-            //     )
-            //     ->join('members as b', 'a.member_id', '=', 'b.id')
-            //     ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
-            //     ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
-            //     ->join('users as f', 'a.user_id', '=', 'f.id')
-            //     // ->join('fitness_consultants as g', 'a.fc_id', '=', 'g.id')
-            //     ->leftJoin(DB::raw('(select * from (select a.* from (select * from check_in_members) as a inner join (SELECT max(id) as id FROM check_in_members group by member_registration_id) as b on a.id=b.id) as tableH) as h'), 'a.id', '=', 'h.member_registration_id')
-            //     ->where('a.id', $id)
-            //     ->get();
-
             $memberActive = MemberRegistration::getActiveListById("", $id);
-            // dd($memberActive);
         }
 
         $data = [
