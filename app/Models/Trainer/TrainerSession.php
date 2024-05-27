@@ -429,10 +429,12 @@ class TrainerSession extends Model
                 IS NOT NULL GROUP BY trainer_session_id)
                 AS count_check_in_view ON train_sess.id = count_check_in_view.trainer_session_id
 
-                WHERE train_pack.status IS NULL AND NOW() > DATE_ADD(train_sess.start_date, INTERVAL train_sess.days DAY)
+                WHERE 
+                train_pack.status IS NULL AND NOW() > DATE_ADD(train_sess.start_date, INTERVAL train_sess.days DAY)
                 OR
                 train_pack.status IS NULL AND IFNULL(train_sess.number_of_session - count_check_in_view.check_in_count, train_sess.number_of_session) = 0
-                ORDER BY max_end_date";
+                ORDER BY max_end_date"
+                ;
 
         $activeTrainerSessions = DB::select($sql);
         return $activeTrainerSessions;
