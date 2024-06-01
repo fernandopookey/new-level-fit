@@ -184,6 +184,7 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     Route::get('fc-detail-report-member-checkin', [StaffController::class, 'fcDetailReportMemberCheckIn'])->name('fc-detail-report-member-checkin');
     Route::get('fc-total-report-pt', [StaffController::class, 'fcTotalReportPT'])->name('fc-total-report-pt');
     Route::get('fc-detail-report-pt', [StaffController::class, 'fcDetailReportPT'])->name('fc-detail-report-pt');
+    Route::get('lo', [StaffController::class, 'lo'])->name('lo-report');
 
     Route::get('/tes', function () {
         return view('admin.member-registration.tes');

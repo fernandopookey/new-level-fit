@@ -62,7 +62,8 @@
                                                 Member</a>
                                             <a href="{{ route('members.show', $item->id) }}"
                                                 class="btn light btn-info btn-xs btn-block mb-1">Detail Member</a>
-                                            @if ($item->lo_status == 'Running' && $item->lo_is_used == 0)
+                                            {{-- @if ($item->lo_status == 'Running' && $item->lo_is_used == 0) --}}
+                                            @if (   $item->lo_is_used == 0)
                                                 <a href="{{ route('useLayoutOrientation', $item->id) }}"
                                                     class="btn btn-dark btn-xs mb-1 btn-block">LO</a>
                                             @else
