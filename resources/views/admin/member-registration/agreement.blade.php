@@ -31,7 +31,7 @@
         <img src="https://gym.gelorasports.com/logokecil.png" class="img-fluid" width="200" alt="">
     </div> --}}
 
-    <h4>LEVELFIT</h4>
+    <h4>{{ config('app.name') }}</h4>
     <h5>MEMBERSHIP AGREEMENT</h5>
 
     <table>

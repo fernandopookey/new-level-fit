@@ -7,12 +7,12 @@
                         <input type="date" id="fromDate" class="form-control" value="{{ $fromDate }}">
                         <span class="mx-1">to</span>
                         <input type="date" id="toDate" class="form-control" value="{{ $toDate }}">
-                        {{-- <select name="trainerName" id="" class="form-control mx-1">
+                        <select name="trainerName" id="trainerName" class="form-control mx-1">
                             @foreach ($personalTrainers as $item)
-                                <option value="{{ $item->id }}">{{ $item->full_name }}
+                                <option value="{{ $item->id }}" {{ $personalTrainer == $item->id? " selected" : ""  }}>{{ $item->full_name }}
                                 </option>
                             @endforeach
-                        </select> --}}
+                        </select>
                     </div>
                     <button type="button" onclick="reloadPage()" class="btn btn-info mx-1" data-bs-toggle="modal">
                         Filter
@@ -24,7 +24,9 @@
             </div>
         @endif
         <div class="row">
-            <!--column-->
+            @if (!isset($fromDate))
+            <h4 align="center">Personal Trainer Total Report</h4>
+            @endif
             <div class="col-xl-12 wow fadeInUp" data-wow-delay="1.5s">
                 <div class="table-responsive full-data">
                     <table class="table table-bordered" border="1" style="text-align: center;" height="2px"
@@ -62,8 +64,9 @@
     function reloadPage(pdf = 0) {
         var fromDate = document.getElementById("fromDate").value;
         var toDate = document.getElementById("toDate").value;
+        var trainerName = document.getElementById("trainerName").value;
         // alert(window.location.host );
-        window.open(window.location.pathname + '?fromDate=' + fromDate + '&toDate=' + toDate  +
+        window.open(window.location.pathname + '?fromDate=' + fromDate + '&toDate=' + toDate  + '&trainerName=' + trainerName +
             '&pdf=' + pdf +
             "&date=" + new Date().toISOString(), '_self');
     }

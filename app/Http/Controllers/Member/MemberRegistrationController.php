@@ -369,9 +369,10 @@ class MemberRegistrationController extends Controller
         // dd($id);
         $mr = MemberRegistration::find($id);
         $status = $mr->members->status;
+        $memberId = $mr->members->id;
 
         if ($status == "one_day_visit") {
-            $query = DB::table('member_registrations as a')
+            $memberRegistrations = DB::table('member_registrations as a')
                 ->select(
                     'a.id',
                     'a.start_date',
@@ -412,16 +413,19 @@ class MemberRegistrationController extends Controller
                 ->where('a.id', $id)
                 ->get();
         } else {
-            $query = MemberRegistration::getActiveListById("", $id);
+            $memberRegistrations = MemberRegistration::getActiveListById("", $id);
+            $pendingMemberRegistrations = MemberRegistration::getPendingList($memberId);
+            $expiredMemberRegistrations = MemberRegistration::getExpiredList($memberId);
             // $query2 = MemberRegistration::getActiveListById("", $id);
         }
 
         $checkInMemberRegistration = MemberRegistration::find($id);
-
+       // dd($memberRegistrations);
         $data = [
             'title'                     => 'Member Registration Detail',
-            'memberRegistrations'       => $query,
-            // 'memberRegistration'        => $query2,
+            'memberRegistrations'       => $memberRegistrations,
+            'pendingMemberRegistrations' => $pendingMemberRegistrations,
+            'expiredMemberRegistrations' => $expiredMemberRegistrations,
             'memberRegistration'        => MemberRegistration::find($id),
             'members'                   => Member::get(),
             'memberRegistrationCheckIn' => $checkInMemberRegistration->memberRegistrationCheckIn,

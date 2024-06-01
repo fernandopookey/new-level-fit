@@ -10,7 +10,7 @@
                                 <b>Full Name</b>
                             </th>
                             <th style="border-right: 2px solid rgb(212, 212, 212);">
-                                : {{ $trainerSession->members->member_name }}
+                                : {{ $trainerSession->members->full_name }}
                             </th>
                             <th scope="col">
                                 <b>Nick Name</b>
@@ -44,7 +44,7 @@
                                 <b>Phone Number</b>
                             </th>
                             <th style="border-right: 2px solid rgb(212, 212, 212);">
-                                : {{ $trainerSession->members->member_phone }}
+                                : {{ $trainerSession->members->phone_number }}
                             </th>
                         </tr>
                         <tr>
@@ -142,6 +142,136 @@
     </div>
 </div>
 
+{{-- @if (isset($pendingTrainerSession))
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-body">
+                @foreach ($pendingTrainerSession as $item)
+                    <div class="accordion accordion-flush" id="accordionFlushExample{{ $loop->iteration }}">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header text-white">
+                                <button class="accordion-button collapsed bg-warning text-white" type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#pending-flush-collapseOne{{ $loop->iteration }}"
+                                    aria-expanded="false"
+                                    aria-controls="pending-flush-collapseOne{{ $loop->iteration }}">
+                                    Package Info: {{ $loop->iteration }}
+                                </button>
+                            </h2>
+                            <div id="pending-flush-collapseOne{{ $loop->iteration }}"
+                                class="accordion-collapse collapse"
+                                data-bs-parent="#accordionFlushExample{{ $loop->iteration }}">
+                                <div class="accordion-body">
+                                    <table class="table">
+                                        <tbody style="color: rgb(85, 85, 85);">
+                                            <tr>
+                                                <th><b>Package Name</b></th>
+                                                <th>{{ $item->package_name }}</th>
+                                            </tr>
+                                            <tr>
+                                                <th><b>Number Of Days</th>
+                                                <th>{{ $item->ts_number_of_days }} Days</th>
+                                            </tr>
+                                            <tr>
+                                                <th><b>Package Price</b></th>
+                                                <th>{{ formatRupiah($item->ts_package_price) }}</th>
+                                            </tr>
+                                            <tr>
+                                                <th><b>Start Date</th>
+                                                <th>{{ DateFormat($item->start_date, 'DD MMMM YYYY') }}</th>
+                                            </tr>
+                                            <tr>
+                                                <th><b>Expired Date</th>
+                                                <th>{{ DateFormat($item->expired_date, 'DD MMMM YYYY') }}</th>
+                                            </tr>
+                                            <tr>
+                                                <th><b>Method Payment</b></th>
+                                                <th>{{ $item->method_payment_name }}</th>
+                                            </tr>
+                                            <tr>
+                                                <th><b>Description</b></th>
+                                                <th>{{ $item->description }}</th>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <a href="{{ route('pt-agreement', $item->id) }}" class="btn btn-primary btn-sm"
+                                        target="_blank">Download
+                                        Agrement {{ $loop->iteration }}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+@endif --}}
+
+@if (isset($expiredTrainerSession))
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="accordion accordion-flush" id="accordionFlushExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header text-white">
+                            <button class="accordion-button collapsed bg-danger text-white" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#expired-flush-collapseOne"
+                                aria-expanded="false" aria-controls="expired-flush-collapseOne">
+                                Expired PT Package (Click Here)
+                            </button>
+                        </h2>
+                        <div id="expired-flush-collapseOne" class="accordion-collapse collapse"
+                            data-bs-parent="#accordionFlushExample">
+                            <div class="accordion-body">
+                                @foreach ($expiredTrainerSession as $item)
+                                    <table class="table">
+                                        <tbody style="color: rgb(85, 85, 85);">
+                                            <tr>
+                                                <th><b>Package Name</b></th>
+                                                <th>{{ $item->package_name }}</th>
+                                            </tr>
+                                            <tr>
+                                                <th><b>Number Of Days</th>
+                                                <th>{{ $item->ts_number_of_days }} Days</th>
+                                            </tr>
+                                            <tr>
+                                                <th><b>Package Price</b></th>
+                                                <th>{{ formatRupiah($item->ts_package_price) }}</th>
+                                            </tr>
+                                            <tr>
+                                                <th><b>Start Date</th>
+                                                <th>{{ DateFormat($item->start_date, 'DD MMMM YYYY') }}</th>
+                                            </tr>
+                                            <tr>
+                                                <th><b>Expired Date</th>
+                                                <th>{{ DateFormat($item->expired_date, 'DD MMMM YYYY') }}</th>
+                                            </tr>
+                                            <tr>
+                                                <th><b>Method Payment</b></th>
+                                                <th>{{ $item->method_payment_name }}</th>
+                                            </tr>
+                                            <tr>
+                                                <th><b>Description</b></th>
+                                                <th>{{ $item->description }}</th>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                @endforeach
+                                <a href="{{ route('pt-agreement', $item->id) }}" class="btn btn-primary btn-sm"
+                                    target="_blank">Download
+                                    Agrement</a>
+                                <hr />
+                                <hr />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
+
+{{-- Check In & Check Out --}}
 <div class="col-xl-12">
     <div class="card">
         <div class="card-body">

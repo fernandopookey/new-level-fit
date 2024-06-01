@@ -37,7 +37,6 @@ class TrainerSessionOverController extends Controller
     {
         $selectedTrainerSessionsOver = $request->input('selectedTrainerSessionsOver', []);
 
-        // Add your logic to delete the selected members from the database
         TrainerSession::whereIn('id', $selectedTrainerSessionsOver)->delete();
 
         // Redirect back or return a response as needed

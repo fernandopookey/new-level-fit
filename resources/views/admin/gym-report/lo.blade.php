@@ -25,7 +25,7 @@
         @endif
         <div class="row">
             @if (!isset($fromDate))
-            <h4 align="center">Personal Trainer Detail Report</h4>
+            <h4 align="center">Layout Orientation</h4>
             @endif
             <!--column-->
             <div class="col-xl-12 wow fadeInUp" data-wow-delay="1.5s">
@@ -34,11 +34,8 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Trainer Name</th>
                                 <th>Member Name</th>
-                                <th>Package Name</th>
-                                <th>Check In Time</th>
-                                <th>Check Out Time</th>
+                                <th>PT Name</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -46,20 +43,11 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>
-                                        {{ $item->trainer_name }}
-                                    </td>
-                                    <td>
                                         {{ $item->member_name }}
                                     </td>
                                     <td>
-                                       {{ $item->package_name }}
+                                       {{ $item->pt_name }}
                                     </td>
-                                    <td>
-                                        {{ DateFormat($item->check_in_time, 'DD MMMM YYYY, H:mm:ss') }}
-                                     </td>
-                                     <td>
-                                        {{ DateFormat($item->check_out_time, 'DD MMMM YYYY, H:mm:ss') }}
-                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -77,6 +65,7 @@
         var fromDate = document.getElementById("fromDate").value;
         var toDate = document.getElementById("toDate").value;
         var trainerName = document.getElementById("trainerName").value;
+        // alert(window.location.host );
         window.open(window.location.pathname + '?fromDate=' + fromDate + '&toDate=' + toDate + '&trainerName=' + trainerName + '&pdf=' + pdf +
             "&date=" + new Date().toISOString(), '_self');
     }

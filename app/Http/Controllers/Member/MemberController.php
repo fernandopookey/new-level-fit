@@ -445,7 +445,7 @@ class MemberController extends Controller
         $data['lo_start_date'] = Carbon::now()->tz('Asia/Jakarta');
 
         $item->update($data);
-        return redirect()->route('members.index')->with('success', 'LO berhasil digunakan');
+        return redirect()->route('members.index')->with('success', 'LO digunakan');
     }
 
     public function stopLO(Request $request, string $id)

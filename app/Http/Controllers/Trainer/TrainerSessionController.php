@@ -172,10 +172,11 @@ class TrainerSessionController extends Controller
         // dd($id);
         $ts = TrainerSession::find($id);
         $status = $ts->members;
+        $memberId = $ts->members->id;
 
         if ($status == "one_day_visit") {
             // dd("Kondisi Pertama");
-            $query = DB::table('trainer_sessions as a')
+            $activePt = DB::table('trainer_sessions as a')
             ->select(
                 'a.id',
                 'a.start_date',
@@ -227,8 +228,11 @@ class TrainerSessionController extends Controller
             })
             ->get();
         } else {
-            // dd("Kondisi Kedua");
-            $query = TrainerSession::getActivePTListById($id);
+            $activePt = TrainerSession::getActivePTListById($id);
+            $pendingTrainerSession = TrainerSession::getPendingPT($memberId);
+            $expiredTrainerSession = TrainerSession::getExpiredTrainerSession($memberId);
+            // dd($expiredTrainerSession);
+            // dd($expiredTrainerSession);
         }
 
         $trainerSessions = TrainerSession::find($id);
@@ -246,7 +250,9 @@ class TrainerSessionController extends Controller
             'checkInTrainerSession' => $checkInTrainerSession,
             'trainerSession'        => $trainerSessions,
             'members'               => Member::get(),
-            'query'                 => $query,
+            'pendingTrainerSession' => $pendingTrainerSession,
+            'expiredTrainerSession' => $expiredTrainerSession,
+            'query'                 => $activePt,
             'totalSessions'         => $totalSessions,
             'remainingSessions'     => $remainingSessions,
             'content'               => 'admin/trainer-session/show',

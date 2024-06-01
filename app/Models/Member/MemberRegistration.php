@@ -30,6 +30,7 @@ class MemberRegistration extends Model
 
     protected $hidden = [];
 
+    //jangan ditiru, nando sesat, harusnya member
     public function members()
     {
         return $this->belongsTo(Member::class, 'member_id', 'id');
@@ -125,14 +126,14 @@ class MemberRegistration extends Model
         return $activeMemberRegistrations;
     }
 
-    public static function getExpiredList()
+    public static function getExpiredList($memberId = "")
     {
         $sql = "SELECT mbr_reg.id, mbr_reg.start_date, mbr_reg.days as member_registration_days,
             mbr_reg.package_price as mr_package_price,  mbr_reg.admin_price as mr_admin_price,
             mbr.id as member_id, mbr.full_name as member_name, mbr.nickname, mbr.email, mbr.ig, mbr.emergency_contact, mbr.ec_name,
             mbr.address, mbr.member_code, mbr_reg.days,
             mbr.phone_number, mbr.born, mbr.photos, mbr.gender, mbr.id_code_count,
-            mbr_pkg.package_name, mbr_pkg.days, mbr_pkg.package_price,
+            mbr_pkg.package_name, mbr_pkg.days, mbr_pkg.package_price, mbr_pkg.description,
             mtd_pay.name as method_payment_name, usr.full_name as staff_name,
             -- fit_cons.full_name as fc_name, fit_cons.phone_number as fc_phone_number,
             cim_view.current_check_in_members_id, cim_view.check_in_time, cim_view.check_out_time, cim_view.updated_at_check_in,
@@ -181,7 +182,7 @@ class MemberRegistration extends Model
         return $activeMemberRegistrations;
     }
 
-    public static function getActiveListById($card_number = "", $id = "")
+    public static function getActiveListById($cardNumber = "", $memberRegistrationId = "")
     {
         $sql = "SELECT mbr_reg.id, mbr_reg.start_date, mbr_reg.days as member_registration_days,
             mbr_reg.package_price as mr_package_price,  mbr_reg.admin_price as mr_admin_price,
@@ -229,17 +230,17 @@ class MemberRegistration extends Model
             on mbr_reg.id = lds_continue_view.member_registration_id_continue
 
             where NOW() BETWEEN mbr_reg.start_date AND DATE_ADD(mbr_reg.start_date, INTERVAL (mbr_reg.days + ifnull(total_days,0)) DAY)"
-            . ($card_number ? " and mbr.card_number='$card_number' " : '') . ($id ? " and mbr_reg.id='$id' " : '') .  "
+            . ($cardNumber ? " and mbr.card_number='$cardNumber' " : '') . ($memberRegistrationId ? " and mbr_reg.id='$memberRegistrationId' " : '') .  "
             order by cim_view.updated_at_check_in desc";
         $activeMemberRegistrations = DB::select($sql);
 
         return $activeMemberRegistrations;
     }
 
-    public static function getPendingList()
+    public static function getPendingList($memberId = "")
     {
         $sql = "SELECT mbr_reg.id, mbr_reg.start_date, mbr_reg.days as member_registration_days,
-            mbr_reg.package_price as mr_package_price,  mbr_reg.admin_price as mr_admin_price,
+            mbr_reg.package_price as mr_package_price,  mbr_reg.admin_price as mr_admin_price, mbr_pkg.description,
             mbr.id as member_id, mbr.full_name as member_name, mbr.nickname, mbr.email, mbr.ig, mbr.emergency_contact, mbr.ec_name,
             mbr.address, mbr.member_code, mbr_reg.days,
             mbr.phone_number, mbr.born, mbr.photos, mbr.gender, mbr.id_code_count,
@@ -287,7 +288,7 @@ class MemberRegistration extends Model
                 WHERE NOW() BETWEEN ld.submission_date AND DATE_ADD(ld.submission_date, INTERVAL (ifnull(total_days,0)) DAY)) as lds_continue_view
             on mbr_reg.id = lds_continue_view.member_registration_id_continue
 
-            where NOW() < (mbr_reg.start_date)"
+            where NOW() < (mbr_reg.start_date)" . ($memberId ? " and mbr.id=$memberId " : "")
             .  "order by cim_view.updated_at_check_in desc";
         $activeMemberRegistrations = DB::select($sql);
 

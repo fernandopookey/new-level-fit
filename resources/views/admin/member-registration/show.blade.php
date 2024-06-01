@@ -63,6 +63,7 @@
         </div>
     </div>
 </div>
+
 <div class="col-xl-12">
     <div class="card">
         <div class="card-body">
@@ -73,7 +74,7 @@
                             <button class="accordion-button collapsed bg-info text-white" type="button"
                                 data-bs-toggle="collapse" data-bs-target="#flush-collapseOne{{ $loop->iteration }}"
                                 aria-expanded="false" aria-controls="flush-collapseOne{{ $loop->iteration }}">
-                                Package Info: {{ $loop->iteration }}
+                                Active Package Info (Click Here)
                             </button>
                         </h2>
                         <div id="flush-collapseOne{{ $loop->iteration }}" class="accordion-collapse collapse"
@@ -138,16 +139,190 @@
     </div>
 </div>
 
+@if (isset($pendingMemberRegistrations))
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-body">
+                @foreach ($pendingMemberRegistrations as $pendingMemberRegistration)
+                    <div class="accordion accordion-flush" id="accordionFlushExample{{ $loop->iteration }}">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed bg-warning text-white" type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#pending-flush-collapseOne{{ $loop->iteration }}"
+                                    aria-expanded="false"
+                                    aria-controls="pending-flush-collapseOne{{ $loop->iteration }}">
+                                    Pending Package Info (Click Here)
+                                </button>
+                            </h2>
+                            <div id="pending-flush-collapseOne{{ $loop->iteration }}"
+                                class="accordion-collapse collapse"
+                                data-bs-parent="#accordionFlushExample{{ $loop->iteration }}">
+                                <div class="accordion-body">
+                                    <table class="table">
+                                        <tbody style="color: rgb(85, 85, 85);">
+                                            <tr>
+                                                <th><b>Package Name</b></th>
+                                                <th>{{ $pendingMemberRegistration->package_name }}</th>
+                                            </tr>
+                                            <tr>
+                                                <th><b>Number Of Days</th>
+                                                <th>{{ $pendingMemberRegistration->member_registration_days }} Days
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th><b>Package Price</b></th>
+                                                <th>{{ formatRupiah($pendingMemberRegistration->mr_package_price) }}
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th><b>Admin Price</b></th>
+                                                <th>{{ formatRupiah($pendingMemberRegistration->mr_admin_price) }}</th>
+                                            </tr>
+                                            <tr>
+                                                <th><b>Start Date</th>
+                                                <th>{{ DateFormat($pendingMemberRegistration->start_date, 'DD MMMM YYYY') }}
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th><b>Expired Date</th>
+                                                <th>{{ DateFormat($pendingMemberRegistration->expired_date, 'DD MMMM YYYY') }}
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th><b>Method Payment</b></th>
+                                                <th>{{ $pendingMemberRegistration->method_payment_name }}</th>
+                                            </tr>
+                                            <tr>
+                                                <th><b>Description</b></th>
+                                                <th>{{ $pendingMemberRegistration->description }}</th>
+                                            </tr>
+                                            @if ($status == 'sell')
+                                                <tr>
+                                                    <th><b>Leave Days</b></th>
+                                                    @if ($pendingMemberRegistration->leave_day_status == 'Freeze')
+                                                        <th>{{ $pendingMemberRegistration->total_leave_days }}</th>
+                                                    @else
+                                                        <th>No Leave Days</th>
+                                                    @endif
+                                                </tr>
+                                            @endif
+                                        </tbody>
+                                    </table>
+                                    <a href="{{ route('membership-agreement', $pendingMemberRegistration->id) }}"
+                                        class="btn btn-primary btn-sm" target="_blank">Download
+                                        Agrement</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+@endif
+
+
+@if (isset($expiredMemberRegistrations))
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-body">
+
+                <div class="accordion accordion-flush" id="accordionFlushExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed bg-danger text-white" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#expired-flush-collapseOne"
+                                aria-expanded="false" aria-controls="expired-flush-collapseOne">
+                                Expired Package Info (Click Here)
+                            </button>
+                        </h2>
+                        <div id="expired-flush-collapseOne" class="accordion-collapse collapse"
+                            data-bs-parent="#accordionFlushExample">
+                            <div class="accordion-body">
+                                @foreach ($expiredMemberRegistrations as $expiredMemberRegistrations)
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="2" class="text-center">Expired Member Package
+                                                    {{ $loop->iteration }}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody style="color: rgb(85, 85, 85);">
+                                            <tr>
+                                                <th><b>Package Name</b></th>
+                                                <th>{{ $expiredMemberRegistrations->package_name }}</th>
+                                            </tr>
+                                            <tr>
+                                                <th><b>Number Of Days</th>
+                                                <th>{{ $expiredMemberRegistrations->member_registration_days }} Days
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th><b>Package Price</b></th>
+                                                <th>{{ formatRupiah($expiredMemberRegistrations->mr_package_price) }}
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th><b>Admin Price</b></th>
+                                                <th>{{ formatRupiah($expiredMemberRegistrations->mr_admin_price) }}
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th><b>Start Date</th>
+                                                <th>{{ DateFormat($expiredMemberRegistrations->start_date, 'DD MMMM YYYY') }}
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th><b>Expired Date</th>
+                                                <th>{{ DateFormat($expiredMemberRegistrations->expired_date, 'DD MMMM YYYY') }}
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th><b>Method Payment</b></th>
+                                                <th>{{ $expiredMemberRegistrations->method_payment_name }}</th>
+                                            </tr>
+                                            <tr>
+                                                <th><b>Description</b></th>
+                                                <th>{{ $expiredMemberRegistrations->description }}</th>
+                                            </tr>
+                                            {{-- @if ($status == 'sell')
+                                            <tr>
+                                                <th><b>Leave Days</b></th>
+                                                @if ($expiredMemberRegistrations->leave_day_status == 'Freeze')
+                                                    <th>{{ $expiredMemberRegistrations->total_leave_days }}</th>
+                                                @else
+                                                    <th>No Leave Days</th>
+                                                @endif
+                                            </tr>
+                                        @endif --}}
+                                        </tbody>
+                                    </table>
+                                    <a href="{{ route('membership-agreement', $expiredMemberRegistrations->id) }}"
+                                        class="btn btn-primary btn-sm" target="_blank">Download
+                                        Agrement</a>
+                                    <hr />
+                                    <hr />
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
+
 <div class="col-xl-12">
     <div class="card">
         <div class="card-body">
             <div class="accordion accordion-flush" id="accordionFlushExample">
                 <div class="accordion-item">
                     <h2 class="accordion-header">
-                        <button class="accordion-button collapsed bg-info text-white" type="button"
+                        <button class="accordion-button collapsed bg-primary text-white" type="button"
                             data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false"
                             aria-controls="flush-collapseOne">
-                            Check In & Checkout History
+                            Check In & Checkout History (Click Here)
                         </button>
                     </h2>
                     <div id="flush-collapseOne" class="accordion-collapse collapse"
