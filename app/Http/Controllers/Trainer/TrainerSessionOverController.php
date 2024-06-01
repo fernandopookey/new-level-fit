@@ -33,16 +33,6 @@ class TrainerSessionOverController extends Controller
         return view('admin.layouts.wrapper', $data);
     }
 
-    public function deleteSelectedTrainerSessionsOver(Request $request)
-    {
-        $selectedTrainerSessionsOver = $request->input('selectedTrainerSessionsOver', []);
-
-        TrainerSession::whereIn('id', $selectedTrainerSessionsOver)->delete();
-
-        // Redirect back or return a response as needed
-        return redirect()->back()->with('message', 'Selected trainer sessions over deleted successfully');
-    }
-
     public function pdfReport()
     {
         $trainerSessionsOver = DB::table('trainer_sessions as a')

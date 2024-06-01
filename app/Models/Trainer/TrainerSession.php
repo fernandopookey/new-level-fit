@@ -429,6 +429,7 @@ class TrainerSession extends Model
                 IS NOT NULL GROUP BY trainer_session_id)
                 AS count_check_in_view ON train_sess.id = count_check_in_view.trainer_session_id
 
+
                 WHERE train_pack.status IS NULL AND NOW() > DATE_ADD(train_sess.start_date, INTERVAL train_sess.days DAY)
                 ORDER BY max_end_date" . ($memberId ? " and mbr.id='$memberId' " : '');
 
