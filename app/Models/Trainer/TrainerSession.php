@@ -572,15 +572,16 @@ class TrainerSession extends Model
         return $pendingTrainerSessions;
     }
 
-    public static function getExpiredTrainerSession($memberId = "")
+    public static function getExpiredTrainerSession($memberId)
     {
         $sql = "SELECT mbr.full_name AS member_name, mbr.nickname, mbr.phone_number, mbr.gender, mbr.born, mbr.member_code, mbr.email, mbr.ig, mbr.emergency_contact, mbr.ec_name,
-        mbr.card_number, mbr.id_code_count, mbr.photos, mbr.status, mbr.address,
-        train_sess.id, train_sess.start_date, train_sess.number_of_session AS ts_number_of_session, train_sess.days,
-        train_pack.package_name, pers_train.full_name AS trainer_name, met_pay.name AS method_payment_name,
+        mbr.card_number, mbr.id_code_count, mbr.photos, mbr.status, mbr.address, mbr.id AS member_id,
+        train_sess.id, train_sess.start_date, train_sess.number_of_session AS ts_number_of_session, train_sess.days AS ts_number_of_days, train_sess.package_price AS ts_package_price, train_sess.description,
+        train_pack.package_name,
+        pers_train.full_name AS trainer_name,
         cits_view.current_check_in_trainer_sessions_id, cits_view.check_in_time, cits_view.check_out_time, cits_view.updated_at_check_in,
-	    leave_days_view.submission_date_continue, leave_days_view.total_price_continue,
-    
+        met_pay.name AS method_payment_name,
+	
         DATE_ADD(train_sess.start_date, INTERVAL COALESCE(leave_days_view.total_days_continue, 0) + train_sess.days DAY) AS expired_date,
         DATE_ADD(leave_days_view.submission_date_continue, INTERVAL leave_days_view.total_days_continue DAY) AS expired_leave_days,
 
@@ -591,17 +592,12 @@ class TrainerSession extends Model
         CASE WHEN NOW() > DATE_ADD(train_sess.start_date, INTERVAL train_sess.days DAY) THEN 'Over'
         WHEN NOW() BETWEEN train_sess.start_date AND DATE_ADD(train_sess.start_date, INTERVAL train_sess.days DAY) THEN 'Running'
         ELSE 'Not Started'
-        END as STATUS,
-
-        CASE WHEN NOW() > DATE_ADD(train_sess.start_date, INTERVAL train_sess.days DAY) THEN 'Over'
-        WHEN NOW() BETWEEN train_sess.start_date AND DATE_ADD(train_sess.start_date, INTERVAL train_sess.days DAY) THEN 'Running'
-        ELSE 'Not Started'
-        END as expired_date_status
+        END as STATUS
     
         FROM members AS mbr
         
         INNER JOIN trainer_sessions AS train_sess ON mbr.id = train_sess.member_id
-        INNER JOIN trainer_packages AS train_pack ON train_pack.id = train_sess.trainer_package_id AND train_pack.status = 'LGT'
+        INNER JOIN trainer_packages AS train_pack ON train_pack.id = train_sess.trainer_package_id AND train_pack.status IS NULL
         INNER JOIN personal_trainers AS pers_train ON pers_train.id = train_sess.trainer_id
         -- INNER JOIN fitness_consultants AS fit_cons ON fit_cons.id= train_sess.fc_id
         INNER JOIN method_payments AS met_pay ON met_pay.id = train_sess.method_payment_id
@@ -621,12 +617,12 @@ class TrainerSession extends Model
         AS max_check_in_view ON check_in_train_sess.id = max_check_in_view.max_check_in_id) 
         AS last_check_in_view ON train_sess.id = last_check_in_view.trainer_session_id
         
-        LEFT JOIN (SELECT mbr_reg.member_id AS mbr_reg_member_id, ld_continue_view.submission_date_continue, ld_continue_view.total_days_continue, ld_continue_view.total_price_continue from
-        (SELECT ld.id, ld.member_registration_id as member_registration_id_continue, ld.submission_date as submission_date_continue,
-        ld_view.total_days as total_days_continue, ld_view.total_price as total_price_continue FROM  leave_days ld 
+        LEFT JOIN (SELECT mbr_reg.member_id AS mbr_reg_member_id, ld_continue_view.submission_date_continue, ld_continue_view.total_days_continue from
+        (SELECT ld.id, ld.member_registration_id as member_registration_id_continue, ld.submission_date as submission_date_continue, 
+        ld_view.total_days as total_days_continue FROM  leave_days ld 
         INNER JOIN 
-        (SELECT leave_day_continue_id, SUM(days) AS total_days, SUM(price) AS total_price
-        FROM (SELECT id, ifnull(leave_day_continue_id, id) AS leave_day_continue_id, days, price FROM leave_days) AS view_1
+        (SELECT leave_day_continue_id, sum(days) AS total_days 
+        FROM (SELECT id,ifnull(leave_day_continue_id, id) AS leave_day_continue_id,days FROM leave_days) AS view_1
         GROUP BY leave_day_continue_id) AS ld_view ON ld.id=ld_view.leave_day_continue_id 
         WHERE NOW() BETWEEN ld.submission_date AND DATE_ADD(ld.submission_date, INTERVAL (ifnull(total_days,0)) DAY))
         AS ld_continue_view
@@ -634,11 +630,13 @@ class TrainerSession extends Model
         AS leave_days_view ON mbr.id = leave_days_view.mbr_reg_member_id
         
         WHERE
-        train_pack.status IS NULL
-        AND NOW() > DATE_ADD(train_sess.start_date, INTERVAL train_sess.days DAY)
-        order by cits_view.updated_at_check_in desc, train_sess.updated_at";
-        $activeTrainerSessions = DB::select($sql);
+            -- IFNULL(train_sess.number_of_session - count_check_in_view.check_in_count, train_sess.number_of_session) = 0
+        -- AND NOW() < DATE_ADD(train_sess.start_date, INTERVAL (train_sess.days + IFNULL(leave_days_view.total_days_continue,0)) DAY)
+        NOW() > DATE_ADD(train_sess.start_date, INTERVAL train_sess.days DAY)"
+             . ($memberId ? " and mbr.id='$memberId' " : '') . "
+            order by cits_view.updated_at_check_in desc";
+        $pendingTrainerSessions = DB::select($sql);
 
-        return $activeTrainerSessions;
+        return $pendingTrainerSessions;
     }
 }
