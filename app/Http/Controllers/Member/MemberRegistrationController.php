@@ -417,6 +417,7 @@ class MemberRegistrationController extends Controller
             $pendingMemberRegistrations = MemberRegistration::getPendingList($memberId);
             $expiredMemberRegistrations = MemberRegistration::getExpiredList($memberId);
             // $query2 = MemberRegistration::getActiveListById("", $id);
+            // dd($expiredMemberRegistrations);
         }
 
         $checkInMemberRegistration = MemberRegistration::find($id);

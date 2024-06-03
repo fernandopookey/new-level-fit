@@ -142,7 +142,7 @@
     </div>
 </div>
 
-{{-- @if (isset($pendingTrainerSession))
+@if (isset($pendingTrainerSession))
     <div class="col-xl-12">
         <div class="card">
             <div class="card-body">
@@ -205,7 +205,7 @@
             </div>
         </div>
     </div>
-@endif --}}
+@endif
 
 @if (isset($expiredTrainerSession))
     <div class="col-xl-12">
@@ -256,12 +256,12 @@
                                             </tr>
                                         </tbody>
                                     </table>
+                                    <a href="{{ route('pt-agreement', $item->id) }}" class="btn btn-primary btn-sm"
+                                        target="_blank">Download
+                                        Agrement</a>
+                                    <hr />
+                                    <hr />
                                 @endforeach
-                                <a href="{{ route('pt-agreement', $item->id) }}" class="btn btn-primary btn-sm"
-                                    target="_blank">Download
-                                    Agrement</a>
-                                <hr />
-                                <hr />
                             </div>
                         </div>
                     </div>
