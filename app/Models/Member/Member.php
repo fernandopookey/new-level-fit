@@ -2,6 +2,7 @@
 
 namespace App\Models\Member;
 
+use App\Models\Appointment;
 use App\Models\Staff\PersonalTrainer;
 use App\Models\Trainer\TrainerSession;
 use App\Models\User;
@@ -67,5 +68,10 @@ class Member extends Model
     public function fitnessConsultant()
     {
         return $this->belongsTo(User::class, 'fc_candidate_id', 'id');
+    }
+
+    public function appointment()
+    {
+        return $this->hasMany(Appointment::class);
     }
 }

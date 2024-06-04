@@ -25,7 +25,7 @@
                 </ul>
             </li>
 
-            @if (Auth::user()->role == 'ADMIN' || Auth::user()->role == 'CS')
+            @if (Auth::user()->role == 'ADMIN' || Auth::user()->role == 'CS' || Auth::user()->role == 'FC')
                 <li>
                     <a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
                         <i class="material-symbols-outlined">person</i>
@@ -34,6 +34,7 @@
                     <ul aria-expanded="false">
                         <li><a href="{{ route('members.index') }}">Member List</a></li>
                         <li><a href="{{ route('missed-guest.index') }}">Missed Guest</a></li>
+                        {{-- <li><a href="{{ route('appointmentSchedule') }}">Appointment Schedule</a></li> --}}
                         <li><a href="{{ route('oneDayVisit') }}">1 Day Visit</a></li>
                     </ul>
                 </li>
