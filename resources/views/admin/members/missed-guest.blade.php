@@ -50,6 +50,10 @@
                                     </td>
                                     <td>
                                         <div>
+                                            {{-- <a href="{{ route('appointment', $item->id) }}"
+                                                class="btn light btn-info btn-xs btn-block mb-1">Appointment</a>
+                                                <a href="{{ route('appointment', $item->id) }}"
+                                                    class="btn light btn-primary btn-xs btn-block mb-1">Appointment Schedule</a> --}}
                                             <a href="{{ route('members.edit', $item->id) }}"
                                                 class="btn light btn-warning btn-xs btn-block mb-1">Edit</a>
                                             @if (Auth::user()->role == 'ADMIN')

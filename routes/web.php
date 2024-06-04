@@ -6,6 +6,7 @@ use App\Http\Controllers\Member\MemberCheckInController;
 use App\Http\Controllers\Member\MemberController;
 use App\Http\Controllers\Member\MemberRegistrationController;
 use App\Http\Controllers\Member\MemberRegistrationOverController;
+use App\Http\Controllers\Member\MissedGuestController;
 use App\Http\Controllers\MergeCreateDataController;
 use App\Http\Controllers\Report\AppointmentListController;
 use App\Http\Controllers\Report\MemberExpiredListController;
@@ -101,10 +102,10 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     Route::get('session-pending', [TrainerSessionController::class, 'pending'])->name('trainer-session-pending');
 
     Route::resource('buddy-referral', '\App\Http\Controllers\Admin\BuddyReferralController');
-    Route::resource('appointment', '\App\Http\Controllers\Admin\AppointmentController');
-    Route::get('/appointment-status-show/{id}', [AppointmentStatusChangeController::class, 'appointment_status_show']);
-    Route::get('/appointment-status-hide/{id}', [AppointmentStatusChangeController::class, 'appointment_status_hide']);
-    Route::get('/appointment-status-missed-guest/{id}', [AppointmentStatusChangeController::class, 'appointment_status_missed_guest']);
+    // Route::resource('appointment', '\App\Http\Controllers\Admin\AppointmentController');
+    // Route::get('/appointment-status-show/{id}', [AppointmentStatusChangeController::class, 'appointment_status_show']);
+    // Route::get('/appointment-status-hide/{id}', [AppointmentStatusChangeController::class, 'appointment_status_hide']);
+    // Route::get('/appointment-status-missed-guest/{id}', [AppointmentStatusChangeController::class, 'appointment_status_missed_guest']);
 
     Route::resource('class', '\App\Http\Controllers\Admin\ClassRecapController');
     Route::resource('leads', '\App\Http\Controllers\Admin\LeadController');
@@ -115,9 +116,9 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
 
     Route::resource('report-gym', '\App\Http\Controllers\Report\ReportFitnessController');
 
-    Route::resource('appointment-list', '\App\Http\Controllers\Report\AppointmentListController');
-    Route::get('all-appointment', [AppointmentListController::class, 'allData'])->name('all-appointment');
-    Route::get('appointment-filter', [AppointmentListController::class, 'filter'])->name('appointment-filter');
+    // Route::resource('appointment-list', '\App\Http\Controllers\Report\AppointmentListController');
+    // Route::get('all-appointment', [AppointmentListController::class, 'allData'])->name('all-appointment');
+    // Route::get('appointment-filter', [AppointmentListController::class, 'filter'])->name('appointment-filter');
 
     Route::resource('member-list', '\App\Http\Controllers\Report\MemberListController');
     Route::resource('member-active', '\App\Http\Controllers\Member\MemberRegistrationController');
@@ -185,6 +186,10 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     Route::get('fc-total-report-pt', [StaffController::class, 'fcTotalReportPT'])->name('fc-total-report-pt');
     Route::get('fc-detail-report-pt', [StaffController::class, 'fcDetailReportPT'])->name('fc-detail-report-pt');
     Route::get('lo', [StaffController::class, 'lo'])->name('lo-report');
+
+    Route::get('appointment/{id}', [MissedGuestController::class, 'appointment'])->name('appointment');
+    Route::get('appointment-schedule', [MissedGuestController::class, 'appointmentSchedule'])->name('appointmentSchedule');
+    Route::post('store-appointment/{id}', [MissedGuestController::class, 'storeAppointment'])->name('storeAppointment');
 
     Route::get('/tes', function () {
         return view('admin.member-registration.tes');

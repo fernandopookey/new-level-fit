@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Member\Member;
 use App\Models\Staff\CustomerService;
 use App\Models\Staff\FitnessConsultant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,27 +13,14 @@ class Appointment extends Model
     use HasFactory;
 
     protected $fillable = [
-        'date_time',
-        'full_name',
         'appointment_date',
-        'appointment_code',
-        'phone_number',
-        'email',
-        'source',
-        'description',
-        'status',
-        'fc_id',
-        'cs_id'
+        'member_id',
     ];
 
     protected $hidden = [];
 
-    public function fitnessConsultants()
+    public function member()
     {
-        return $this->belongsTo(FitnessConsultant::class, 'fc_id', 'id');
-    }
-    public function customerServices()
-    {
-        return $this->belongsTo(CustomerService::class, 'cs_id', 'id');
+        return $this->belongsTo(Member::class, 'member_id', 'id');
     }
 }
