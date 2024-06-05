@@ -408,7 +408,7 @@ class TrainerSession extends Model
     public static function getExpiredPT($memberId = "")
     {
         $sql = "SELECT mbr.id, mbr.full_name AS member_name, mbr.photos, mbr.member_code,
-                train_sess.start_date, train_sess.id AS ts_id, train_sess.days AS ts_days, train_Sess.days AS ts_number_of_days, train_sess.package_price AS ts_package_price, train_sess.member_id AS registered_member_id,
+                train_sess.start_date, train_sess.id AS ts_id, train_sess.days AS ts_days, train_sess.days AS ts_number_of_days, train_sess.package_price AS ts_package_price, train_sess.member_id AS registered_member_id,
                 pers_train.full_name AS trainer_full_name, train_sess.description,
                 train_pack.package_name, met_pay.name AS method_payment_name,
 
