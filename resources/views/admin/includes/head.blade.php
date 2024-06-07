@@ -20,7 +20,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Page Title Here -->
-    <title>LEVELFIT: Admin Page</title>
+    <title>{{ config('app.name') }}: Admin Page</title>
 
     <!-- FAVICONS ICON -->
     <link rel="shortcut icon" type="{{ asset('admingym/image/png') }}"

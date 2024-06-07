@@ -21,7 +21,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Page Title Here -->
-    <title>Level-Fit: Login Page</title>
+    <title>{{ config('app.name') }}: Login Page</title>
 
     <!-- FAVICONS ICON -->
     <link rel="shortcut icon" type="image/png" href="/admingym/images/gym/fav-icon.png">
@@ -40,7 +40,7 @@
                 <div class="text-center pt-5 logo">
                     <h3 class="mb-2 text-white">Selamat Datang di</h3>
                     {{-- <img src="/admingym/images/logo-white.png" alt=""> --}}
-                    <h1 class="text-white">Level-Fit Management System</h1>
+                    <h1 class="text-white">{{ config('app.name') }} Management System</h1>
                 </div>
                 {{-- <p class="mb-4">User Experience & Interface Design <br>Strategy SaaS Solutions</p> --}}
             </div>
