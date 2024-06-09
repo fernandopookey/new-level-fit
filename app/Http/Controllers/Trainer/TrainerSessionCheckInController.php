@@ -30,7 +30,7 @@ class TrainerSessionCheckInController extends Controller
             return;
         }
 
-        $trainerSession = TrainerSession::getActivePTList($request->card_number);
+        $trainerSession = TrainerSession::checkInPT($request->card_number);
         // dd($trainerSession[0]->trainer_id);
 
         if (!empty($trainerSession) && isset($trainerSession[0])) {
@@ -110,7 +110,7 @@ class TrainerSessionCheckInController extends Controller
 
     public function secondStore($id)
     {
-        $trainerSession = TrainerSession::getActivePTList("", $id);
+        $trainerSession = TrainerSession::checkInPT("", $id);
         // dd($trainerSession);
         $expiredMemberRegistration = MemberRegistration::getActiveList("", $trainerSession[0]->member_id);
 
@@ -208,7 +208,7 @@ class TrainerSessionCheckInController extends Controller
             return;
         }
 
-        $trainerSession = TrainerSession::lgtActive($request->card_number);
+        $trainerSession = TrainerSession::checkInLGT($request->card_number);
 
         if (!empty($trainerSession) && isset($trainerSession[0])) {
             if ($trainerSession[0]->leave_day_status == "Freeze") {
