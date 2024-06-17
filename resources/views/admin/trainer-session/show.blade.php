@@ -132,7 +132,7 @@
                                 </table>
                                 <a href="{{ route('pt-agreement', $item->id) }}" class="btn btn-primary btn-sm"
                                     target="_blank">Download
-                                    Agrement {{ $loop->iteration }}</a>
+                                    Agrement {{ $item->id }}</a>
                             </div>
                         </div>
                     </div>
@@ -196,7 +196,7 @@
                                     </table>
                                     <a href="{{ route('pt-agreement', $item->id) }}" class="btn btn-primary btn-sm"
                                         target="_blank">Download
-                                        Agrement {{ $loop->iteration }}</a>
+                                        Agrement {{ $item->id }}</a>
                                 </div>
                             </div>
                         </div>

@@ -31,7 +31,7 @@
         <img src="https://levelfit.warastra-adhiguna.online/LEVELFIT.png" class="img-fluid" width="100" alt="">
     </div> --}}
 
-    <h4>LEVELFIT</h4>
+    <h4>{{ config('app.name') }}</h4>
     <h5>PRIVATE TRAINING AGREEMENT</h5>
 
     <table>
@@ -39,7 +39,7 @@
             <tr>
                 <td style="width: 150px;">No Member: {{ $trainerSession->member_code }}</td>
                 <td style="width: 150px;">Club: Semarang</td>
-                <td style="width: 150px;">Nama FC: {{ $trainerSession->fc_name }}</td>
+                {{-- <td style="width: 150px;">Nama FC: {{ $trainerSession->fc_name }}</td> --}}
             </tr>
         </tbody>
     </table>
