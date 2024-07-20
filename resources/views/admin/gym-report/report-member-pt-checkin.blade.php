@@ -8,6 +8,16 @@
                         <span class="mx-1">to</span>
                         <input type="date" id="toDate" class="form-control" value="{{ $toDate }}">
                     </div>
+                    <div class="col-2 d-flex flex-nowrap align-items-center mx-2">
+                        <select id="memberId" class="form-control single-select">
+                            <option value="">All</option>
+                            @foreach ($members as $item)
+                                <option value="{{ $item->id }}" {{ $item->id == $memberId ? 'selected' : '' }}>
+                                    {{ $item->full_name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                     <button type="button" onclick="reloadPage()" class="btn btn-info mx-1" data-bs-toggle="modal">
                         Filter
                     </button>
@@ -21,7 +31,8 @@
             <!--column-->
             <div class="col-xl-12 wow fadeInUp" data-wow-delay="1.5s">
                 <div class="table-responsive full-data">
-                    <table class="table table-bordered" border="1" style="text-align: center;" height="2px" width="100%">
+                    <table class="table table-bordered" border="1" style="text-align: center;" height="2px"
+                        width="100%">
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -38,11 +49,11 @@
                                         {{ $item->member_name }}
                                     </td>
                                     <td>
-                                       {{ $item->check_in_time }}
+                                        {{ DateFormat($item->check_in_time, 'DD MMMM YYYY, HH:mm:ss') }}
                                     </td>
                                     <td>
-                                        {{ $item->check_out_time }}
-                                     </td>
+                                        {{ DateFormat($item->check_out_time, 'DD MMMM YYYY, HH:mm:ss') }}
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -59,8 +70,9 @@
     function reloadPage(pdf = 0) {
         var fromDate = document.getElementById("fromDate").value;
         var toDate = document.getElementById("toDate").value;
+        var memberId = document.getElementById("memberId").value;
         // alert(window.location.host );
-        window.open(window.location.pathname + '?fromDate=' + fromDate + '&toDate=' + toDate + '&pdf=' + pdf +
+        window.open(window.location.pathname + '?fromDate=' + fromDate + '&toDate=' + toDate + '&memberId=' + memberId + '&pdf=' + pdf +
             "&date=" + new Date().toISOString(), '_self');
     }
 </script>

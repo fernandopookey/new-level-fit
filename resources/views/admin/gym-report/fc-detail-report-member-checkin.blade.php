@@ -8,6 +8,16 @@
                         <span class="mx-1">to</span>
                         <input type="date" id="toDate" class="form-control" value="{{ $toDate }}">
                     </div>
+                    <div class="col-2 d-flex flex-nowrap align-items-center mx-2">
+                        <select id="fcId" class="form-control single-select">
+                            <option value="">All</option>
+                            @foreach ($fc as $item)
+                                <option value="{{ $item->id }}" {{ $item->id == $fcId ? 'selected' : '' }}>
+                                    {{ $item->full_name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                     <button type="button" onclick="reloadPage()" class="btn btn-info mx-1" data-bs-toggle="modal">
                         Filter
                     </button>
@@ -29,6 +39,8 @@
                                 <th>FC Name</th>
                                 <th>Member Name</th>
                                 <th>Package Name</th>
+                                <th>Package Price</th>
+                                <th>Date</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -43,6 +55,12 @@
                                     </td>
                                     <td>
                                         {{ $item->package_name }}
+                                    </td>
+                                    <td>
+                                        {{ FormatRupiah($item->package_price) }}
+                                    </td>
+                                    <td>
+                                        {{ DateFormat($item->created_at, 'DD MMMM YYYY') }}
                                     </td>
                                 </tr>
                             @endforeach
@@ -60,8 +78,10 @@
     function reloadPage(pdf = 0) {
         var fromDate = document.getElementById("fromDate").value;
         var toDate = document.getElementById("toDate").value;
+        var fcId = document.getElementById("fcId").value;
         // alert(window.location.host );
-        window.open(window.location.pathname + '?fromDate=' + fromDate + '&toDate=' + toDate + '&pdf=' + pdf +
+        window.open(window.location.pathname + '?fromDate=' + fromDate + '&toDate=' + toDate + '&fcId=' + fcId +
+            '&pdf=' + pdf +
             "&date=" + new Date().toISOString(), '_self');
     }
 </script>
