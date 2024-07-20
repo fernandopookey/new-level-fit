@@ -85,14 +85,14 @@
                     <span class="nav-text">Report</span>
                 </a>
                 <ul aria-expanded="false">
-                    <li><a class="has-arrow" href="javascript:void(0);" aria-expanded="false">PT</a>
+                    {{-- <li><a class="has-arrow" href="javascript:void(0);" aria-expanded="false">PT</a>
                         <ul aria-expanded="false">
                             <li style="margin-left: 10px"><a href="{{ route('pt-total-report') }}">PT Total</a>
                             </li>
                             <li style="margin-left: 10px"><a href="{{ route('pt-detail-report') }}">PT Detail</a>
                             </li>
                         </ul>
-                    </li>
+                    </li> --}}
                     <li><a href="{{ route('lo-report') }}">LO</a></li>
                     <li><a href="{{ route('report-member-checkin') }}">Member Check In</a></li>
                     <li><a href="{{ route('report-member-pt-checkin') }}">PT Check In</a></li>
@@ -100,8 +100,7 @@
                         <a class="has-arrow" href="javascript:void(0);" aria-expanded="false">Lead</a>
                         <ul aria-expanded="false">
                             <li style="margin-left: 10px">
-                                <a class="has-arrow" href="javascript:void(0);" aria-expanded="false">Member
-                                    CheckIn</a>
+                                <a class="has-arrow" href="javascript:void(0);" aria-expanded="false">General</a>
                                 <ul aria-expanded="false">
                                     <li style="margin-left: 10px"><a
                                             href="{{ route('fc-total-report-member-checkin') }}">Total</a></li>
@@ -110,7 +109,7 @@
                                 </ul>
                             </li>
                             <li style="margin-left: 10px">
-                                <a class="has-arrow" href="javascript:void(0);" aria-expanded="false">POS</a>
+                                <a class="has-arrow" href="javascript:void(0);" aria-expanded="false">PT Selling</a>
                                 <ul aria-expanded="false">
                                     <li style="margin-left: 10px"><a href="{{ route('fc-total-report-pt') }}">Total</a>
                                     </li>

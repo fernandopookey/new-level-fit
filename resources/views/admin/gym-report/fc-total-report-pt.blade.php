@@ -26,7 +26,7 @@
                             <tr>
                                 <th>No</th>
                                 <th>FC Name</th>
-                                <th>Total Input</th>
+                                <th>Total Selling</th>
                             </tr>
                         </thead>
                         <tbody>

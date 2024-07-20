@@ -72,34 +72,6 @@ class MemberRegistrationController extends Controller
 
         $memberRegistrations = MemberRegistration::getPendingList();
 
-        // $memberRegistrations = DB::table('member_registrations as a')
-        //     ->select(
-        //         'a.id',
-        //         'a.start_date',
-        //         'a.description',
-        //         'a.days as member_registration_days',
-        //         'a.old_days',
-        //         'a.package_price as mr_package_price',
-        //         'a.admin_price as mr_admin_price',
-        //         'b.id as member_id',
-        //         'b.full_name as member_name',
-        //         'b.member_code',
-        //         'b.phone_number',
-        //         'b.born',
-        //         'b.photos',
-        //         'b.gender',
-        //     )
-        //     ->addSelect(
-        //         DB::raw('DATE_ADD(a.start_date, INTERVAL COALESCE(ld.days, 0) + a.days DAY) as expired_date'),
-        //         DB::raw('DATE_ADD(ld.submission_date, INTERVAL ld.days DAY) as expired_leave_days'),
-        //     )
-        //     ->join('members as b', 'a.member_id', '=', 'b.id')
-        //     ->join('fitness_consultants as g', 'a.fc_id', '=', 'g.id')
-        //     ->leftJoin('leave_days as ld', 'a.id', '=', 'ld.member_registration_id')
-        //     ->whereRaw('NOW() < a.start_date')
-        //     ->distinct()
-        //     ->get();
-
         $data = [
             'title'                 => 'Member Pending',
             'memberRegistrations'   => $memberRegistrations,
@@ -484,6 +456,11 @@ class MemberRegistrationController extends Controller
                 ->get();
         } else {
             $memberActive = MemberRegistration::getActiveListById("", $id);
+            // dd("Member Active");
+            if (!$memberActive){
+                $memberActive = MemberRegistration::getNewPendingListById("", $id);
+            }
+            // dd("Member Pending");
         }
 
         $data = [
@@ -834,6 +811,7 @@ class MemberRegistrationController extends Controller
             ->leftJoin('leave_days as ld', 'a.id', '=', 'ld.member_registration_id')
             ->where('a.id', $id)
             ->first();
+            // dd($memberRegistration);
 
         $fileName1 = $memberRegistration->member_name;
         $fileName2 = $memberRegistration->start_date;

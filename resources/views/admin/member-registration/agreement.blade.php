@@ -96,6 +96,12 @@
     <table>
         <tbody>
             <tr>
+                <td>No Member</td>
+                <td>{{ $memberRegistration->member_code }}</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td>Tanggal Pembayaran</td>
                 <td>{{ DateFormat($memberRegistration->start_date, 'DD MMMM YYYY') }}</td>
                 <td>Harga Paket</td>
@@ -103,7 +109,7 @@
             </tr>
             <tr>
                 <td>Masa Aktif</td>
-                <td>{{ $memberRegistration->days }} Days</td>
+                <td>{{ DateFormat($memberRegistration->start_date, 'DD MMMM YYYY') }}</td>
                 <td>Biaya Administrasi</td>
                 <td>{{ formatRupiah($memberRegistration->mr_admin_price) }}</td>
             </tr>
