@@ -14,9 +14,11 @@
             <thead>
                 <tr style="background-color: #f5e400;">
                     <th>No</th>
+                    <th>FC Name</th>
                     <th>Member Name</th>
-                    <th>Check In Time</th>
-                    <th>Check Out Time</th>
+                    <th>Trainer Package</th>
+                    <th>Package Price</th>
+                    <th>Date</th>
                 </tr>
             </thead>
             <tbody>
@@ -24,13 +26,19 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>
+                            <h6>{{ $item->fc_name }}</h6>
+                        </td>
+                        <td>
                             <h6>{{ $item->member_name }}</h6>
                         </td>
                         <td>
-                            {{ DateFormat($item->check_in_time, 'DD MMMM YYYY, HH:mm:ss') }}
+                            {{ $item->package_name }}
                         </td>
                         <td>
-                            {{ DateFormat($item->check_out_time, 'DD MMMM YYYY, HH:mm:ss') }}
+                            {{ FormatRupiah($item->package_price) }}
+                        </td>
+                        <td>
+                            {{ DateFormat($item->created_at, 'DD MMMM YYYY') }}
                         </td>
                     </tr>
                 @endforeach

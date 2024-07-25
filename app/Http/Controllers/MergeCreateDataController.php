@@ -43,6 +43,8 @@ class MergeCreateDataController extends Controller
 
     public function create()
     {
+        $memberPackage = MemberPackage::where('days', '1')->get();
+        // dd($memberPackage);
         $data = [
             'title'             => '1 Day Visit Lead',
             'members'           => Member::get(),
@@ -50,9 +52,9 @@ class MergeCreateDataController extends Controller
 
             // Create Member Registration
             'memberRegistration'    => MemberRegistration::get(),
-            'memberPackage'         => MemberPackage::find(35),
+            // 'memberPackage'         => MemberPackage::find(35),
+            'memberPackage'         => $memberPackage,
             'methodPayment'         => MethodPayment::all(),
-
             'content'           => 'admin/one-visit/onevisit'
         ];
 

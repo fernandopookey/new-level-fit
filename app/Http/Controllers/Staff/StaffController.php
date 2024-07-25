@@ -2,8 +2,15 @@
 
 namespace App\Http\Controllers\Staff;
 
+use App\Exports\DetailSellingLeadGeneralReportExport;
+use App\Exports\DetailSellingPTReportExport;
+use App\Exports\MemberCheckInReport;
+use App\Exports\MemberCheckInReportExport;
+use App\Exports\MemberPTCheckInReportExport;
 use App\Exports\ReportMemberPTCheckInExport;
 use App\Exports\StaffExport;
+use App\Exports\TotalSellingLeadGeneralReportExport;
+use App\Exports\TotalSellingPTReportExport;
 use App\Http\Controllers\Controller;
 use App\Models\Member\Member;
 use App\Models\Staff\ClassInstructor;
@@ -15,7 +22,6 @@ use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use GuzzleHttp\Psr7\Request;
-use Symfony\Component\Console\Input\Input;
 
 class StaffController extends Controller
 {
@@ -217,11 +223,14 @@ class StaffController extends Controller
                     'cits.id as cits_id',
                     'members.id as member_id',
                     'members.full_name as member_name',
+                    // 'cits.pt_id as pt_id',
+                    // 'pt.full_name as trainer_name',
                     'cits.check_in_time',
                     'cits.check_out_time'
                 )
                 ->join('trainer_sessions as ts', 'ts.member_id', '=', 'members.id')
                 ->join('check_in_trainer_sessions as cits', 'cits.trainer_session_id', '=', 'ts.id')
+                // ->join('personal_trainers as pt', 'cits.pt_id', '=', 'pt.id')
                 ->whereDate('cits.check_in_time', '>=', $fromDate)
                 ->whereDate('cits.check_in_time', '<=', $toDate)
                 ->where('member_id', '=', $memberId)
@@ -232,27 +241,29 @@ class StaffController extends Controller
                     'cits.id as cits_id',
                     'members.id as member_id',
                     'members.full_name as member_name',
+                    // 'cits.pt_id as pt_id',
+                    // 'pt.full_name as trainer_name',
                     'cits.check_in_time',
                     'cits.check_out_time'
                 )
                 ->join('trainer_sessions as ts', 'ts.member_id', '=', 'members.id')
                 ->join('check_in_trainer_sessions as cits', 'cits.trainer_session_id', '=', 'ts.id')
+                // ->join('personal_trainers as pt', 'cits.pt_id', '=', 'pt.id')
                 ->whereDate('cits.check_in_time', '>=', $fromDate)
                 ->whereDate('cits.check_in_time', '<=', $toDate)
                 ->get();
         }
 
-        if ($pdf && $pdf == '1') {
-            $pdf = Pdf::loadView('admin/gym-report/report-member-pt-checkin', [
-                'result'   => $results,
-            ]);
-            return $pdf->stream('Report-PT-checkin-' . $fromDate . '-' . $toDate . '.pdf');
-        }
+        // if ($pdf && $pdf == '1') {
+        //     $pdf = Pdf::loadView('admin/gym-report/report-member-pt-checkin', [
+        //         'result'   => $results,
+        //     ]);
+        //     return $pdf->stream('Report-PT-checkin-' . $fromDate . '-' . $toDate . '.pdf');
+        // }
 
         if ($excel && $excel == "1") {
-            return Excel::download(new ReportMemberPTCheckInExport(), 'Report-Member-PT-CheckIn, ' . $fromDate . ' to ' . $toDate . '.xlsx');
+            return Excel::download(new MemberPTCheckInReportExport(), 'Member-PT-checkin-report, ' . $fromDate . ' to ' . $toDate . '.xlsx');
         }
-
 
         $data = [
             'title'                 => 'Report Member PT Check In',
@@ -283,6 +294,7 @@ class StaffController extends Controller
         $toDate     = Request()->input('toDate');
         $memberId   = Request()->input('memberId');
         $pdf        = Request()->input('pdf');
+        $excel      = Request()->input('excel');
 
         $member = Member::all();
 
@@ -306,6 +318,7 @@ class StaffController extends Controller
                 ->whereDate('cim.check_in_time', '<=', $toDate)
                 ->where('member_id', '=', $memberId)
                 ->get();
+            // ->paginate(10);
         } else {
             $results = DB::table('members')
                 ->select(
@@ -320,15 +333,19 @@ class StaffController extends Controller
                 ->whereDate('cim.check_in_time', '>=', $fromDate)
                 ->whereDate('cim.check_in_time', '<=', $toDate)
                 ->get();
+            // ->paginate(10);
         }
 
-        if ($pdf && $pdf == '1') {
-            $pdf = Pdf::loadView('admin/gym-report/report-member-checkin', [
-                'result'   => $results,
-            ]);
-            return $pdf->stream('Report-member-checkin-' . $fromDate . '-' . $toDate . '.pdf');
-        }
+        // if ($pdf && $pdf == '1') {
+        //     $pdf = Pdf::loadView('admin/gym-report/report-member-checkin', [
+        //         'result'   => $results,
+        //     ]);
+        //     return $pdf->stream('Report-member-checkin-' . $fromDate . '-' . $toDate . '.pdf');
+        // }
 
+        if ($excel && $excel == "1") {
+            return Excel::download(new MemberCheckInReportExport(), 'Member-checkin-report, ' . $fromDate . ' to ' . $toDate . '.xlsx');
+        }
 
         $data = [
             'title'                 => 'Report Member Check In',
@@ -538,35 +555,61 @@ class StaffController extends Controller
     public function fcTotalReportMemberCheckIn()
     {
         $fromDate   = Request()->input('fromDate');
-        $fromDate  = $fromDate ?  DateFormat($fromDate) : NowDate();
+        $fromDate   = $fromDate ?  DateFormat($fromDate) : NowDate();
+        $fcId       = Request()->input('fcId');
 
         $toDate     = Request()->input('toDate');
         $toDate = $toDate ? DateFormat($toDate) : NowDate();
         $pdf = Request()->input('pdf');
+        $excel      = Request()->input('excel');
 
-        $results = User::select('users.full_name as fc_name', DB::raw('COUNT(users.id) as fc_total'))
-            ->join('member_registrations', 'member_registrations.fc_id', '=', 'users.id')
-            ->whereDate('member_registrations.created_at', '>=', $fromDate)
-            ->whereDate('member_registrations.created_at', '<=', $toDate)
-            ->where('users.role', '=', 'FC')
-            ->groupBy('users.id', 'users.full_name')
-            ->orderBy('users.full_name', 'asc')
-            ->get();
+        $fc         = User::where('role', 'fc')->get();
 
-        if ($pdf && $pdf == '1') {
-            $pdf = Pdf::loadView('admin/gym-report/fc-total-report-member-checkin', [
-                'result'   => $results,
-            ]);
-            return $pdf->stream('FC-Total-Report-Member-checkin, ' . $fromDate . '-' . $toDate . '.pdf');
+        if (!$fromDate || !$toDate) {
+            $fromDate = NowDate();
+            $toDate = NowDate();
         }
 
+        if ($fcId) {
+            $results = User::select('users.full_name as fc_name', 'member_registrations.fc_id', DB::raw('COUNT(users.id) as fc_total'))
+                ->join('member_registrations', 'member_registrations.fc_id', '=', 'users.id')
+                ->whereDate('member_registrations.created_at', '>=', $fromDate)
+                ->whereDate('member_registrations.created_at', '<=', $toDate)
+                // ->where('users.role', '=', 'FC')
+                ->where('member_registrations.fc_id', '=', $fcId)
+                ->groupBy('users.id', 'users.full_name', 'member_registrations.fc_id')
+                ->orderBy('users.full_name', 'asc')
+                ->get();
+        } else {
+            $results = User::select('users.full_name as fc_name', DB::raw('COUNT(users.id) as fc_total'))
+                ->join('member_registrations', 'member_registrations.fc_id', '=', 'users.id')
+                ->whereDate('member_registrations.created_at', '>=', $fromDate)
+                ->whereDate('member_registrations.created_at', '<=', $toDate)
+                ->where('users.role', '=', 'FC')
+                ->groupBy('users.id', 'users.full_name')
+                ->orderBy('users.full_name', 'asc')
+                ->get();
+        }
+
+        // if ($pdf && $pdf == '1') {
+        //     $pdf = Pdf::loadView('admin/gym-report/fc-total-report-member-checkin', [
+        //         'result'   => $results,
+        //     ]);
+        //     return $pdf->stream('FC-Total-Report-Member-checkin, ' . $fromDate . '-' . $toDate . '.pdf');
+        // }
+
+        if ($excel && $excel == "1") {
+            return Excel::download(new TotalSellingLeadGeneralReportExport(), 'Total-Selling-Lead-General-Report, ' . $fromDate . ' to ' . $toDate . '.xlsx');
+        }
 
         $data = [
-            'title'                 => 'FC Total Input Member Check In',
+            'title'                 => 'Total Selling Lead General Report',
             'administrator'         => User::where('role', 'ADMIN')->get(),
             'customerService'       => User::where('role', 'FC')->get(),
             'result'                => $results,
             'fromDate'              => $fromDate,
+            'fc'                    => $fc,
+            'fcId'                  => $fcId,
             'toDate'                => $toDate,
             'users'                 => User::get(),
             'content'               => 'admin/gym-report/fc-total-report-member-checkin'
@@ -577,50 +620,14 @@ class StaffController extends Controller
 
     public function fcDetailReportMemberCheckIn()
     {
-        // $fromDate   = Request()->input('fromDate');
-        // $fromDate  = $fromDate ?  DateFormat($fromDate) : NowDate();
-
-        // $toDate     = Request()->input('toDate');
-        // $toDate = $toDate ? DateFormat($toDate) : NowDate();
-        // $pdf = Request()->input('pdf');
-
-        // $results = User::select('users.full_name as fc_name', 'members.full_name as member_name', 'member_packages.package_name', 'mr.package_price', 'mr.created_at')
-        //     ->join('member_registrations as mr', 'users.id', '=', 'mr.fc_id')
-        //     ->join('member_packages', 'mr.member_package_id', '=', 'member_packages.id')
-        //     ->join('members', 'members.id', '=', 'mr.member_id')
-        //     ->whereDate('mr.created_at', '>=', $fromDate)
-        //     ->whereDate('mr.created_at', '<=', $toDate)
-        //     ->where('users.role', 'FC')
-        //     ->orderBy('users.full_name')
-        //     ->get();
-
-        // if ($pdf && $pdf == '1') {
-        //     $pdf = Pdf::loadView('admin/gym-report/fc-detail-report-member-checkin', [
-        //         'result'   => $results,
-        //     ]);
-        //     return $pdf->stream('FC-Detail-Member-CheckIn-Report.pdf');
-        // }
-
-
-        // $data = [
-        //     'title'                 => 'FC Detail Input Member Check In',
-        //     'result'                => $results,
-        //     'fromDate'              => $fromDate,
-        //     'toDate'                => $toDate,
-        //     'content'               => 'admin/gym-report/fc-detail-report-member-checkin'
-        // ];
-
-        // return view('admin.layouts.wrapper', $data);
-
-
         $fromDate   = Request()->input('fromDate');
         $toDate     = Request()->input('toDate');
         $fcId       = Request()->input('fcId');
         $pdf        = Request()->input('pdf');
+        $excel      = Request()->input('excel');
 
-        $fc    = User::where('role', 'fc')->get();
+        $fc         = User::where('role', 'fc')->get();
 
-        // Default to all members if no specific member is selected
         if (!$fromDate || !$toDate) {
             $fromDate = NowDate();
             $toDate = NowDate();
@@ -656,11 +663,15 @@ class StaffController extends Controller
 
         // $results = $results->get();
 
-        if ($pdf && $pdf == '1') {
-            $pdf = Pdf::loadView('admin/gym-report/fc-detail-report-pt', [
-                'result' => $results,
-            ]);
-            return $pdf->stream('Detail-Selling-Lead-General-Report' . $fromDate . '-' . $toDate . '.pdf');
+        // if ($pdf && $pdf == '1') {
+        //     $pdf = Pdf::loadView('admin/gym-report/fc-detail-report-pt', [
+        //         'result' => $results,
+        //     ]);
+        //     return $pdf->stream('Detail-Selling-Lead-General-Report' . $fromDate . '-' . $toDate . '.pdf');
+        // }
+
+        if ($excel && $excel == "1") {
+            return Excel::download(new DetailSellingLeadGeneralReportExport(), 'Detail-Selling-Lead-General-Report, ' . $fromDate . ' to ' . $toDate . '.xlsx');
         }
 
         $data = [
@@ -681,33 +692,54 @@ class StaffController extends Controller
     {
         $fromDate   = Request()->input('fromDate');
         $fromDate  = $fromDate ?  DateFormat($fromDate) : NowDate();
+        $fcId       = Request()->input('fcId');
 
         $toDate     = Request()->input('toDate');
         $toDate = $toDate ? DateFormat($toDate) : NowDate();
         $pdf = Request()->input('pdf');
+        $excel      = Request()->input('excel');
 
-        $results = User::select('users.full_name as fc_name', DB::raw('COUNT(users.id) as fc_total'), 'trainer_sessions.package_price')
-            ->join('trainer_sessions', 'trainer_sessions.fc_id', '=', 'users.id')
-            ->whereDate('trainer_sessions.created_at', '>=', $fromDate)
-            ->whereDate('trainer_sessions.created_at', '<=', $toDate)
-            ->where('users.role', '=', 'FC')
-            ->groupBy('users.id', 'users.full_name', 'trainer_sessions.package_price')
-            ->orderBy('users.full_name', 'asc')
-            ->get();
+        $fc         = User::where('role', 'fc')->get();
 
-        if ($pdf && $pdf == '1') {
-            $pdf = Pdf::loadView('admin/gym-report/fc-total-report-pt', [
-                'result'   => $results,
-            ]);
-            return $pdf->stream('FC-Total-Report-pt, ' . $fromDate . '-' . $toDate . '.pdf');
+        if ($fcId) {
+            $results = User::select('users.full_name as fc_name', DB::raw('COUNT(users.id) as fc_total'), 'trainer_sessions.package_price')
+                ->join('trainer_sessions', 'trainer_sessions.fc_id', '=', 'users.id')
+                ->whereDate('trainer_sessions.created_at', '>=', $fromDate)
+                ->whereDate('trainer_sessions.created_at', '<=', $toDate)
+                // ->where('users.role', '=', 'FC')
+                ->where('trainer_sessions.fc_id', '=', $fcId)
+                ->groupBy('users.id', 'users.full_name', 'trainer_sessions.package_price')
+                ->orderBy('users.full_name', 'asc')
+                ->get();
+        } else {
+            $results = User::select('users.full_name as fc_name', DB::raw('COUNT(users.id) as fc_total'), 'trainer_sessions.package_price')
+                ->join('trainer_sessions', 'trainer_sessions.fc_id', '=', 'users.id')
+                ->whereDate('trainer_sessions.created_at', '>=', $fromDate)
+                ->whereDate('trainer_sessions.created_at', '<=', $toDate)
+                ->where('users.role', '=', 'FC')
+                ->groupBy('users.id', 'users.full_name', 'trainer_sessions.package_price')
+                ->orderBy('users.full_name', 'asc')
+                ->get();
         }
 
+        // if ($pdf && $pdf == '1') {
+        //     $pdf = Pdf::loadView('admin/gym-report/fc-total-report-pt', [
+        //         'result'   => $results,
+        //     ]);
+        //     return $pdf->stream('FC-Total-Report-pt, ' . $fromDate . '-' . $toDate . '.pdf');
+        // }
+
+        if ($excel && $excel == "1") {
+            return Excel::download(new TotalSellingPTReportExport(), 'Total-Selling-PT-Report, ' . $fromDate . ' to ' . $toDate . '.xlsx');
+        }
 
         $data = [
             'title'                 => 'FC Total Selling PT',
             'result'                => $results,
             'fromDate'              => $fromDate,
             'toDate'                => $toDate,
+            'fc'                    => $fc,
+            'fcId'                  => $fcId,
             'content'               => 'admin/gym-report/fc-total-report-pt'
         ];
 
@@ -732,6 +764,7 @@ class StaffController extends Controller
         $toDate     = Request()->input('toDate');
         $fcId       = Request()->input('fcId');
         $pdf        = Request()->input('pdf');
+        $excel      = Request()->input('excel');
 
         $fc = User::where('role', 'fc')->get();
 
@@ -769,13 +802,16 @@ class StaffController extends Controller
             $results->where('trainer_sessions.fc_id', '=', $fcId);
         }
 
-        if ($pdf && $pdf == '1') {
-            $pdf = Pdf::loadView('admin/gym-report/fc-detail-report-pt', [
-                'result'   => $results,
-            ]);
-            return $pdf->stream('FC-Detail-PT-Selling-Report-' . $fromDate . '-' . $toDate . '.pdf');
-        }
+        // if ($pdf && $pdf == '1') {
+        //     $pdf = Pdf::loadView('admin/gym-report/fc-detail-report-pt', [
+        //         'result'   => $results,
+        //     ]);
+        //     return $pdf->stream('FC-Detail-PT-Selling-Report-' . $fromDate . '-' . $toDate . '.pdf');
+        // }
 
+        if ($excel && $excel == "1") {
+            return Excel::download(new DetailSellingPTReportExport(), 'Detail-Selling-PT-Report, ' . $fromDate . ' to ' . $toDate . '.xlsx');
+        }
 
         $data = [
             'title'                 => 'FC Detail PT Selling Report',

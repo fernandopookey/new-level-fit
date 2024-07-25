@@ -8,11 +8,21 @@
                         <span class="mx-1">to</span>
                         <input type="date" id="toDate" class="form-control" value="{{ $toDate }}">
                     </div>
+                    <div class="col-2 d-flex flex-nowrap align-items-center mx-2">
+                        <select id="fcId" class="form-control single-select">
+                            <option value="">All FC</option>
+                            @foreach ($fc as $item)
+                                <option value="{{ $item->id }}" {{ $item->id == $fcId ? 'selected' : '' }}>
+                                    {{ $item->full_name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                     <button type="button" onclick="reloadPage()" class="btn btn-info mx-1" data-bs-toggle="modal">
                         Filter
                     </button>
                     <button type="button" onclick="reloadPage(1)" class="btn btn-outline-info" data-bs-toggle="modal">
-                        PDF
+                        Download Excel
                     </button>
                 </div>
             </div>
@@ -26,7 +36,7 @@
                             <tr>
                                 <th>No</th>
                                 <th>FC Name</th>
-                                <th>Total Input</th>
+                                <th>Total Selling</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -52,11 +62,12 @@
 
 
 <script>
-    function reloadPage(pdf = 0) {
+    function reloadPage(excel = 0) {
         var fromDate = document.getElementById("fromDate").value;
         var toDate = document.getElementById("toDate").value;
+        var fcId = document.getElementById("fcId").value;
         // alert(window.location.host );
-        window.open(window.location.pathname + '?fromDate=' + fromDate + '&toDate=' + toDate + '&pdf=' + pdf +
+        window.open(window.location.pathname + '?fromDate=' + fromDate + '&toDate=' + toDate + '&fcId=' + fcId + '&excel=' + excel +
             "&date=" + new Date().toISOString(), '_self');
     }
 </script>
