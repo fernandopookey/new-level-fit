@@ -36,12 +36,20 @@
                     <div class="col-xl-6" id="member_package">
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Member Package</label>
-                            <select id="single-select2" name="member_package_id" class="form-control" required>
+                            <select id="single-select3" name="member_package_id" class="form-control">
+                                <option>
+                                    <- Choose ->
+                                </option>
+                                @foreach ($memberPackage as $item)
+                                    <option value="{{ $item->id }}">{{ $item->package_name }}</option>
+                                @endforeach
+                            </select>
+                            {{-- <select id="single-select2" name="member_package_id" class="form-control" required>
                                 <option value="{{ $memberPackage->id }}">{{ $memberPackage->package_name }} |
                                     {{ $memberPackage->days }} Days |
                                     {{ formatRupiah($memberPackage->package_price) }} |
                                     {{ formatRupiah($memberPackage->admin_price) }}</option>
-                            </select>
+                            </select> --}}
                         </div>
                     </div>
                     <div class="col-xl-6" id="method_payment">

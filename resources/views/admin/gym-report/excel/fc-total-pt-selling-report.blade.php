@@ -14,9 +14,8 @@
             <thead>
                 <tr style="background-color: #f5e400;">
                     <th>No</th>
-                    <th>Member Name</th>
-                    <th>Check In Time</th>
-                    <th>Check Out Time</th>
+                    <th>FC Name</th>
+                    <th>Total Selling</th>
                 </tr>
             </thead>
             <tbody>
@@ -24,13 +23,10 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>
-                            <h6>{{ $item->member_name }}</h6>
+                            {{ $item->fc_name }}
                         </td>
                         <td>
-                            {{ DateFormat($item->check_in_time, 'DD MMMM YYYY, HH:mm:ss') }}
-                        </td>
-                        <td>
-                            {{ DateFormat($item->check_out_time, 'DD MMMM YYYY, HH:mm:ss') }}
+                           {{ $item->fc_total }}
                         </td>
                     </tr>
                 @endforeach

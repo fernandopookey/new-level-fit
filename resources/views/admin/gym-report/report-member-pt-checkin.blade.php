@@ -10,7 +10,7 @@
                     </div>
                     <div class="col-2 d-flex flex-nowrap align-items-center mx-2">
                         <select id="memberId" class="form-control single-select">
-                            <option value="">All</option>
+                            <option value="">All Member</option>
                             @foreach ($members as $item)
                                 <option value="{{ $item->id }}" {{ $item->id == $memberId ? 'selected' : '' }}>
                                     {{ $item->full_name }}
@@ -22,7 +22,7 @@
                         Filter
                     </button>
                     <button type="button" onclick="reloadPage(1)" class="btn btn-outline-info" data-bs-toggle="modal">
-                        PDF
+                        Download Excel
                     </button>
                 </div>
             </div>
@@ -37,6 +37,7 @@
                             <tr>
                                 <th>No</th>
                                 <th>Member Name</th>
+                                {{-- <th>Trainer Name</th> --}}
                                 <th>Check In Time</th>
                                 <th>Check Out Time</th>
                             </tr>
@@ -48,6 +49,9 @@
                                     <td>
                                         {{ $item->member_name }}
                                     </td>
+                                    {{-- <td>
+                                        {{ $item->trainer_name }}
+                                    </td> --}}
                                     <td>
                                         {{ DateFormat($item->check_in_time, 'DD MMMM YYYY, HH:mm:ss') }}
                                     </td>
@@ -67,12 +71,12 @@
 
 
 <script>
-    function reloadPage(pdf = 0) {
+    function reloadPage(excel = 0) {
         var fromDate = document.getElementById("fromDate").value;
         var toDate = document.getElementById("toDate").value;
         var memberId = document.getElementById("memberId").value;
         // alert(window.location.host );
-        window.open(window.location.pathname + '?fromDate=' + fromDate + '&toDate=' + toDate + '&memberId=' + memberId + '&pdf=' + pdf +
+        window.open(window.location.pathname + '?fromDate=' + fromDate + '&toDate=' + toDate + '&memberId=' + memberId + '&excel=' + excel +
             "&date=" + new Date().toISOString(), '_self');
     }
 </script>
