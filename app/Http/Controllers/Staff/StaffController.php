@@ -234,7 +234,8 @@ class StaffController extends Controller
                 ->whereDate('cits.check_in_time', '>=', $fromDate)
                 ->whereDate('cits.check_in_time', '<=', $toDate)
                 ->where('member_id', '=', $memberId)
-                ->get();
+                // ->get();
+                ->paginate(10);
         } else {
             $results = DB::table('members')
                 ->select(
@@ -251,7 +252,8 @@ class StaffController extends Controller
                 // ->join('personal_trainers as pt', 'cits.pt_id', '=', 'pt.id')
                 ->whereDate('cits.check_in_time', '>=', $fromDate)
                 ->whereDate('cits.check_in_time', '<=', $toDate)
-                ->get();
+                // ->get();
+                ->paginate(10);
         }
 
         // if ($pdf && $pdf == '1') {
@@ -317,8 +319,7 @@ class StaffController extends Controller
                 ->whereDate('cim.check_in_time', '>=', $fromDate)
                 ->whereDate('cim.check_in_time', '<=', $toDate)
                 ->where('member_id', '=', $memberId)
-                ->get();
-            // ->paginate(10);
+                ->paginate(10);
         } else {
             $results = DB::table('members')
                 ->select(
@@ -332,8 +333,8 @@ class StaffController extends Controller
                 ->join('check_in_members as cim', 'cim.member_registration_id', '=', 'mr.id')
                 ->whereDate('cim.check_in_time', '>=', $fromDate)
                 ->whereDate('cim.check_in_time', '<=', $toDate)
-                ->get();
-            // ->paginate(10);
+                // ->get();
+                ->paginate(4);
         }
 
         // if ($pdf && $pdf == '1') {
@@ -643,7 +644,8 @@ class StaffController extends Controller
                 ->where('mr.fc_id', '=', $fcId)
                 // ->where('users.role', 'FC')
                 ->orderBy('users.full_name')
-                ->get();
+                // ->get();
+                ->paginate(10);
         } else {
             $results = User::select('users.full_name as fc_name', 'members.full_name as member_name', 'member_packages.package_name', 'mr.package_price', 'mr.created_at')
                 ->join('member_registrations as mr', 'users.id', '=', 'mr.fc_id')
@@ -654,7 +656,8 @@ class StaffController extends Controller
                 // ->where('mr.fc_id', '=', $fcId)
                 // ->where('users.role', 'FC')
                 ->orderBy('users.full_name')
-                ->get();
+                // ->get();
+                ->paginate(10);
         }
 
         if ($fcId) {
@@ -783,7 +786,8 @@ class StaffController extends Controller
                 ->where('ts.fc_id', '=', $fcId)
                 ->where('users.role', 'FC')
                 ->orderBy('users.full_name')
-                ->get();
+                // ->get();
+                ->paginate(5);
         } else {
             $results = User::select('users.full_name as fc_name', 'members.full_name as member_name', 'trainer_packages.package_name', 'ts.created_at', 'ts.package_price')
                 ->join('trainer_sessions as ts', 'users.id', '=', 'ts.fc_id')
@@ -794,7 +798,8 @@ class StaffController extends Controller
                 // ->where('ts.fc_id', '=', $fcId)
                 ->where('users.role', 'FC')
                 ->orderBy('users.full_name')
-                ->get();
+                // ->get();
+                ->paginate(5);
         }
 
 
