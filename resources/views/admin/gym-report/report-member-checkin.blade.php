@@ -58,9 +58,7 @@
                             @endforeach
                         </tbody>
                     </table>
-                    {{-- @if (isset($fromDate))
-                    {{ $result }}
-                    @endif --}}
+                    {{ $result->links('pagination::bootstrap-4') }}
                 </div>
             </div>
             <!--/column-->
