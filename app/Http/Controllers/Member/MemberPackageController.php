@@ -64,4 +64,33 @@ class MemberPackageController extends Controller
             return redirect()->back()->with('errorr', 'Gagal menghapus paket ' . $memberPackage->package_name . ', paket member ini sedang dipakai member');
         }
     }
+
+    public function dataSoft()
+    {
+        $data = [
+            'title'             => 'Old Member Package',
+            'memberPackages'    => MemberPackage::onlyTrashed()->get(),
+            'content'           => 'admin/member-package/soft'
+        ];
+
+        return view('admin.layouts.wrapper', $data);
+    }
+
+    public function restore($id)
+    {
+        MemberPackage::withTrashed()->find($id)->restore();
+        return redirect()->back()->with('success', 'Data berhasil di restore');
+    }
+
+    public function forceDelete($id)
+    {
+        // $MemberPackage = MemberPackage::onlyTrashed()->find($id)->forceDelete();
+
+        try {
+            MemberPackage::onlyTrashed()->find($id)->forceDelete();;
+            return redirect()->back()->with('success', 'Member Package Deleted Permanently Successfully');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('errorr', 'Gagal menghapus paket member');
+        }
+    }
 }
