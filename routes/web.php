@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AppointmentStatusChangeController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Member\MemberCheckInController;
 use App\Http\Controllers\Member\MemberController;
+use App\Http\Controllers\Member\MemberPackageController;
 use App\Http\Controllers\Member\MemberRegistrationController;
 use App\Http\Controllers\Member\MemberRegistrationOverController;
 use App\Http\Controllers\Member\MissedGuestController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\Trainer\LGTController;
 use App\Http\Controllers\Trainer\TrainerSessionCheckInController;
 use App\Http\Controllers\Trainer\TrainerSessionController;
 use App\Http\Controllers\Trainer\TrainerSessionOverController;
+use App\Models\Member\MemberPackage;
 use App\Models\Trainer\CheckInTrainerSession;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -49,6 +51,10 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     Route::resource('member', '\App\Http\Controllers\Member\MemberController');
 
     Route::resource('member-package', '\App\Http\Controllers\Member\MemberPackageController');
+    Route::get('member-packages/data-soft', [MemberPackageController::class, 'dataSoft'])->name('dataSoft');
+    Route::get('restore-member-package-data/{id}', [MemberPackageController::class, 'restore'])->name('restore-member-package-data');
+    Route::delete('member-packages-force-delete/{id}', [MemberPackageController::class, 'forceDelete'])->name('member-packages-force-delete');
+
     Route::resource('member-package-type', '\App\Http\Controllers\Member\MemberPackageTypeController');
     Route::resource('member-package-category', '\App\Http\Controllers\Member\MemberPackageCategoryController');
     Route::resource('member-payment', '\App\Http\Controllers\Member\MemberPaymentController');
