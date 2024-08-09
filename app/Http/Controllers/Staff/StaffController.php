@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Staff;
 
 use App\Exports\DetailSellingLeadGeneralReportExport;
 use App\Exports\DetailSellingPTReportExport;
+use App\Exports\LOReportExport;
 use App\Exports\MemberCheckInReport;
 use App\Exports\MemberCheckInReportExport;
 use App\Exports\MemberPTCheckInReportExport;
@@ -100,33 +101,52 @@ class StaffController extends Controller
 
     public function lo()
     {
-        $fromDate       = Request()->input('fromDate');
-        $fromDate       = $fromDate ?  DateFormat($fromDate) : NowDate();
+        $fromDate   = Request()->input('fromDate');
+        $toDate     = Request()->input('toDate');
+        $fcId       = Request()->input('fcId');
+        $pdf        = Request()->input('pdf');
+        $excel      = Request()->input('excel');
+        $ptId       = Request()->input('ptId');
 
-        $toDate         = Request()->input('toDate');
-        $toDate         = $toDate ? DateFormat($toDate) : NowDate();
+        $pt = PersonalTrainer::get();
 
-        $personalTrainer = Request()->input('trainerName');
-        $pdf            = Request()->input('pdf');
+        if (!$fromDate || !$toDate) {
+            $fromDate = NowDate();
+            $toDate = NowDate();
+        }
 
-        $results = Member::select('members.full_name as member_name', 'members.lo_start_date', 'pt.full_name as pt_name')
-            ->join('personal_trainers as pt', 'members.lo_pt_by', '=', 'pt.id')
-            ->where('lo_is_used', 1)
-            ->whereDate('lo_start_date', '>=', $fromDate)
-            ->whereDate('lo_start_date', '<=', $toDate)
-            ->where('pt.id', '=', $personalTrainer)
-            ->get();
+        if ($ptId) {
+            $results = Member::select('members.full_name as member_name', 'members.lo_start_date', 'members.lo_end', 'pt.full_name as pt_name')
+                ->join('personal_trainers as pt', 'members.lo_pt_by', '=', 'pt.id')
+                ->where('lo_is_used', 1)
+                ->where('members.lo_pt_by', '=', $ptId)
+                ->whereDate('lo_start_date', '>=', $fromDate)
+                ->whereDate('lo_end', '<=', $toDate)
+                ->get();
+        } else {
+            $results = Member::select('members.full_name as member_name', 'members.lo_start_date', 'members.lo_end', 'pt.full_name as pt_name')
+                ->join('personal_trainers as pt', 'members.lo_pt_by', '=', 'pt.id')
+                ->where('lo_is_used', 1)
+                ->whereDate('lo_start_date', '>=', $fromDate)
+                ->whereDate('lo_end', '<=', $toDate)
+                ->get();
+        }
 
-        if ($pdf && $pdf == '1') {
-            $pdf = Pdf::loadView('admin/gym-report/lo', [
-                'result'   => $results,
-            ]);
-            return $pdf->stream('LO.pdf');
+        // if ($pdf && $pdf == '1') {
+        //     $pdf = Pdf::loadView('admin/gym-report/lo', [
+        //         'result'   => $results,
+        //     ]);
+        //     return $pdf->stream('LO.pdf');
+        // }
+
+        if ($excel && $excel == "1") {
+            return Excel::download(new LOReportExport(), 'LO-Report, ' . $fromDate . ' to ' . $toDate . '.xlsx');
         }
 
 
+
         $data = [
-            'title'                 => 'PT Total Report',
+            'title'                 => 'LO Report',
             'administrator'         => User::where('role', 'ADMIN')->get(),
             'classInstructor'       => ClassInstructor::get(),
             'customerService'       => User::where('role', 'CS')->get(),
@@ -134,9 +154,11 @@ class StaffController extends Controller
             'fitnessConsultant'     => User::where('role', 'FC')->get(),
             'personalTrainers'      => PersonalTrainer::get(),
             'result'                => $results,
+            'pt'                    => $pt,
+            'ptId'                  => $ptId,
             'fromDate'              => $fromDate,
             'toDate'                => $toDate,
-            'personalTrainer'       => $personalTrainer,
+            // 'personalTrainer'       => $personalTrainer,
             'users'                 => User::get(),
             'page'                  => Request()->input('page'),
             'content'               => 'admin/gym-report/lo'
@@ -828,6 +850,71 @@ class StaffController extends Controller
             // 'fromFc'                => $fromFc,
             'toDate'                => $toDate,
             'content'               => 'admin/gym-report/fc-detail-report-pt'
+        ];
+
+        return view('admin.layouts.wrapper', $data);
+    }
+
+    public function oneVisit()
+    {
+        $fromDate   = Request()->input('fromDate');
+        $toDate     = Request()->input('toDate');
+        $fcId       = Request()->input('fcId');
+        $pdf        = Request()->input('pdf');
+        $excel      = Request()->input('excel');
+
+        $fc = User::where('role', 'fc')->get();
+
+        if (!$fromDate || !$toDate) {
+            $fromDate = NowDate();
+            $toDate = NowDate();
+        }
+
+        // if ($fcId) {
+        $results = User::select('users.full_name as fc_name', 'members.full_name as member_name', 'trainer_packages.package_name', 'ts.created_at', 'ts.package_price')
+            ->join('trainer_sessions as ts', 'users.id', '=', 'ts.fc_id')
+            ->join('trainer_packages', 'ts.trainer_package_id', '=', 'trainer_packages.id')
+            ->join('members', 'members.id', '=', 'ts.member_id')
+            ->whereDate('ts.created_at', '>=', $fromDate)
+            ->whereDate('ts.created_at', '<=', $toDate)
+            ->where('ts.fc_id', '=', $fcId)
+            ->where('users.role', 'FC')
+            ->orderBy('users.full_name')
+            // ->get();
+            ->paginate(5);
+        // } else {
+        //     $results = User::select('users.full_name as fc_name', 'members.full_name as member_name', 'trainer_packages.package_name', 'ts.created_at', 'ts.package_price')
+        //         ->join('trainer_sessions as ts', 'users.id', '=', 'ts.fc_id')
+        //         ->join('trainer_packages', 'ts.trainer_package_id', '=', 'trainer_packages.id')
+        //         ->join('members', 'members.id', '=', 'ts.member_id')
+        //         ->whereDate('ts.created_at', '>=', $fromDate)
+        //         ->whereDate('ts.created_at', '<=', $toDate)
+        //         // ->where('ts.fc_id', '=', $fcId)
+        //         ->where('users.role', 'FC')
+        //         ->orderBy('users.full_name')
+        //         // ->get();
+        //         ->paginate(5);
+        // }
+
+
+        if ($fcId) {
+            $results->where('trainer_sessions.fc_id', '=', $fcId);
+        }
+
+        if ($excel && $excel == "1") {
+            return Excel::download(new DetailSellingPTReportExport(), 'Detail-Selling-PT-Report, ' . $fromDate . ' to ' . $toDate . '.xlsx');
+        }
+
+        $data = [
+            'title'                 => 'FC Detail PT Selling Report',
+            'personalTrainers'      => PersonalTrainer::get(),
+            'result'                => $results,
+            'fc'                    => $fc,
+            'fcId'                  => $fcId,
+            'fromDate'              => $fromDate,
+            // 'fromFc'                => $fromFc,
+            'toDate'                => $toDate,
+            'content'               => 'admin/gym-report/one-visit'
         ];
 
         return view('admin.layouts.wrapper', $data);

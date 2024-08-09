@@ -17,6 +17,7 @@
                                 <th>No</th>
                                 <th>Full Name</th>
                                 <th>Phone Number</th>
+                                <th>Package Name</th>
                                 <th>Date</th>
                                 <th>Status</th>
                                 <th>Staff</th>
@@ -32,6 +33,9 @@
                                     </td>
                                     <td>
                                         <h6>{{ $item->phone_number }}</h6>
+                                    </td>
+                                    <td>
+                                        <h6>{{ $item->package_name }}</h6>
                                     </td>
                                     <td>
                                         <h6>{{ DateFormat($item->start_date, 'DD MMMM YYYY') }}-{{ DateFormat($item->expired_date, 'DD MMMM YYYY') }}
@@ -55,7 +59,7 @@
                                             <a href="{{ route('member-active.edit', $item->id) }}"
                                                 class="btn light btn-warning btn-xs mb-1 btn-block">Edit</a>
                                         @endif
-                                        <a href="{{ route('member-active.show', $item->id) }}"
+                                        <a href="{{ route('member-one-visit-detail', $item->id) }}"
                                             class="btn light btn-info btn-xs mb-1 btn-block">Detail</a>
                                         <a href="{{ route('renewal', $item->id) }}"
                                             class="btn light btn-dark btn-xs mb-1 btn-block">Renewal</a>

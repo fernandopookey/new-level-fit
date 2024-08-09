@@ -94,6 +94,7 @@
                         </ul>
                     </li> --}}
                     <li><a href="{{ route('lo-report') }}">LO</a></li>
+                    {{-- <li><a href="{{ route('one-visit-report') }}">1 Visit</a></li> --}}
                     <li><a href="{{ route('report-member-checkin') }}">Member Check In</a></li>
                     <li><a href="{{ route('report-member-pt-checkin') }}">PT Check In</a></li>
                     <li>

@@ -178,7 +178,8 @@ class MemberRegistration extends Model
             where NOW() > DATE_ADD(mbr_reg.start_date, INTERVAL (mbr_reg.days + ifnull(total_days,0)) DAY)"
             . ($memberId ? " and mbr.id=$memberId " : "") .
             " order by cim_view.updated_at_check_in desc";
-        $activeMemberRegistrations = DB::select($sql);
+            $activeMemberRegistrations = DB::select($sql);
+            // dd($sql);
 
         return $activeMemberRegistrations;
     }

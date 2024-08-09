@@ -128,6 +128,7 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
 
     Route::resource('member-list', '\App\Http\Controllers\Report\MemberListController');
     Route::resource('member-active', '\App\Http\Controllers\Member\MemberRegistrationController');
+    Route::get('member-one-visit-detail/{id}', [MemberRegistrationController::class, 'showOneVisit'])->name('member-one-visit-detail');
     Route::get('mmember-active-excel', [MemberRegistrationController::class, 'excel'])->name('member-active-excel');
     Route::get('mmember-expired-excel', [MemberRegistrationOverController::class, 'excel'])->name('member-expired-excel');
     Route::resource('member-expired', '\App\Http\Controllers\Member\MemberRegistrationOverController');
@@ -192,6 +193,7 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     Route::get('fc-total-report-pt', [StaffController::class, 'fcTotalReportPT'])->name('fc-total-report-pt');
     Route::get('fc-detail-report-pt', [StaffController::class, 'fcDetailReportPT'])->name('fc-detail-report-pt');
     Route::get('lo', [StaffController::class, 'lo'])->name('lo-report');
+    Route::get('one-visit-report', [StaffController::class, 'oneVisit'])->name('one-visit-report');
 
     Route::get('appointment/{id}', [MissedGuestController::class, 'appointment'])->name('appointment');
     Route::get('appointment-schedule', [MissedGuestController::class, 'appointmentSchedule'])->name('appointmentSchedule');

@@ -135,7 +135,10 @@
                                         <- Choose ->
                                     </option>
                                     @foreach ($memberPackage as $item)
-                                        <option value="{{ $item->id }}">{{ $item->package_name }}</option>
+                                        <option value="{{ $item->id }}">{{ $item->package_name }} |
+                                            {{ $item->days }} Days |
+                                            {{ formatRupiah($item->package_price) }} |
+                                            {{ formatRupiah($item->admin_price) }}</option>
                                     @endforeach
                                 </select>
                             </div>
