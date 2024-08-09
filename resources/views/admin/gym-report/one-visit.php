@@ -1,4 +1,4 @@
-<div class="row">
+<!-- <div class="row">
     <div class="col-xl-12">
         @if (isset($fromDate))
             <div class="col-xl-12">
@@ -9,10 +9,10 @@
                         <input type="date" id="toDate" class="form-control" value="{{ $toDate }}">
                     </div>
                     <div class="col-2 d-flex flex-nowrap align-items-center mx-2">
-                        <select id="ptId" class="form-control single-select">
-                            <option value="">All PT</option>
-                            @foreach($pt as $item)
-                            <option value="{{ $item->id }}" {{ $item->id == $ptId ? 'selected' : '' }}>
+                        <select id="fcId" class="form-control single-select">
+                            <option value="">All FC</option>
+                            @foreach($fc as $item)
+                            <option value="{{ $item->id }}" {{ $item->id == $fcId ? 'selected' : '' }}>
                                 {{ $item->full_name }}
                             </option>
                             @endforeach
@@ -28,8 +28,6 @@
             </div>
         @endif
         <div class="row">
-            
-            <!--column-->
             <div class="col-xl-12 wow fadeInUp" data-wow-delay="1.5s">
                 <div class="table-responsive full-data">
                     <table class="table table-bordered" border="1" style="text-align: center;" height="2px"
@@ -37,10 +35,11 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>PT Name</th>
+                                <th>FC Name</th>
                                 <th>Member Name</th>
-                                <th>LO Start</th>
-                                <th>LO End</th>
+                                <th>Trainer Package</th>
+                                <th>Package Price</th>
+                                <th>Date</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -48,39 +47,39 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>
-                                        {{ $item->pt_name }}
+                                        {{ $item->fc_name }}
                                     </td>
                                     <td>
                                         {{ $item->member_name }}
                                     </td>
                                     <td>
-                                        {{ DateFormat($item->lo_start_date, 'DD MMMM YYYY, H:mm:ss') }}
+                                        {{ $item->package_name }}
                                     </td>
                                     <td>
-                                        {{ DateFormat($item->lo_end, 'DD MMMM YYYY, H:mm:ss') }}
+                                        {{ FormatRupiah($item->package_price) }}
                                     </td>
+                                    <td>{{ DateFormat($item->created_at, 'DD MMMM YYYY') }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
+                    {{ $result->links('pagination::bootstrap-4') }}
                 </div>
             </div>
-            <!--/column-->
         </div>
     </div>
-</div>
+</div> -->
 
 
-<script>
+<!-- <script>
     function reloadPage(excel = 0) {
         var fromDate = document.getElementById("fromDate").value;
         var toDate = document.getElementById("toDate").value;
-        var ptId = document.getElementById("ptId").value;
-        // alert(window.location.host );
-        // window.open(window.location.pathname + '?fromDate=' + fromDate + '&toDate=' + toDate + '&pdf=' + pdf +
-        //     "&date=" + new Date().toISOString(), '_self');
-        window.open(window.location.pathname + '?fromDate=' + fromDate + '&toDate=' + toDate + '&ptId=' + ptId +
-            '&excel=' + excel +
+        var fcId = document.getElementById("fcId").value;
+
+        window.open(window.location.pathname + '?fromDate=' + fromDate + '&toDate=' + toDate + '&fcId=' + fcId + '&excel=' + excel +
             "&date=" + new Date().toISOString(), '_self');
     }
-</script>
+</script> -->
+
+<h2>Hallo</h2>

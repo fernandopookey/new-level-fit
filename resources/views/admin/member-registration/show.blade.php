@@ -119,7 +119,8 @@
                                             <tr>
                                                 <th><b>Leave Days</b></th>
                                                 @if ($memberRegistration->leave_day_status == 'Freeze')
-                                                    <th>{{ $memberRegistration->total_leave_days }}</th>
+                                                    {{-- <th>{{ $memberRegistration->total_leave_days }}</th> --}}
+                                                    <th>{{ $memberRegistration->total_days }} Days</th>
                                                 @else
                                                     <th>No Leave Days</th>
                                                 @endif
@@ -201,7 +202,8 @@
                                                 <tr>
                                                     <th><b>Leave Days</b></th>
                                                     @if ($pendingMemberRegistration->leave_day_status == 'Freeze')
-                                                        <th>{{ $pendingMemberRegistration->total_leave_days }}</th>
+                                                        {{-- <th>{{ $pendingMemberRegistration->total_leave_days }}</th> --}}
+                                                        <th>{{ $pendingMemberRegistration->total_days }}</th>
                                                     @else
                                                         <th>No Leave Days</th>
                                                     @endif

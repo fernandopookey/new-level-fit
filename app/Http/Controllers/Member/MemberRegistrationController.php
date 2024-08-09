@@ -313,7 +313,7 @@ class MemberRegistrationController extends Controller
             } else {
                 $fc = Auth::user()->role;
                 // $user = Auth::user()->id;
-                if($fc == 'FC'){
+                if ($fc == 'FC') {
                     $data['fc_candidate_id'] = Auth::user()->id;
                     $newMember = Member::create(array_intersect_key($data, array_flip([
                         'full_name', 'phone_number', 'status', 'fc_candidate_id', 'cancellation_note'
@@ -338,7 +338,6 @@ class MemberRegistrationController extends Controller
 
     public function show($id)
     {
-        // dd($id);
         $mr = MemberRegistration::find($id);
         $status = $mr->members->status;
         $memberId = $mr->members->id;
@@ -393,17 +392,79 @@ class MemberRegistrationController extends Controller
         }
 
         $checkInMemberRegistration = MemberRegistration::find($id);
-       // dd($memberRegistrations);
+        // dd($memberRegistrations);
         $data = [
             'title'                     => 'Member Registration Detail',
             'memberRegistrations'       => $memberRegistrations,
-            'pendingMemberRegistrations' => $pendingMemberRegistrations,
+            // 'pendingMemberRegistrations' => $pendingMemberRegistrations,
             'expiredMemberRegistrations' => $expiredMemberRegistrations,
             'memberRegistration'        => MemberRegistration::find($id),
             'members'                   => Member::get(),
             'memberRegistrationCheckIn' => $checkInMemberRegistration->memberRegistrationCheckIn,
             'status'                    => $status,
             'content'                   => 'admin/member-registration/show',
+        ];
+
+        return view('admin.layouts.wrapper', $data);
+    }
+
+    public function showOneVisit($id)
+    {
+        $mr = MemberRegistration::find($id);
+        $status = $mr->members->status;
+        $memberId = $mr->members->id;
+
+        $memberRegistrations = DB::table('member_registrations as a')
+            ->select(
+                'a.id',
+                'a.start_date',
+                'a.description',
+                'a.days as member_registration_days',
+                'a.old_days',
+                'a.package_price as mr_package_price',
+                'a.admin_price as mr_admin_price',
+                'b.full_name as member_name',
+                'b.address',
+                'b.member_code',
+                'b.phone_number',
+                'b.photos',
+                'b.gender',
+                'b.nickname',
+                'b.ig',
+                'b.emergency_contact',
+                'b.email',
+                'b.born',
+                'b.status as member_status',
+                'c.id as member_package_id',
+                'c.package_name',
+                'c.days',
+                'c.package_price',
+                'c.admin_price',
+                'e.id as method_payment_id',
+                'e.name as method_payment_name',
+                'f.full_name as staff_name'
+            )
+            ->addSelect(
+                DB::raw('DATE_ADD(a.start_date, INTERVAL a.days DAY) as expired_date'),
+                DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.days DAY) THEN "Over" ELSE "Running" END as status')
+            )
+            ->join('members as b', 'a.member_id', '=', 'b.id')
+            ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
+            ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
+            ->join('users as f', 'a.user_id', '=', 'f.id')
+            ->where('a.id', $id)
+            ->get();
+
+        $checkInMemberRegistration = MemberRegistration::find($id);
+        // dd($memberRegistrations);
+        $data = [
+            'title'                     => 'One Visit Detail',
+            'memberRegistrations'       => $memberRegistrations,
+            'memberRegistration'        => MemberRegistration::find($id),
+            'members'                   => Member::get(),
+            'memberRegistrationCheckIn' => $checkInMemberRegistration->memberRegistrationCheckIn,
+            'status'                    => $status,
+            'content'                   => 'admin/one-visit/show',
         ];
 
         return view('admin.layouts.wrapper', $data);
@@ -457,7 +518,7 @@ class MemberRegistrationController extends Controller
         } else {
             $memberActive = MemberRegistration::getActiveListById("", $id);
             // dd("Member Active");
-            if (!$memberActive){
+            if (!$memberActive) {
                 $memberActive = MemberRegistration::getNewPendingListById("", $id);
             }
             // dd("Member Pending");
@@ -811,7 +872,7 @@ class MemberRegistrationController extends Controller
             ->leftJoin('leave_days as ld', 'a.id', '=', 'ld.member_registration_id')
             ->where('a.id', $id)
             ->first();
-            // dd($memberRegistration);
+        // dd($memberRegistration);
 
         $fileName1 = $memberRegistration->member_name;
         $fileName2 = $memberRegistration->start_date;
@@ -941,6 +1002,7 @@ class MemberRegistrationController extends Controller
             $lessLeaveDays = LeaveDay::where([["id", ">", $currentLeaveDay->id], ["member_registration_id", $member_registration_id]]);
             //  hitung total uang lalu tampilkan
             $newDay = DateDiff($currentLeaveDay->submission_date, $now);
+            // dd($currentLeaveDay->price);
             if ($newDay == 0) {
                 DB::rollback();
                 return redirect()->route('member-active.index')->with('errorr', "Cuti yang baru saja dibuat, tidak bisa dihentikan (hapus data)!");
@@ -953,7 +1015,7 @@ class MemberRegistrationController extends Controller
             if (sizeof($lessLeaveDays->get()) > 0)
                 $lessLeaveDays->delete();
             DB::commit();
-            return redirect()->route('member-active.index')->with('success', 'Kembalikan uang brp');
+            return redirect()->route('member-active.index')->with('success', 'Leave days successfully stop!');
         } catch (\Throwable $th) {
             DB::rollback();
             return redirect()->route('member-active.index')->with('error', $th->getMessage());
