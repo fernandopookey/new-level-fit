@@ -396,7 +396,7 @@ class MemberRegistrationController extends Controller
         $data = [
             'title'                     => 'Member Registration Detail',
             'memberRegistrations'       => $memberRegistrations,
-            // 'pendingMemberRegistrations' => $pendingMemberRegistrations,
+            'pendingMemberRegistrations' => $pendingMemberRegistrations,
             'expiredMemberRegistrations' => $expiredMemberRegistrations,
             'memberRegistration'        => MemberRegistration::find($id),
             'members'                   => Member::get(),
@@ -1012,8 +1012,9 @@ class MemberRegistrationController extends Controller
                 'days' => $newDay - 1
             ]);
 
-            if (sizeof($lessLeaveDays->get()) > 0)
+            if (sizeof($lessLeaveDays->get()) > 0) {
                 $lessLeaveDays->delete();
+            }
             DB::commit();
             return redirect()->route('member-active.index')->with('success', 'Leave days successfully stop!');
         } catch (\Throwable $th) {
