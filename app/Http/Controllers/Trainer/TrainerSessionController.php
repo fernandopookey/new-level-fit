@@ -464,4 +464,61 @@ class TrainerSessionController extends Controller
         ]);
         return $pdf->stream('Cuti Trainer Session -' . $fileName1 . '-' . $fileName2 . '.pdf');
     }
+
+    public function history()
+    {
+        $fromDate   = Request()->input('fromDate');
+        $fromDate  = $fromDate ?  DateFormat($fromDate) : NowDate();
+
+        $toDate     = Request()->input('toDate');
+        $toDate = $toDate ? DateFormat($toDate) : NowDate();
+
+        $trainerSessions = TrainerSession::history("", "", $fromDate, $toDate);
+        // dd($trainerSessions);
+
+        $idCodeMaxCount = env("ID_CODE_MAX_COUNT", 3);
+        $data = [
+            'title'                 => 'PT History',
+            'fromDate'              => $fromDate,
+            'toDate'                => $toDate,
+            'trainerSessions'       => $trainerSessions,
+            'content'               => 'admin/trainer-session/history',
+            'idCodeMaxCount'        => $idCodeMaxCount,
+        ];
+
+        return view('admin.layouts.wrapper', $data);
+    }
+
+    public function historyDetail($id)
+    {
+        // dd($id);
+        $ts = TrainerSession::find($id);
+        $status = $ts->members;
+        $memberId = $ts->members->id;
+
+        $activePt = TrainerSession::historyById($id);
+
+        $trainerSessions = TrainerSession::find($id);
+
+        $totalSessions = $trainerSessions->trainerPackages->number_of_session;
+
+        $checkInTrainerSession = $trainerSessions->trainerSessionCheckIn;
+
+        $checkInCount = $checkInTrainerSession->count();
+
+        $remainingSessions = $totalSessions - $checkInCount;
+
+        $data = [
+            'title'                 => 'Trainer Session Detail',
+            'checkInTrainerSession' => $checkInTrainerSession,
+            'trainerSession'        => $trainerSessions,
+            'members'               => Member::get(),
+            'query'                 => $activePt,
+            'totalSessions'         => $totalSessions,
+            'remainingSessions'     => $remainingSessions,
+            'content'               => 'admin/trainer-session/detail-history-check-in',
+        ];
+
+        return view('admin.layouts.wrapper', $data);
+    }
 }

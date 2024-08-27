@@ -66,6 +66,11 @@ Route::prefix('/')->namespace('Admin')->middleware(['auth', 'admin'])->group(fun
     Route::get('pt-check-in/{id}', [TrainerSessionCheckInController::class, 'secondStore'])->name('PTSecondCheckIn');
     Route::post('lgt-check-in', [TrainerSessionCheckInController::class, 'lgtStore'])->name('LGTCheckIn');
     Route::get('lgt-second-check-in/{id}', [TrainerSessionCheckInController::class, 'lgtSecondStore'])->name('LGTSecondCheckIn');
+    Route::get('history-member-registration', [MemberRegistrationController::class, 'history'])->name('history-member-registration');
+    Route::get('history-member-registration/detail/{id}', [MemberRegistrationController::class, 'historyDetail'])->name('detail-history-member-registration');
+
+    Route::get('pt-history', [TrainerSessionController::class, 'history'])->name('pt-history');
+    Route::get('pt-history/detail/{id}', [TrainerSessionController::class, 'historyDetail'])->name('detail-pt-history');
 
     Route::resource('trainer', '\App\Http\Controllers\Trainer\TrainerController');
     Route::resource('trainer-package', '\App\Http\Controllers\Trainer\TrainerPackageController');
