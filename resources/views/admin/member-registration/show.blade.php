@@ -324,7 +324,7 @@
                         <button class="accordion-button collapsed bg-primary text-white" type="button"
                             data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false"
                             aria-controls="flush-collapseOne">
-                            Check In & Checkout History (Click Here)
+                            Check In & Checkout Time (Click Here)
                         </button>
                     </h2>
                     <div id="flush-collapseOne" class="accordion-collapse collapse"

@@ -259,15 +259,35 @@ class MemberRegistrationController extends Controller
                 $data['days'] = $package->days;
 
                 $newMember = Member::create(array_intersect_key($data, array_flip([
-                    'full_name', 'phone_number', 'status', 'nickname',
-                    'born', 'member_code', 'card_number', 'email', 'ig', 'emergency_contact', 'ec_name', 'gender', 'address', 'photos'
+                    'full_name',
+                    'phone_number',
+                    'status',
+                    'nickname',
+                    'born',
+                    'member_code',
+                    'card_number',
+                    'email',
+                    'ig',
+                    'emergency_contact',
+                    'ec_name',
+                    'gender',
+                    'address',
+                    'photos'
                 ])));
 
                 $data['member_id'] = $newMember->id;
 
                 $createMemberRegistration = MemberRegistration::create(array_intersect_key($data, array_flip([
-                    'member_id', 'member_package_id', 'start_date',
-                    'method_payment_id', 'fc_id', 'user_id', 'description', 'package_price', 'admin_price', 'days'
+                    'member_id',
+                    'member_package_id',
+                    'start_date',
+                    'method_payment_id',
+                    'fc_id',
+                    'user_id',
+                    'description',
+                    'package_price',
+                    'admin_price',
+                    'days'
                 ])));
             } elseif ($request->status == 'one_day_visit') {
                 $data += $request->validate([
@@ -293,21 +313,37 @@ class MemberRegistrationController extends Controller
                     $data['member_id'] = $existingMember->id;
 
                     MemberRegistration::create(array_intersect_key($data, array_flip([
-                        'member_id', 'member_package_id', 'start_date',
-                        'method_payment_id', 'user_id', 'description', 'package_price', 'admin_price', 'days'
+                        'member_id',
+                        'member_package_id',
+                        'start_date',
+                        'method_payment_id',
+                        'user_id',
+                        'description',
+                        'package_price',
+                        'admin_price',
+                        'days'
                     ])));
                 } else {
                     // Create new member
                     $newMember = Member::create(array_intersect_key($data, array_flip([
-                        'full_name', 'phone_number', 'status'
+                        'full_name',
+                        'phone_number',
+                        'status'
                     ])));
 
                     $data['member_id'] = $newMember->id;
 
                     // Create member registration
                     MemberRegistration::create(array_intersect_key($data, array_flip([
-                        'member_id', 'member_package_id', 'start_date',
-                        'method_payment_id', 'user_id', 'description', 'package_price', 'admin_price', 'days'
+                        'member_id',
+                        'member_package_id',
+                        'start_date',
+                        'method_payment_id',
+                        'user_id',
+                        'description',
+                        'package_price',
+                        'admin_price',
+                        'days'
                     ])));
                 }
             } else {
@@ -316,11 +352,19 @@ class MemberRegistrationController extends Controller
                 if ($fc == 'FC') {
                     $data['fc_candidate_id'] = Auth::user()->id;
                     $newMember = Member::create(array_intersect_key($data, array_flip([
-                        'full_name', 'phone_number', 'status', 'fc_candidate_id', 'cancellation_note'
+                        'full_name',
+                        'phone_number',
+                        'status',
+                        'fc_candidate_id',
+                        'cancellation_note'
                     ])));
                 } else {
                     $newMember = Member::create(array_intersect_key($data, array_flip([
-                        'full_name', 'phone_number', 'status', 'fc_candidate_id', 'cancellation_note'
+                        'full_name',
+                        'phone_number',
+                        'status',
+                        'fc_candidate_id',
+                        'cancellation_note'
                     ])));
                 }
             }
@@ -703,8 +747,20 @@ class MemberRegistrationController extends Controller
                 }
                 $data['born'] = Carbon::parse($data['born'])->format('Y-m-d');
                 Member::findOrFail($memberRegistration->member_id)->update(array_intersect_key($data, array_flip([
-                    'full_name', 'phone_number', 'status', 'nickname',
-                    'born', 'member_code', 'card_number', 'email', 'ig', 'emergency_contact', 'ec_name', 'gender', 'address', 'photos'
+                    'full_name',
+                    'phone_number',
+                    'status',
+                    'nickname',
+                    'born',
+                    'member_code',
+                    'card_number',
+                    'email',
+                    'ig',
+                    'emergency_contact',
+                    'ec_name',
+                    'gender',
+                    'address',
+                    'photos'
                 ])));
 
                 MemberRegistration::create($data);
@@ -1021,5 +1077,99 @@ class MemberRegistrationController extends Controller
             DB::rollback();
             return redirect()->route('member-active.index')->with('error', $th->getMessage());
         }
+    }
+
+    public function history()
+    {
+        $fromDate   = Request()->input('fromDate');
+        $fromDate  = $fromDate ?  DateFormat($fromDate) : NowDate();
+
+        $toDate     = Request()->input('toDate');
+        $toDate = $toDate ? DateFormat($toDate) : NowDate();
+
+        $memberRegistrations = MemberRegistration::history("", "", $fromDate, $toDate);
+        // dd($memberRegistrations);
+
+        $idCodeMaxCount = env("ID_CODE_MAX_COUNT", 3);
+        $data = [
+            'title'                 => 'Member Registration History',
+            'fromDate'              => $fromDate,
+            'toDate'                => $toDate,
+            'memberRegistrations'   => $memberRegistrations,
+            'content'               => 'admin/member-registration/history',
+            'idCodeMaxCount'        => $idCodeMaxCount,
+        ];
+
+        return view('admin.layouts.wrapper', $data);
+    }
+
+    public function historyDetail($id)
+    {
+        $mr = MemberRegistration::find($id);
+        $status = $mr->members->status;
+        $memberId = $mr->members->id;
+
+        // if ($status == "one_day_visit") {
+        //     $memberRegistrations = DB::table('member_registrations as a')
+        //         ->select(
+        //             'a.id',
+        //             'a.start_date',
+        //             'a.description',
+        //             'a.days as member_registration_days',
+        //             'a.old_days',
+        //             'a.package_price as mr_package_price',
+        //             'a.admin_price as mr_admin_price',
+        //             'b.full_name as member_name',
+        //             'b.address',
+        //             'b.member_code',
+        //             'b.phone_number',
+        //             'b.photos',
+        //             'b.gender',
+        //             'b.nickname',
+        //             'b.ig',
+        //             'b.emergency_contact',
+        //             'b.email',
+        //             'b.born',
+        //             'b.status as member_status',
+        //             'c.id as member_package_id',
+        //             'c.package_name',
+        //             'c.days',
+        //             'c.package_price',
+        //             'c.admin_price',
+        //             'e.id as method_payment_id',
+        //             'e.name as method_payment_name',
+        //             'f.full_name as staff_name'
+        //         )
+        //         ->addSelect(
+        //             DB::raw('DATE_ADD(a.start_date, INTERVAL a.days DAY) as expired_date'),
+        //             DB::raw('CASE WHEN NOW() > DATE_ADD(a.start_date, INTERVAL a.days DAY) THEN "Over" ELSE "Running" END as status')
+        //         )
+        //         ->join('members as b', 'a.member_id', '=', 'b.id')
+        //         ->join('member_packages as c', 'a.member_package_id', '=', 'c.id')
+        //         ->join('method_payments as e', 'a.method_payment_id', '=', 'e.id')
+        //         ->join('users as f', 'a.user_id', '=', 'f.id')
+        //         ->where('a.id', $id)
+        //         ->get();
+        // } else {
+        //     $memberRegistrations = MemberRegistration::historyById("", $id);
+        // }
+
+
+        $memberRegistrations = MemberRegistration::historyById("", $id);
+
+        // dd($memberRegistrations);
+
+        $checkInMemberRegistration = MemberRegistration::find($id);
+        $data = [
+            'title'                     => 'Member Registration Detail',
+            'memberRegistrations'       => $memberRegistrations,
+            'memberRegistration'        => MemberRegistration::find($id),
+            'members'                   => Member::get(),
+            'memberRegistrationCheckIn' => $checkInMemberRegistration->memberRegistrationCheckIn,
+            'status'                    => $status,
+            'content'                   => 'admin/member-registration/detail-history-check-in',
+        ];
+
+        return view('admin.layouts.wrapper', $data);
     }
 }

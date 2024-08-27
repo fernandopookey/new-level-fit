@@ -50,6 +50,7 @@
                         <li><a href="{{ route('member-active.index') }}">Member Active</a></li>
                         <li><a href="{{ route('member-pending') }}">Member Pending</a></li>
                         <li><a href="{{ route('member-expired.index') }}">Member Expired</a>
+                        <li><a href="{{ route('history-member-registration') }}">History</a>
                         </li>
                     </ul>
                 </li>
@@ -67,6 +68,8 @@
                         <li><a href="{{ route('trainer-session-pending') }}">PT Pending</a></li>
                         <li><a href="{{ route('trainer-session-over.index') }}">PT Expired</a></li>
                         <li><a href="{{ route('lgt') }}">LGT</a></li>
+                        <li><a href="{{ route('pt-history') }}">History</a>
+                        </li>
                     @endif
                 </ul>
             </li>
