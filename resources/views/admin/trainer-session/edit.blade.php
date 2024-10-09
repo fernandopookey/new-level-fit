@@ -53,7 +53,7 @@
                                     |
                                     {{ old('trainer_package_id', $trainerSession->trainerPackages->number_of_session) }}
                                     Session |
-                                    {{ old('trainer_package_id', $trainerSession->days) }} Days
+                                    {{ old('trainer_package_id', $trainerSession->days) }} Days | {{ $item->status == 'LGT' ? 'LGT' : 'Non LGT' }}
                                 </option>
                                 @foreach ($trainerPackages as $item)
                                     <option value="{{ $item->id }}">

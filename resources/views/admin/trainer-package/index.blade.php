@@ -46,7 +46,7 @@
                                         <h6>{{ formatRupiah($item->package_price) }}</h6>
                                     </td>
                                     <td>
-                                        <h6>{{ $item->status }}</h6>
+                                        <h6>{{ $item->status == 'LGT' ? 'LGT' : 'Non LGT' }}</h6>
                                     </td>
                                     <td>
                                         <h6>{{ formatRupiah($item->admin_price) }}</h6>
