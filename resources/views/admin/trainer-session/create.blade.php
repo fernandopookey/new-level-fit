@@ -56,7 +56,7 @@
                                     <option value="{{ $item->id }}" data-session="{{ $item->number_of_session }}">
                                         {{ $item->package_name }} |
                                         {{ formatRupiah($item->package_price) }} |
-                                        {{ $item->number_of_session }} Sessions
+                                        {{ $item->number_of_session }} Sessions | {{ $item->status == 'LGT' ? 'LGT' : 'Non LGT' }}
                                     </option>
                                 @endforeach
                             </select>
