@@ -76,13 +76,24 @@
                                         class="form-control rupiah" id="exampleFormControlInput1" autocomplete="off">
                                 </div>
                             </div>
-                            <div class="col-xl-12">
+                            <div class="col-xl-6">
                                 <div class="mb-3">
                                     <label for="exampleFormControlTextarea1" class="form-label text-primary">
                                         Description
                                     </label>
                                     <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="6"
                                         placeholder="Enter Description">{{ old('description', $value->description) }}</textarea>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 mt-4">
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="status" value=""
+                                            id="flexCheckDefault" {{ $value->status == 'LGT' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            LGT
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>

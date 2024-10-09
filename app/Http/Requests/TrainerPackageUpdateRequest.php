@@ -31,6 +31,7 @@ class TrainerPackageUpdateRequest extends FormRequest
             'package_price'         => 'numeric',
             'admin_price'           => 'numeric',
             'description'           => 'nullable',
+            'status'                => 'nullable',
         ];
     }
 
