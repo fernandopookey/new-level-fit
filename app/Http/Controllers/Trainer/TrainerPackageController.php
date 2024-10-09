@@ -58,6 +58,7 @@ class TrainerPackageController extends Controller
     {
         $item = TrainerPackage::find($id);
         $data = $request->all();
+        $data['status'] = $request->has('status') ? 'LGT' : null;
         $data['user_id'] = Auth::user()->id;
         $item->update($data);
         return redirect()->route('trainer-package.index')->with('success', 'Trainer Package Updated Successfully');

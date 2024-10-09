@@ -2,7 +2,7 @@
     <div class="col-xl-12">
         <div class="col-xl-12">
             <div class="page-title flex-wrap justify-content-start">
-                <div class="col-3 d-flex flex-nowrap align-items-center">
+                <div class="d-flex flex-nowrap align-items-center">
                     <input type="date" id="fromDate" class="form-control" value="{{ $fromDate }}">
                     <span class="mx-1">to</span>
                     <input type="date" id="toDate" class="form-control" value="{{ $toDate }}">
